@@ -22,5 +22,5 @@ Route::resource('campaingn_creatives','CampaingnCreativeController');
 Route::resource('widgets','WidgetController');
 Route::resource('widget_campaingns','WidgetCampaingnController');
 Route::resource('creatives','CreativeController');
-Route::resource('creative_log','CreativeLogController');
+Route::resource('creative_logs','CreativeLogController');
 Route::resource('categories','CategoryController');

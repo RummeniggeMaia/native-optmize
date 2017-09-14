@@ -15,7 +15,8 @@ class CampaingnController extends Controller
      */
     public function index()
     {
-        
+        $campaingns = Campaingn::all();
+        return view('campaingns.index',compact('campaingns'));
     }
 
     /**
@@ -25,7 +26,7 @@ class CampaingnController extends Controller
      */
     public function create()
     {
-        
+        return view('campaingns.create');
     }
 
     /** Store a newly created resource in storage.
@@ -34,7 +35,9 @@ class CampaingnController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $campaingn = $request->all();
+        Campaingn::create($campaingn);
+        return redirect('api/campaingns');
     }
 
     /**
@@ -45,7 +48,8 @@ class CampaingnController extends Controller
      */
     public function show($id)
     {
-        
+        $campaingn = Campaingn::find($id);
+        return view('campaingns.show',compact('campaingn')); 
     }
 
     /**
@@ -56,7 +60,8 @@ class CampaingnController extends Controller
      */
     public function edit($id)
     {
-        
+        $campaingn = Campaingn::find($id);
+        return view('campaingns.edit',compact('campaingn'));
     }
 
     /**
@@ -67,7 +72,10 @@ class CampaingnController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $campaingnUpdate = $request->all();
+        $campaingn = Campaingn::find($id);
+        $campaingn->update($campaingnUpdate);
+        return redirect('api/campaingns');
     }
 
     /**
@@ -78,6 +86,7 @@ class CampaingnController extends Controller
      */
     public function destroy($id)
     {
-        
+        Campaingn::find($id)->delete();
+        return redirect('api/campaingns');
     }
 }

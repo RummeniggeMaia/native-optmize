@@ -15,7 +15,8 @@ class CampaingnCreativeController extends Controller
      */
     public function index()
     {
-        
+        $campaingn_creatives = CampaingnCreative::all();
+        return view('campaingns_creatives.index', compact('campaingn_creatives'));
     }
 
     /**
@@ -25,7 +26,7 @@ class CampaingnCreativeController extends Controller
      */
     public function create()
     {
-        
+        return view('campaingn_creatives.create');
     }
 
     /** Store a newly created resource in storage.
@@ -34,7 +35,9 @@ class CampaingnCreativeController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $campaingn_creative = $request->all();
+        CampaingnCreative::create($campaingn_creative);
+        return redirect('api/campaingn_creatives');
     }
 
     /**
@@ -45,7 +48,8 @@ class CampaingnCreativeController extends Controller
      */
     public function show($id)
     {
-        
+        $campaingn_creative = CampaingnCreative::find($id);
+        return view('campaingn_creatives.show',compact('campaingn_creative')); 
     }
 
     /**
@@ -56,7 +60,8 @@ class CampaingnCreativeController extends Controller
      */
     public function edit($id)
     {
-        
+        $campaingn_creative = CampaingnCreative::find($id);
+        return view('campaingn_creatives.edit',compact('campaingn_creative'));
     }
 
     /**
@@ -67,7 +72,10 @@ class CampaingnCreativeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $campaingnCreativeUpdate = $request->all();
+        $campaingn_creative = CampaingnCreative::find($id);
+        $campaingn_creative->update($campaingnCreativeUpdate);
+        return redirect('api/campaingn_creatives');
     }
 
     /**
@@ -78,6 +86,7 @@ class CampaingnCreativeController extends Controller
      */
     public function destroy($id)
     {
-        
+        CampaingnCreative::find($id)->delete();
+        return redirect('api/campaingn_creatives');
     }
 }

@@ -15,7 +15,8 @@ class CreativeLogController extends Controller
      */
     public function index()
     {
-        
+        $creative_logs = CreativeLog::all();
+        return view('creative_logs.index',compact('creative_logs'));
     }
 
     /**
@@ -25,7 +26,7 @@ class CreativeLogController extends Controller
      */
     public function create()
     {
-        
+        return view('creative_logs.create');
     }
 
     /** Store a newly created resource in storage.
@@ -34,7 +35,9 @@ class CreativeLogController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $creative_log = $request->all();
+        CreativeLog::create($creative_log);
+        return redirect('api/creative_logs');
     }
 
     /**
@@ -45,7 +48,8 @@ class CreativeLogController extends Controller
      */
     public function show($id)
     {
-        
+        $creative_log = CreativeLog::find($id);
+        return view('creative_logs.show',compact('creative_log')); 
     }
 
     /**
@@ -56,7 +60,8 @@ class CreativeLogController extends Controller
      */
     public function edit($id)
     {
-        
+        $creative_log = CreativeLog::find($id);
+        return view('creative_logs.edit',compact('creative_log'));
     }
 
     /**
@@ -67,7 +72,10 @@ class CreativeLogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $creative_logUpdate = $request->all();
+        $creative_log = CreativeLog::find($id);
+        $creative_log->update($creative_logUpdate);
+        return redirect('api/creative_logs');
     }
 
     /**
@@ -78,6 +86,7 @@ class CreativeLogController extends Controller
      */
     public function destroy($id)
     {
-        
+        CreativeLog::find($id)->delete();
+        return redirect('api/creative_logs');
     }
 }

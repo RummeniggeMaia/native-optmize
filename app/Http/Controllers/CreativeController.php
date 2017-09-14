@@ -15,7 +15,8 @@ class CreativeController extends Controller
      */
     public function index()
     {
-        
+        $creatives = Creative::all();
+        return view('creatives.index',compact('creatives'));
     }
 
     /**
@@ -25,7 +26,7 @@ class CreativeController extends Controller
      */
     public function create()
     {
-        
+        return view('creatives.create');
     }
 
     /** Store a newly created resource in storage.
@@ -34,7 +35,9 @@ class CreativeController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $creative = $request->all();
+        Creative::create($creative);
+        return redirect('api/creatives');
     }
 
     /**
@@ -45,7 +48,8 @@ class CreativeController extends Controller
      */
     public function show($id)
     {
-        
+        $creative = Creative::find($id);
+        return view('creatives.show',compact('creative')); 
     }
 
     /**
@@ -56,7 +60,8 @@ class CreativeController extends Controller
      */
     public function edit($id)
     {
-        
+        $creative = Creative::find($id);
+        return view('creatives.edit',compact('creative'));
     }
 
     /**
@@ -67,7 +72,10 @@ class CreativeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $creativeUpdate = $request->all();
+        $creative = Creative::find($id);
+        $creative->update($creativeUpdate);
+        return redirect('api/creatives');
     }
 
     /**
@@ -78,6 +86,7 @@ class CreativeController extends Controller
      */
     public function destroy($id)
     {
-        
+        Creative::find($id)->delete();
+        return redirect('api/creatives');
     }
 }
