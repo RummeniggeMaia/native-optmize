@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Creative;
+use App\Campaingn;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
-class CreativeController extends Controller
+class CampaingnController extends Controller
 {
-     /*
+    /*
      * Display a listing of the resource.
      *
      * @return Response

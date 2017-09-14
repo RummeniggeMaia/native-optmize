@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Campaingn extends Model
 {
-    //
+    protected $fillable = ['brand','name'];
 }

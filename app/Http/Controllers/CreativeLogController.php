@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Creative;
+use App\CreativeLog;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
-class CreativeController extends Controller
+class CreativeLogController extends Controller
 {
      /*
      * Display a listing of the resource.
