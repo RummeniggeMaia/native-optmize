@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Creative;
+use App\Category;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CreativeController extends Controller
-{
-     /*
+class CreativeController extends Controller {
+    /*
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
-    {
+
+    public function index() {
         $creatives = Creative::all();
-        return view('creatives.index',compact('creatives'));
+        return view('creatives.index', compact('creatives'));
     }
 
     /**
@@ -24,17 +25,16 @@ class CreativeController extends Controller
      *
      * @return Response
      */
-    public function create()
-    {
-        return view('creatives.create');
+    public function create() {
+        $categories = Category::all();
+        return view('creatives.create')->with('categories', $categories);
     }
 
     /** Store a newly created resource in storage.
      *
      * @return Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $creative = $request->all();
         Creative::create($creative);
         return redirect('api/creatives');
@@ -46,10 +46,9 @@ class CreativeController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         $creative = Creative::find($id);
-        return view('creatives.show',compact('creative')); 
+        return view('creatives.show', compact('creative'));
     }
 
     /**
@@ -58,10 +57,9 @@ class CreativeController extends Controller
      * @param int $id
      * @return Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $creative = Creative::find($id);
-        return view('creatives.edit',compact('creative'));
+        return view('creatives.update', compact('creative'));
     }
 
     /**
@@ -70,8 +68,7 @@ class CreativeController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $creativeUpdate = $request->all();
         $creative = Creative::find($id);
         $creative->update($creativeUpdate);
@@ -84,9 +81,9 @@ class CreativeController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         Creative::find($id)->delete();
         return redirect('api/creatives');
     }
+
 }
