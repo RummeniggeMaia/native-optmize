@@ -48,7 +48,9 @@ class CreativeController extends Controller {
      */
     public function show($id) {
         $creative = Creative::find($id);
-        return view('creatives.show', compact('creative'));
+        $category = Category::find($creative->related_category);
+        return view('creatives.show', compact('creative'))->
+                        with('category', $category);
     }
 
     /**

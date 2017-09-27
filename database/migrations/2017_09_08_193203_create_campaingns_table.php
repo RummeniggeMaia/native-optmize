@@ -4,20 +4,19 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCampaingnsTable extends Migration
-{
+class CreateCampaingnsTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('campaingns', function (Blueprint $table) {
-			
-			$table->bigIncrements('id')->unsigned();
-			$table->char('name', 255);
-			$table->char('brand', 255);
+
+            $table->bigIncrements('id')->unsigned();
+            $table->char('name', 255);
+            $table->char('brand', 255);
             $table->timestamps();
         });
     }
@@ -27,8 +26,8 @@ class CreateCampaingnsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::dropIfExists('campaingns');
     }
+
 }

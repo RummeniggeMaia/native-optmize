@@ -61,7 +61,7 @@ class WidgetController extends Controller
     public function edit($id)
     {
         $widget = Widget::find($id);
-        return view('widgets.edit',compact('widget'));
+        return view('widgets.update',compact('widget'));
     }
 
     /**

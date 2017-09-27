@@ -81,9 +81,10 @@
                 <div class="title m-b-md">
                     Native Optimize
                 </div>
-
                 <div class="links">
                     <a href="{{ route('creatives.index') }}">Creatives</a>
+                    <a href="{{ route('widgets.index') }}">Widgets</a>
+                    <a href="{{ route('campaingns.index') }}">Campaings</a>
                 </div>
             </div>
         </div>

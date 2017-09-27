@@ -1,7 +1,8 @@
 @extends('layout.template')
 @section('content')
-<h1>Atualizar Creative</h1>
-{!! Form::model($creative,['method' => 'patch','route'=>['creatives.update',$creative->id]]) !!}
+
+<h1>Criar Widget</h1>
+{!! Form::open(['url' => 'api/widgets']) !!}
 <div class="form-group">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
@@ -11,11 +12,7 @@
     {!! Form::text('url',null,['class'=>'form-control']) !!}
 </div>
 <div class="form-group">
-    {!! Form::label('Image', 'Image:') !!}
-    {!! Form::text('image',null,['class'=>'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::submit('Atualizar', ['class' => 'btn btn-primary form-control']) !!}
+    {!! Form::submit('Salvar', ['class' => 'btn btn-primary form-control']) !!}
 </div>
 {!! Form::close() !!}
 @stop

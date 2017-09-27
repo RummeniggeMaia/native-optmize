@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    //
+    
+    public function creatives() {
+        return $this->hasMany('App\Creative');
+    }
 }
