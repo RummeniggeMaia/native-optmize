@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Widget extends Model
 {
-    //fillable fields
-    protected $fillable = ['name', 'url'];
-    
-    //custom timestamps name
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'modified';
+    protected $fillable = [
+        'name',
+        'url',
+        'type',
+        'owner'
+    ];
+
+    public function campaingns()
+    {
+        return $this->belongsToMany('App\Campaingn')->withTimestamps();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

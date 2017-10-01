@@ -4,12 +4,23 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Campaingn extends Model
-{
-    //fillable fields
-    protected $fillable = ['name', 'brand'];
+class Campaingn extends Model {
+
+    protected $fillable = [
+		'brand', 
+		'name',
+		'owner'
+	];
+
+    public function creatives() {
+        return $this->belongsToMany('App\Creative')->withTimestamps();
+    }
     
-    //custom timestamps name
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'modified';
+    public function widgets() {
+        return $this->belongsToMany('App\Widget')->withTimestamps();
+    }
+
+	public function user() {
+        return $this->belongsTo('App\User');
+    }
 }
