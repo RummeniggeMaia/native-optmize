@@ -4,15 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Widget extends Model {
-
+class Widget extends Model
+{
     protected $fillable = [
         'name',
-        'url'
+        'url',
+        'type',
+        'owner'
     ];
 
-    public function campaingns() {
+    public function campaingns()
+    {
         return $this->belongsToMany('App\Campaingn')->withTimestamps();
     }
 
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWidgetsTable extends Migration {
+class CreateUsersTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,10 +12,12 @@ class CreateWidgetsTable extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('widgets', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->char('name', 255);
-            $table->char('url', 255);
+            $table->char('email', 255);
+            $table->char('password', 255);
+            $table->char('remember_token', 255)->nullable();
             $table->timestamps();
         });
     }
@@ -26,7 +28,7 @@ class CreateWidgetsTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('widgets');
+        Schema::dropIfExists('users');
     }
 
 }

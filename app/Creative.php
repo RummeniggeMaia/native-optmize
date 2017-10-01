@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Category;
 use Illuminate\Database\Eloquent\Model;
 
 class Creative extends Model {
@@ -12,6 +11,7 @@ class Creative extends Model {
         'url',
         'image',
         'related_category',
+        'owner'
     ];
 
     public function campaingns() {
@@ -20,5 +20,9 @@ class Creative extends Model {
     
     public function category() {
         return $this->belongsTo('App\Category');
+    }
+    
+    public function user() {
+        return $this->belongsTo('App\User');
     }
 }

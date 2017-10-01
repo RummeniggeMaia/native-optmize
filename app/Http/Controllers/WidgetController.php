@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Widget;
+use App\Campaingn;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class WidgetController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /*
      * Display a listing of the resource.
      *
@@ -15,8 +23,8 @@ class WidgetController extends Controller
      */
     public function index()
     {
-        $widgets = Widget::all();
-        return view('widgets.index',compact('widgets'));
+        $widgets = Widget::all()->where('owner', Auth::id());
+        return view('widgets.index', compact('widgets'));
     }
 
     /**
@@ -26,7 +34,8 @@ class WidgetController extends Controller
      */
     public function create()
     {
-        return view('widgets.create');
+        $campaingns = Campaingn::all()->where('owner', Auth::id());
+        return view('widgets.create')->with(['campaingns' => $campaingns]);
     }
 
     /** Store a newly created resource in storage.
@@ -35,9 +44,17 @@ class WidgetController extends Controller
      */
     public function store(Request $request)
     {
-        $widget = $request->all();
-        Widget::create($widget);
-        return redirect('api/widgets');
+        $post = $request->all();
+        DB::beginTransaction();
+        try {
+            $post['owner'] = Auth::id();
+            $widget = Widget::create($post);
+            $widget->campaingns()->sync($post['campaingns']);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+        return redirect('widgets');
     }
 
     /**
@@ -49,7 +66,7 @@ class WidgetController extends Controller
     public function show($id)
     {
         $widget = Widget::find($id);
-        return view('widgets.show',compact('widget')); 
+        return view('widgets.show', compact('widget'));
     }
 
     /**
@@ -61,7 +78,9 @@ class WidgetController extends Controller
     public function edit($id)
     {
         $widget = Widget::find($id);
-        return view('widgets.update',compact('widget'));
+        $campaingns = Campaingn::all()->where('owner', Auth::id());
+        return view('widgets.update', compact('widget'))
+                    ->with('campaingns', $campaingns);
     }
 
     /**
@@ -72,10 +91,17 @@ class WidgetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $widgetUpdate = $request->all();
-        $widget = Widget::find($id);
-        $widget->update($widgetUpdate);
-        return redirect('api/widgets');
+        $post = $request->all();
+        DB::beginTransaction();
+        try {
+            $widget = Widget::find($id);
+            $widget->update($post);
+            $widget->campaingns()->sync($post['campaingns']);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+        return redirect('widgets');
     }
 
     /**
@@ -87,6 +113,6 @@ class WidgetController extends Controller
     public function destroy($id)
     {
         Widget::find($id)->delete();
-        return redirect('api/widgets');
+        return redirect('widgets');
     }
 }

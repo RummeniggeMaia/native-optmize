@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Creative;
 use App\Category;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,8 +15,13 @@ class CreativeController extends Controller {
      * @return Response
      */
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index() {
-        $creatives = Creative::all();
+        $creatives = Creative::all()->where('owner', Auth::id());
         return view('creatives.index', compact('creatives'));
     }
 
@@ -29,17 +34,6 @@ class CreativeController extends Controller {
         $categories = Category::all();
         return view('creatives.create')->with('categories', $categories);
     }
-
-    /** Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store(Request $request) {
-        $creative = $request->all();
-        Creative::create($creative);
-        return redirect('api/creatives');
-    }
-
     /**
      * Display the specified resource.
      *
@@ -61,7 +55,20 @@ class CreativeController extends Controller {
      */
     public function edit($id) {
         $creative = Creative::find($id);
-        return view('creatives.update', compact('creative'));
+        $categories = Category::all();
+        return view('creatives.update', compact('creative'))
+                ->with('categories', $categories);
+    }
+
+    /** Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store(Request $request) {
+        $post = $request->all();
+        $post['owner'] = Auth::id();
+        Creative::create($post);
+        return redirect('creatives');
     }
 
     /**
@@ -74,7 +81,7 @@ class CreativeController extends Controller {
         $creativeUpdate = $request->all();
         $creative = Creative::find($id);
         $creative->update($creativeUpdate);
-        return redirect('api/creatives');
+        return redirect('creatives');
     }
 
     /**
@@ -85,7 +92,7 @@ class CreativeController extends Controller {
      */
     public function destroy($id) {
         Creative::find($id)->delete();
-        return redirect('api/creatives');
+        return redirect('creatives');
     }
 
 }

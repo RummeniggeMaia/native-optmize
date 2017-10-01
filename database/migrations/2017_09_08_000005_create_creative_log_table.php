@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCreativeLogsTable extends Migration
+class CreateCreativeLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCreativeLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('creative_logs', function (Blueprint $table) {
+        Schema::create('creative_log', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ class CreateCreativeLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('creative_logs');
+        Schema::dropIfExists('creative_log');
     }
 }

@@ -20,7 +20,11 @@ class RedirectIfAuthenticated
         if (Auth::guard($guard)->check()) {
             return redirect('/home');
         }
-
+//        if (Auth::guest()) {
+//            return redirect()->guest('login');
+//        } else {
+//            return redirect('/home');
+//        }
         return $next($request);
     }
 }

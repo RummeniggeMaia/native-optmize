@@ -2,21 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Campaingn;
 use App\Creative;
-use App\Widget;
-use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
-class CampaingnController extends Controller {
+class CampaingnController extends Controller
+{
     /*
      * Display a listing of the resource.
      *
      * @return Response
      */
 
-    public function index() {
-        $campaingns = Campaingn::all();
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        $campaingns = Campaingn::all()->where('owner', Auth::id());
         return view('campaingns.index', compact('campaingns'));
     }
 
@@ -25,26 +33,29 @@ class CampaingnController extends Controller {
      *
      * @return Response
      */
-    public function create() {
-        $widgets = Widget::all();
-        $creatives = Creative::all();
-        return view('campaingns.create')
-                        ->with('widgets', $widgets)
-                        ->with('creatives', $creatives);
+    public function create()
+    {
+        $creatives = Creative::all()->where('owner', Auth::id());
+        return view('campaingns.create')->with(['creatives' => $creatives]);
     }
 
     /** Store a newly created resource in storage.
      *
      * @return Response
      */
-    public function store(Request $request) {
-        $post = $request->all();       
-        $campaingn = Campaingn::create($post);
-        $creative = Creative::find($request->input('target_creative'));
-        $campaingn->creatives()->save($creative);
-        $widget = Widget::find($request->input('related_widget'));
-        $campaingn->widgets()->save($widget);
-        return redirect('api/campaingns');
+    public function store(Request $request)
+    {
+        $post = $request->all();
+        DB::beginTransaction();
+        try {
+            $post['owner'] = Auth::id();
+            $campaingn = Campaingn::create($post);
+            $campaingn->creatives()->sync($post['creatives']);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+        return redirect('campaingns');
     }
 
     /**
@@ -53,7 +64,8 @@ class CampaingnController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         $campaingn = Campaingn::find($id);
         return view('campaingns.show', compact('campaingn'));
     }
@@ -64,9 +76,12 @@ class CampaingnController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         $campaingn = Campaingn::find($id);
-        return view('campaingns.update', compact('campaingn'));
+        $creatives = Creative::all()->where('owner', Auth::id());
+        return view('campaingns.update', compact('campaingn'))
+                    ->with('creatives', $creatives);
     }
 
     /**
@@ -75,11 +90,19 @@ class CampaingnController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id) {
-        $campaingnUpdate = $request->all();
-        $campaingn = Campaingn::find($id);
-        $campaingn->update($campaingnUpdate);
-        return redirect('api/campaingns');
+    public function update(Request $request, $id)
+    {
+        $post = $request->all();
+        DB::beginTransaction();
+        try {
+            $campaingn = Campaingn::find($id);
+            $campaingn->update($post);
+            $campaingn->creatives()->sync($post['creatives']);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
+        return redirect('campaingns');
     }
 
     /**
@@ -88,9 +111,9 @@ class CampaingnController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         Campaingn::find($id)->delete();
-        return redirect('api/campaingns');
+        return redirect('campaingns');
     }
-
 }

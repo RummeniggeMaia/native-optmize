@@ -1,7 +1,8 @@
-@extends('layout.template')
+@extends('layouts.template')
+
 @section('content')
+{!! Form::open(['url' => 'campaingns']) !!}
 <h1>Criar Campaingn</h1>
-{!! Form::open(['url' => 'api/campaingns']) !!}
 <div class="form-group">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
@@ -11,23 +12,27 @@
     {!! Form::text('brand',null,['class'=>'form-control']) !!}
 </div>
 <div class="form-group">
-    {!! Form::label('Creative', 'Creative:') !!}
-    <select class="form-control" name="target_creative" id="target_creative">
+    {!! Form::label('Creatives', 'Creatives:') !!}
+    <select name="creatives[]"
+            class="selectpicker form-control"
+            data-live-search="true"
+            title="Nenhum Creative selecionado"
+            data-actions-box="true"
+            data-select-all-text="Marcar todos"
+            data-deselect-all-text="Desmarcar todos"
+            multiple>
         @foreach($creatives as $creative)
-        <option value="{{$creative->id}}">{{$creative->name}}</option>
+            <option title="{{ $creative->name }}"
+                    value="{{ $creative->id }}">
+                {{ $creative->name}},
+                {{ $creative->url}}
+            </option>
         @endforeach
     </select>
 </div>
 <div class="form-group">
-    {!! Form::label('Widget', 'Widget:') !!}
-    <select class="form-control" name="related_widget" id="related_widget">
-        @foreach($widgets as $widget)
-        <option value="{{$widget->id}}">{{$widget->name}}</option>
-        @endforeach
-    </select>
-</div>
-<div class="form-group">
-    {!! Form::submit('Salvar', ['class' => 'btn btn-primary form-control']) !!}
+    {!! Form::submit('Salvar', ['class' => 'btn btn-primary form-control', 'name' => 'salvar']) !!}
 </div>
 {!! Form::close() !!}
+
 @stop

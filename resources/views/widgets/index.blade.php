@@ -1,4 +1,4 @@
-@extends('layout/template')
+@extends('layouts/template')
 
 @section('content')
 <h1>Widgets</h1>

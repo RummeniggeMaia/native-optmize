@@ -1,4 +1,5 @@
-@extends('layout/template')
+@extends('layouts/template')
+
 @section('content')
 <h1>Dados do Creative</h1>
 
@@ -29,7 +30,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <a href="{{ route('creatives.index')}}" class="btn btn-primary">Voltar</a>
+            <a href="{{ route('creatives')}}" class="btn btn-primary">Voltar</a>
         </div>
     </div>
 </form>

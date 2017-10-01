@@ -1,4 +1,4 @@
-@extends('layout/template')
+@extends('layouts/template')
 
 @section('content')
 <h1>Creatives</h1>

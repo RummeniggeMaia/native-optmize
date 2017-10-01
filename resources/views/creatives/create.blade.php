@@ -1,7 +1,8 @@
-@extends('layout.template')
+@extends('layouts.template')
+
 @section('content')
 <h1>Criar Creative</h1>
-{!! Form::open(['url' => 'api/creatives']) !!}
+{!! Form::open(['url' => 'creatives']) !!}
 <div class="form-group">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
