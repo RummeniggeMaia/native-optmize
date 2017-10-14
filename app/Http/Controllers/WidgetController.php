@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Widget;
 use App\Campaingn;
+use App\Creative;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -115,4 +116,58 @@ class WidgetController extends Controller
         Widget::find($id)->delete();
         return redirect('widgets');
     }
+
+
+    
+    public function create_widget($id)
+    {
+        $widget = Widget::find($id);
+        $folder_name = "data/{$id}";
+        $file_name = $widget->name . '.js';
+		//Verifica se Pasta Existe
+		if(!file_exists($folder_name))
+		{
+			echo "Non ecziste";
+			print_r(mkdir($folder_name, 0777));
+		}
+		
+		$this->create_js($folder_name,$file_name);
+	}
+
+	public function create_js($folder_name, $file_name = '02.js')
+	{
+		$abrir = fopen($folder_name."/".$file_name, "w");
+
+		fwrite($abrir, $this->create_content());
+		fclose($abrir);
+	}
+
+	public function create_content()
+	{
+		$tpl = new Template("data/widget_example.js");
+
+        $creatives = Creative::all()->where('owner', Auth::id());
+
+		foreach ($creatives as $creative) 
+		{
+			$tpl->TITLE = $creative->name;
+			$tpl->IMAGE = $creative->image;
+			$tpl->URL = $creative->url;
+            $tpl->block("BLOCK_CONTEUDO", true);
+		}
+		
+		return $tpl->parse();
+	}
+
+	public function create_widgets()
+	{
+        $widgets = Widget::all()->where('owner', Auth::id());
+
+		foreach ($widgets as $widget) 
+		{
+			$this->create_widget($widget->id);
+		}
+	}
+
+
 }
