@@ -124,50 +124,50 @@ class WidgetController extends Controller
         $widget = Widget::find($id);
         $folder_name = "data/{$id}";
         $file_name = $widget->name . '.js';
-		//Verifica se Pasta Existe
-		if(!file_exists($folder_name))
-		{
-			echo "Non ecziste";
-			print_r(mkdir($folder_name, 0777));
-		}
-		
-		$this->create_js($folder_name,$file_name);
-	}
+        //Verifica se Pasta Existe
+        if(!file_exists($folder_name))
+        {
+            echo "Non ecziste";
+            print_r(mkdir($folder_name, 0777));
+        }
+        
+        $this->create_js($folder_name,$file_name);
+    }
 
-	public function create_js($folder_name, $file_name = '02.js')
-	{
-		$abrir = fopen($folder_name."/".$file_name, "w");
+    public function create_js($folder_name, $file_name = '02.js')
+    {
+        $abrir = fopen($folder_name."/".$file_name, "w");
 
-		fwrite($abrir, $this->create_content());
-		fclose($abrir);
-	}
+        fwrite($abrir, $this->create_content());
+        fclose($abrir);
+    }
 
-	public function create_content()
-	{
-		$tpl = new Template("data/widget_example.js");
+    public function create_content()
+    {
+        $tpl = new Template("data/widget_example.js");
 
         $creatives = Creative::all()->where('owner', Auth::id());
 
-		foreach ($creatives as $creative) 
-		{
-			$tpl->TITLE = $creative->name;
-			$tpl->IMAGE = $creative->image;
-			$tpl->URL = $creative->url;
+        foreach ($creatives as $creative) 
+        {
+            $tpl->TITLE = $creative->name;
+            $tpl->IMAGE = $creative->image;
+            $tpl->URL = $creative->url;
             $tpl->block("BLOCK_CONTEUDO", true);
-		}
-		
-		return $tpl->parse();
-	}
+        }
+        
+        return $tpl->parse();
+    }
 
-	public function create_widgets()
-	{
+    public function create_widgets()
+    {
         $widgets = Widget::all()->where('owner', Auth::id());
 
-		foreach ($widgets as $widget) 
-		{
-			$this->create_widget($widget->id);
-		}
-	}
+        foreach ($widgets as $widget) 
+        {
+            $this->create_widget($widget->id);
+        }
+    }
 
 
 }
