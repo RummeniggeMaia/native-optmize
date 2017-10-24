@@ -15,6 +15,7 @@
                 <a href="{{ route('creatives.index') }}">Creatives</a>
                 <a href="{{ route('campaingns.index') }}">Campaings</a>
                 <a href="{{ route('widgets.index') }}">Widgets</a>
+                <a href="{{ route('categories.index') }}">Categorias</a>
             </div>
         </div>
     </div>
