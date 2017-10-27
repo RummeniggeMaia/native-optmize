@@ -122,7 +122,7 @@ class WidgetController extends Controller
     public function create_widget($id)
     {
         $widget = Widget::find($id);
-        $folder_name = "data/{$id}";
+        $folder_name = "data/{$id}"; //Verificar sistema de diretorios laravel
         $file_name = $widget->name . '.js';
         //Verifica se Pasta Existe
         if(!file_exists($folder_name))
@@ -130,20 +130,17 @@ class WidgetController extends Controller
             echo "Non ecziste";
             print_r(mkdir($folder_name, 0777));
         }
-        
-        $this->create_js($folder_name,$file_name);
+
+        $json_content = array('name' => $widget->name, 'url' => $widget->url, 
+                              'type' => $widgeg->type);
+
+        $this->create_json($folder_name,$file_name, $json_content);
     }
 
-    public function create_js($folder_name, $file_name = '02.js')
+    public function create_json($folder_name, $file_name, $json_content)
     {
         $abrir = fopen($folder_name."/".$file_name, "w");
 
-        fwrite($abrir, $this->create_content());
-        fclose($abrir);
-    }
-
-    public function create_content()
-    {
         $tpl = new Template("data/widget_example.js");
 
         $creatives = Creative::all()->where('owner', Auth::id());
@@ -155,8 +152,11 @@ class WidgetController extends Controller
             $tpl->URL = $creative->url;
             $tpl->block("BLOCK_CONTEUDO", true);
         }
-        
-        return $tpl->parse();
+
+        $json_content['js'] = $tpl->parse();
+
+        fwrite($abrir,json_encode($json_content));
+        fclose($abrir);
     }
 
     public function create_widgets()
