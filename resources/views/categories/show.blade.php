@@ -12,7 +12,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <a href="{{ route('categories')}}" class="btn btn-primary">Voltar</a>
+            <a href="{{ route('categories.index')}}" class="btn btn-primary">Voltar</a>
         </div>
     </div>
 </form>
