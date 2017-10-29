@@ -21,7 +21,7 @@ class CreativeController extends Controller {
     }
 
     public function index() {
-        $creatives = Creative::all()->where('owner', Auth::id());
+        $creatives = Creative::where('owner', Auth::id())->simplePaginate(5);
         return view('creatives.index', compact('creatives'));
     }
 

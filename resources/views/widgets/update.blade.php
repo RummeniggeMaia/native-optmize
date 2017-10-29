@@ -18,7 +18,7 @@
             '1' => 'Barra Lateral Direita',
             '2' => 'Barra Lateral Esquerda',
             '3' => 'Central'] as $typeId => $type)
-            <<option value="{{ $typeId}}" @if($widget->type == $typeId) selected @endif>{{ $type }}</option>
+            <option value="{{ $typeId}}" @if($widget->type == $typeId) selected @endif>{{ $type }}</option>
         @endforeach
     </select>
 </div>

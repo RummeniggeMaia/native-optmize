@@ -30,6 +30,8 @@
             </td>
         </tr>
         @endforeach
+        
+        {{ $creatives->links('view.name') }}
     </tbody>
 
 </table>

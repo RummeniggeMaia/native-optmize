@@ -11,11 +11,13 @@
             <div class="title m-b-md">
                 Native Optimize
             </div>
+            @auth
             <div class="links">
-                <a href="{{ route('creatives.index') }}">Creatives</a>
-                <a href="{{ route('campaingns.index') }}">Campaings</a>
-                <a href="{{ route('widgets.index') }}">Widgets</a>
+                <a href="{{ route('creatives') }}">Creatives</a>
+                <a href="{{ route('campaingns') }}">Campaings</a>
+                <a href="{{ route('widgets') }}">Widgets</a>
             </div>
+            @endauth
         </div>
     </div>
 </div>

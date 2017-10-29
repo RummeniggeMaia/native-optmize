@@ -46,3 +46,8 @@ Route::get('/widgets/{widget}', 'WidgetController@show')->name('widgets.show');
 Route::patch('/widgets/{widget}', 'WidgetController@update')->name('widgets.update');
 Route::delete('/widgets/{widget}', 'WidgetController@destroy')->name('widgets.destroy');
 Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
+
+Route::get('/mw', ['middleware' => 'cors', function() {
+    return \Response::json('ok', 200);
+}]);
+

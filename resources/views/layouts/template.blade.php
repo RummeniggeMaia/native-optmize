@@ -27,7 +27,7 @@
         <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
         <script type="text/javascript" src="{{ asset('js/bootstrap-select.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('js/i18n/defaults-pt_BR.min.js') }}"></script>
-        
+
         <script type="text/javascript">
             $(document).ready(function () {
                 $('.dropdown-toggle').dropdown();
@@ -40,7 +40,7 @@
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <style>
-            body {
+            .body {
                 background-color: #fff;
                 color: #636b6f;
                 font-family: 'Raleway', sans-serif;
@@ -48,35 +48,28 @@
                 height: 100vh;
                 margin: 0;
             }
-
             .full-height {
                 height: 100vh;
             }
-
             .flex-center {
                 align-items: center;
                 display: flex;
                 justify-content: center;
             }
-
             .position-ref {
                 position: relative;
             }
-
             .top-right {
                 position: absolute;
                 right: 10px;
                 top: 18px;
             }
-
             .content {
                 text-align: center;
             }
-
             .title {
                 font-size: 84px;
             }
-
             .links > a {
                 color: #636b6f;
                 padding: 0 25px;
@@ -86,7 +79,6 @@
                 text-decoration: none;
                 text-transform: uppercase;
             }
-
             .m-b-md {
                 margin-bottom: 30px;
             }

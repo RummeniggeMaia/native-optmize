@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Widget;
 use App\Campaingn;
 use App\Http\Requests;
+use App\CreativeLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class WidgetController extends Controller
@@ -48,8 +49,12 @@ class WidgetController extends Controller
         DB::beginTransaction();
         try {
             $post['owner'] = Auth::id();
+            $log = CreativeLog::create()->id;
+            $post['creative_log'] = $log;
             $widget = Widget::create($post);
             $widget->campaingns()->sync($post['campaingns']);
+            $widget->hashid = Hash::make($widget->id);
+            $widget->save();
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
