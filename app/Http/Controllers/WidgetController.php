@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Widget;
 use App\Campaingn;
+use App\Creative;
 use App\Http\Requests;
 use App\CreativeLog;
 use Illuminate\Http\Request;
@@ -12,9 +13,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class WidgetController extends Controller {
+use App\Providers\Template;
+use Illuminate\Support\Facades\Storage;
 
-    public function __construct() {
+class WidgetController extends Controller
+{
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -145,5 +150,57 @@ class WidgetController extends Controller {
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
+   
+    public function create_widget($id)
+    {
+        $widget = Widget::find($id);
+        
+        if (!Storage::disk('teste')->exists("data/{$id}"))
+        {
+            Storage::disk('teste')->makeDirectory("data/{$id}");
+        }
 
+        $folder_name = Storage::disk('teste')->url("data/{$id}");
+        $file_name = $widget->name . '.js';
+        
+        $json_content = array('name' => $widget->name, 'url' => $widget->url, 
+                              'type' => $widgeg->type);
+
+        $this->create_json($folder_name, $file_name, $json_content);
+    }
+
+    public function create_json($folder_name, $file_name, $json_content)
+    {
+        //$abrir = fopen($folder_name."/".$file_name, "w");
+        $abrir = $folder_name . "/" . $file_name;
+        $widget_base = Storage::disk('teste')->url('data/widget_example.js');
+        $tpl = new Template($widget_base);
+
+        $creatives = Creative::all()->where('owner', Auth::id());
+
+        foreach ($creatives as $creative) 
+        {
+            $tpl->TITLE = $creative->name;
+            $tpl->IMAGE = $creative->image;
+            $tpl->URL = $creative->url;
+            $tpl->block("BLOCK_CONTEUDO", true);
+        }
+
+        $json_content['js'] = $tpl->parse();
+
+        //fwrite($abrir,json_encode($json_content));
+        //fclose($abrir);
+
+        Storage::disk('teste')->put($abrir, $json_content);
+    }
+
+    public function create_widgets()
+    {
+        $widgets = Widget::all()->where('owner', Auth::id());
+
+        foreach ($widgets as $widget) 
+        {
+            $this->create_widget($widget->id);
+        }
+    }
 }
