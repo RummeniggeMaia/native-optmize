@@ -30,9 +30,20 @@
             </td>
         </tr>
         @endforeach
-        
-        {{ $creatives->links('view.name') }}
     </tbody>
-
+    <tfoot class="bg-info">
+        <tr>
+            <td colspan="7" style="text-align: right;font-weight: bold">
+                Exibindo de {{ ($creatives->currentPage() - 1) * 5 + 1 }}
+                a @if(($creatives->currentPage() - 1) * 5 + 5 > $creatives->total())
+                    {{ $creatives->total() }}
+                  @else
+                    {{ ($creatives->currentPage() - 1) * 5 + 5 }}
+                  @endif
+                de {{ $creatives->total() }} creatives
+            </td>
+        </tr>
+    </tfoot>
 </table>
+{{ $creatives->links() }}
 @endsection

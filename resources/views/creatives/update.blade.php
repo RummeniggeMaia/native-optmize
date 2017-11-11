@@ -1,15 +1,26 @@
 @extends('layouts.template')
 
 @section('content')
+
 <h1>Atualizar Creative</h1>
 {!! Form::model($creative,['method' => 'patch','route'=>['creatives.update',$creative->id]]) !!}
-<div class="form-group">
+<div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
+    @if ($errors->has('name'))
+    <span class="help-block">
+        <strong>{{ $errors->first('name') }}</strong>
+    </span>
+    @endif
 </div>
-<div class="form-group">
+<div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
     {!! Form::label('URL', 'URL:') !!}
     {!! Form::text('url',null,['class'=>'form-control']) !!}
+    @if ($errors->has('url'))
+    <span class="help-block">
+        <strong>{{ $errors->first('url') }}</strong>
+    </span>
+    @endif
 </div>
 <div class="form-group">
     {!! Form::label('Image', 'Image:') !!}

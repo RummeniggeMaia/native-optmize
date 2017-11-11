@@ -2,13 +2,23 @@
 @section('content')
 <h1>Atualizar Widget</h1>
 {!! Form::model($widget,['method' => 'patch','route'=>['widgets.update',$widget->id]]) !!}
-<div class="form-group">
+<div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
+    @if ($errors->has('name'))
+    <span class="help-block">
+        <strong>{{ $errors->first('name') }}</strong>
+    </span>
+    @endif
 </div>
-<div class="form-group">
+<div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
     {!! Form::label('URL', 'URL:') !!}
     {!! Form::text('url',null,['class'=>'form-control']) !!}
+    @if ($errors->has('url'))
+    <span class="help-block">
+        <strong>{{ $errors->first('url') }}</strong>
+    </span>
+    @endif
 </div>
 <div class="form-group">
     {!! Form::label('Type', 'Type:') !!}
@@ -22,13 +32,13 @@
         @endforeach
     </select>
 </div>
-<div class="form-group">
+<div class="form-group {{ $errors->has('campaingns') ? ' has-error' : '' }}">
     {!! Form::label('Campaingns', 'Campaingns:') !!}
     <select name="campaingns[]"
             class="selectpicker form-control"
             data-live-search="true"
             title="Nenhuma Campaingn selecionada"
-            data-actions-box="true"
+            data-actions-box="false"
             data-select-all-text="Marcar todas"
             data-deselect-all-text="Desmarcar todas"
             multiple>
@@ -41,6 +51,11 @@
             </option>
         @endforeach
     </select>
+    @if ($errors->has('campaingns'))
+    <span class="help-block">
+        <strong>{{ $errors->first('campaingns') }}</strong>
+    </span>
+    @endif
 </div>
 <div class="form-group">
     {!! Form::submit('Atualizar', ['class' => 'btn btn-primary form-control']) !!}

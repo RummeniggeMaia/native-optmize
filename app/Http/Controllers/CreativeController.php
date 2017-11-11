@@ -7,6 +7,7 @@ use App\Creative;
 use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator;
 
 class CreativeController extends Controller {
     /*
@@ -15,13 +16,13 @@ class CreativeController extends Controller {
      * @return Response
      */
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->middleware('auth');
     }
 
     public function index() {
-        $creatives = Creative::where('owner', Auth::id())->simplePaginate(5);
+        $creatives = Creative::where(
+                        'owner', Auth::id())->orderBy('name', 'asc')->paginate(5);
         return view('creatives.index', compact('creatives'));
     }
 
@@ -34,6 +35,7 @@ class CreativeController extends Controller {
         $categories = Category::all();
         return view('creatives.create')->with('categories', $categories);
     }
+
     /**
      * Display the specified resource.
      *
@@ -57,7 +59,7 @@ class CreativeController extends Controller {
         $creative = Creative::find($id);
         $categories = Category::all();
         return view('creatives.update', compact('creative'))
-                ->with('categories', $categories);
+                        ->with('categories', $categories);
     }
 
     /** Store a newly created resource in storage.
@@ -66,9 +68,16 @@ class CreativeController extends Controller {
      */
     public function store(Request $request) {
         $post = $request->all();
-        $post['owner'] = Auth::id();
-        Creative::create($post);
-        return redirect('creatives');
+        $v = $this->validar($post);
+        if ($v->fails()) {
+            return redirect()->back()
+                            ->withErrors($v)
+                            ->withInput();
+        } else {
+            $post['owner'] = Auth::id();
+            Creative::create($post);
+            return redirect('creatives');
+        }
     }
 
     /**
@@ -78,10 +87,18 @@ class CreativeController extends Controller {
      * @return Response
      */
     public function update(Request $request, $id) {
-        $creativeUpdate = $request->all();
-        $creative = Creative::find($id);
-        $creative->update($creativeUpdate);
-        return redirect('creatives');
+        $post = $request->all();
+        $v = $this->validar($post);
+        if ($v->fails()) {
+            return redirect()->back()
+                            ->withErrors($v)
+                            ->withInput();
+        } else {
+            $creativeUpdate = $request->all();
+            $creative = Creative::find($id);
+            $creative->update($creativeUpdate);
+            return redirect('creatives');
+        }
     }
 
     /**
@@ -95,4 +112,18 @@ class CreativeController extends Controller {
         return redirect('creatives');
     }
 
+    private function validar($post) {
+        $mensagens = array(
+            'name.required' => 'Insira um nome.',
+            //'name.unique' => 'Já existe um creative com este nome.',
+            'name.min' => 'Nome muito curto.',
+            'url.regex' => 'URL inválido.'
+        );
+        $rules = array(
+            'name' => 'required|min:4',
+            'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/'
+        );
+        $validator = Validator::make($post, $rules, $mensagens);
+        return $validator;
+    }
 }
