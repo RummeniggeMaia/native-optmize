@@ -95,6 +95,11 @@ class CreativeController extends Controller {
                             ->withInput();
         } else {
             $creativeUpdate = $request->all();
+
+            //$image = $creativeUpdate['image'];
+            //$image_path = compress_image($image,$image_name);
+            //$creativeUpdate['image'] = $image_path;
+
             $creative = Creative::find($id);
             $creative->update($creativeUpdate);
             return redirect('creatives');
@@ -126,4 +131,39 @@ class CreativeController extends Controller {
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
+
+    public function compress_image($image, $image_name) {
+        // setting
+        $setting = array(
+           'directory' => Storage::disk('teste')->url("img/compressed") , // directory file compressed output
+           'file_type' => array( // file format allowed
+             'image/jpeg',
+             'image/png'
+           )
+        );
+        
+        //criando a imagem original em disco, enviada pelo usuario
+        //$image = "asd"; //placeholder para o conteudo da imagem
+        //$image_name = "das"; //placeholder para o nome da imagem
+        
+        $folder_name = Storage::disk('teste')->url("img");
+        $image_path = $folder_name . "/" . $image_name;
+        
+        Storage::disk('teste')->put($image_path, $image);//salvando a imagem original
+        
+        // create object
+        $ImgCompressor = new ImgCompressor($setting);
+        
+        // run('STRING original file path', 'output file type', INTEGER Compression level: from 0 (no compression) to 9);
+        // example level = 2 same quality 80%, level = 7 same quality 30% etc
+        $result = $ImgCompressor->run($image_path, 'jpg', 1); 
+        
+        // result array
+        //print_r($result);
+        $compressed_image_name = $result['data']['compressed']['name'];
+        $compressed_image_path = Storage::disk('teste')->url("img/compressed/{$compressed_image_name}");
+
+        return $compressed_image_path;
+    }
+
 }
