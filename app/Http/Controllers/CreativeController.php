@@ -75,6 +75,18 @@ class CreativeController extends Controller {
                             ->withInput();
         } else {
             $post['owner'] = Auth::id();
+            
+            if ($request->hasFile('image')){
+                $image = $request->file('image');
+                $image_name = $image->getClientOriginalName();
+
+                $image->storeAs('img/',$image_name,'teste');
+                
+
+                $image_path = compress_image($image_name);
+                $post['image'] = $image_path;
+            }
+
             Creative::create($post);
             return redirect('creatives');
         }
@@ -95,11 +107,6 @@ class CreativeController extends Controller {
                             ->withInput();
         } else {
             $creativeUpdate = $request->all();
-
-            //$image = $creativeUpdate['image'];
-            //$image_path = compress_image($image,$image_name);
-            //$creativeUpdate['image'] = $image_path;
-
             $creative = Creative::find($id);
             $creative->update($creativeUpdate);
             return redirect('creatives');
@@ -132,7 +139,7 @@ class CreativeController extends Controller {
         return $validator;
     }
 
-    public function compress_image($image, $image_name) {
+    public function compress_image($image_name) {
         // setting
         $setting = array(
            'directory' => Storage::disk('teste')->url("img/compressed") , // directory file compressed output
@@ -142,14 +149,7 @@ class CreativeController extends Controller {
            )
         );
         
-        //criando a imagem original em disco, enviada pelo usuario
-        //$image = "asd"; //placeholder para o conteudo da imagem
-        //$image_name = "das"; //placeholder para o nome da imagem
-        
-        $folder_name = Storage::disk('teste')->url("img");
-        $image_path = $folder_name . "/" . $image_name;
-        
-        Storage::disk('teste')->put($image_path, $image);//salvando a imagem original
+        $image_path = Storage::disk('teste')->url("img/{$image_name}");
         
         // create object
         $ImgCompressor = new ImgCompressor($setting);
