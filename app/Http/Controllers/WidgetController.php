@@ -178,12 +178,17 @@ class WidgetController extends Controller
 
         $creatives = Creative::all()->where('owner', Auth::id());
 
+        $contador = 0;
+
         foreach ($creatives as $creative) 
         {
             $tpl->TITLE = $creative->name;
             $tpl->IMAGE = $creative->image;
             $tpl->URL = $creative->url;
+            $tpl->CONTADOR = $contador;
             $tpl->block("BLOCK_CONTEUDO", true);
+
+            $contador++;
         }
 
         $json_content['js'] = $tpl->parse();
