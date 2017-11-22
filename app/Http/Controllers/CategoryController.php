@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Validator;
 
 class CategoryController extends Controller
 {
@@ -15,7 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::where('fixed', false)
+                ->orderBy('name', 'asc')->paginate(5);
         return view('categories.index',compact('categories'));
     }
 
@@ -35,9 +38,18 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = $request->all();
-        Category::create($category);
-        return redirect('api/categories');
+        $post = $request->all();
+        $v = $this->validar($post);
+        if ($v->fails()) {
+            return redirect()->back()
+                            ->withInput()
+                            ->withErrors($v);
+        } else {
+            $post['owner'] = Auth::id();
+            $post['fixed'] = false;
+            Category::create($post);
+            return redirect('categories');
+        }
     }
 
     /**
@@ -49,6 +61,9 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::find($id);
+        if ($category->fixed) {
+            return $this->index();
+        }
         return view('categories.show',compact('category')); 
     }
 
@@ -61,6 +76,9 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
+        if ($category->fixed) {
+            return $this->index();
+        }
         return view('categories.update',compact('category'));
     }
 
@@ -72,10 +90,21 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $categoryUpdate = $request->all();
-        $category = Category::find($id);
-        $category->update($categoryUpdate);
-        return redirect('api/categories');
+        $post = $request->all();
+        $v = $this->validar($post);
+        if ($v->fails()) {
+            return redirect()->back()
+                            ->withErrors($v)
+                            ->withInput();
+        } else {
+            $categoryUpdate = $request->all();
+            $category = Category::find($id);
+            if ($category->fixed) {
+                return $this->index();
+            }
+            $category->update($categoryUpdate);
+            return redirect('categories');
+        }
     }
 
     /**
@@ -87,6 +116,18 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         Category::find($id)->delete();
-        return redirect('api/categories');
+        return redirect('categories');
+    }
+    
+    private function validar($post) {
+        $mensagens = array(
+            'name.required' => 'Insira um nome.',
+            'name.min' => 'Nome muito curto.'
+        );
+        $rules = array(
+            'name' => 'required|min:4',
+        );
+        $validator = Validator::make($post, $rules, $mensagens);
+        return $validator;
     }
 }

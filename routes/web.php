@@ -30,6 +30,7 @@ Route::get('/creatives/{creative}', 'CreativeController@show')->name('creatives.
 Route::patch('/creatives/{creative}', 'CreativeController@update')->name('creatives.update');
 Route::delete('/creatives/{creative}', 'CreativeController@destroy')->name('creatives.destroy');
 Route::get('/creatives/{creative}/edit', 'CreativeController@edit')->name('creatives.edit');
+Route::get('/creatives/{page?}', 'CreativeController@index')->name('creatives');
 
 Route::post('/campaingns', 'CampaingnController@store')->name('campaingns.store');
 Route::get('/campaingns', 'CampaingnController@index')->name('campaingns');
@@ -38,6 +39,7 @@ Route::get('/campaingns/{campaingn}', 'CampaingnController@show')->name('campain
 Route::patch('/campaingns/{campaingn}', 'CampaingnController@update')->name('campaingns.update');
 Route::delete('/campaingns/{campaingn}', 'CampaingnController@destroy')->name('campaingns.destroy');
 Route::get('/campaingns/{campaingn}/edit', 'CampaingnController@edit')->name('campaingns.edit');
+Route::get('/campaingns/{page?}', 'CampaingnController@index')->name('campaingns');
 
 Route::post('/widgets', 'WidgetController@store')->name('widgets.store');
 Route::get('/widgets', 'WidgetController@index')->name('widgets');
@@ -46,6 +48,16 @@ Route::get('/widgets/{widget}', 'WidgetController@show')->name('widgets.show');
 Route::patch('/widgets/{widget}', 'WidgetController@update')->name('widgets.update');
 Route::delete('/widgets/{widget}', 'WidgetController@destroy')->name('widgets.destroy');
 Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
+Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
+
+Route::post('/categories', 'CategoryController@store')->name('categories.store');
+Route::get('/categories', 'CategoryController@index')->name('categories');
+Route::get('/categories/create', 'CategoryController@create')->name('categories.create');
+Route::get('/categories/{campaingn}', 'CategoryController@show')->name('categories.show');
+Route::patch('/categories/{campaingn}', 'CategoryController@update')->name('categories.update');
+Route::delete('/categories/{campaingn}', 'CategoryController@destroy')->name('categories.destroy');
+Route::get('/categories/{campaingn}/edit', 'CategoryController@edit')->name('categories.edit');
+Route::get('/categories/{page?}', 'CategoryController@index')->name('categories.index');
 
 Route::get('/mw', ['middleware' => 'cors', function() {
     return \Response::json('ok', 200);

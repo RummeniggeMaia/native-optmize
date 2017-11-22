@@ -39,7 +39,7 @@
             class="selectpicker form-control"
             data-live-search="true"
             title="Nenhuma Campaingn selecionada"
-            data-actions-box="true"
+            data-actions-box="false"
             data-select-all-text="Marcar todas"
             data-deselect-all-text="Desmarcar todas"
             multiple>

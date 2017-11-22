@@ -32,8 +32,13 @@ class CreativeController extends Controller {
      * @return Response
      */
     public function create() {
-        $categories = Category::all();
-        return view('creatives.create')->with('categories', $categories);
+        $categories = Category::where('fixed', true)
+                        ->orderBy('name', 'asc')->get();
+        $myCategories = Category::where('owner', Auth::id())
+                        ->orderBy('name', 'asc')->get();
+        return view('creatives.create')
+                        ->with('categories', $categories)
+                        ->with('myCategories', $myCategories);
     }
 
     /**
@@ -117,13 +122,16 @@ class CreativeController extends Controller {
             'name.required' => 'Insira um nome.',
             //'name.unique' => 'Já existe um creative com este nome.',
             'name.min' => 'Nome muito curto.',
-            'url.regex' => 'URL inválido.'
+            'url.regex' => 'URL inválido.',
+            'related_category.required' => 'Selecione uma Category'
         );
         $rules = array(
             'name' => 'required|min:4',
-            'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/'
+            'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/',
+            'related_category' => 'required'
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
+
 }

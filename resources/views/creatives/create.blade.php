@@ -8,9 +8,9 @@
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
     @if ($errors->has('name'))
-        <span class="help-block">
-            <strong>{{ $errors->first('name') }}</strong>
-         </span>
+    <span class="help-block">
+        <strong>{{ $errors->first('name') }}</strong>
+    </span>
     @endif
 </div>
 <div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
@@ -26,13 +26,42 @@
     {!! Form::label('Image', 'Image:') !!}
     {!! Form::text('image',null,['class'=>'form-control']) !!}
 </div>
-<div class="form-group">
+<div class="form-group {{ $errors->has('related_category') ? ' has-error' : '' }}">
     {!! Form::label('Category', 'Category:') !!}
-    <select class="form-control" name="related_category" id="related_category">
-        @foreach($categories as $category)
-        <option value="{{$category->id}}">{{$category->name}}</option>
-        @endforeach
+    <select id='related_category'
+            name="related_category"
+            class="selectpicker form-control"
+            data-live-search="true"
+            title="Nenhuma Category selecionada"
+            data-actions-box="false"
+            data-select-all-text="Marcar todos"
+            data-deselect-all-text="Desmarcar todos">
+        <optgroup label="Categories Fixas">
+            @foreach($categories as $category)
+            <option 
+                title="{{$category->name}}" 
+                value="{{$category->id}}"
+                {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
+                {{$category->name}}
+            </option>
+            @endforeach
+        </optgroup>
+        <optgroup label="Minhas Categories">
+            @foreach($myCategories as $category)
+            <option 
+                title="{{$category->name}}" 
+                value="{{$category->id}}"
+                {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
+                {{$category->name}}
+            </option>
+            @endforeach
+        </optgroup>
     </select>
+    @if ($errors->has('related_category'))
+    <span class="help-block">
+        <strong>{{ $errors->first('related_category') }}</strong>
+    </span>
+    @endif
 </div>
 <div class="form-group">
     {!! Form::submit('Salvar', ['class' => 'btn btn-primary form-control']) !!}

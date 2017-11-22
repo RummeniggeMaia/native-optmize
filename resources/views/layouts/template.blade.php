@@ -112,6 +112,7 @@
                             <li><a href="{{ route('creatives') }}">Creatives</a></li>
                             <li><a href="{{ route('campaingns') }}">Campaings</a></li>
                             <li><a href="{{ route('widgets') }}">Widgets</a></li>
+                            <li><a href="{{ route('categories') }}">Categories</a></li>
                             @endauth
                         </ul>
 

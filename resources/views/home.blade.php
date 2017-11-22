@@ -13,10 +13,10 @@
             </div>
             @auth
             <div class="links">
-                <a href="{{ route('creatives.index') }}">Creatives</a>
-                <a href="{{ route('campaingns.index') }}">Campaings</a>
-                <a href="{{ route('widgets.index') }}">Widgets</a>
-                <a href="{{ route('categories.index') }}">Categorias</a>
+                <a href="{{ route('creatives') }}">Creatives</a>
+                <a href="{{ route('campaingns') }}">Campaings</a>
+                <a href="{{ route('widgets') }}">Widgets</a>
+                <a href="{{ route('categories') }}">Categorias</a>
             </div>
             @endauth
         </div>

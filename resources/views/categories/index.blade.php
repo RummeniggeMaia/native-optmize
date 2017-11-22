@@ -27,6 +27,19 @@
         </tr>
         @endforeach
     </tbody>
-
+    <tfoot class="bg-info">
+        <tr>
+            <td colspan="7" style="text-align: right;font-weight: bold">
+                Exibindo de {{ ($categories->currentPage() - 1) * 5 + 1 }}
+                a @if(($categories->currentPage() - 1) * 5 + 5 > $categories->total())
+                    {{ $categories->total() }}
+                  @else
+                    {{ ($categories->currentPage() - 1) * 5 + 5 }}
+                  @endif
+                de {{ $categories->total() }} categories
+            </td>
+        </tr>
+    </tfoot>
 </table>
+{{ $categories->links() }}
 @endsection

@@ -16,7 +16,13 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->char('name', 255);
+            $table->boolean('fixed')->nullable();
             $table->timestamps();
+        });
+        
+        Schema::table('categories', function(Blueprint $table) {
+            $table->bigInteger('owner')->unsigned()->nullable();
+            $table->foreign('owner')->references('id')->on('users');
         });
     }
 
