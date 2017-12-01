@@ -140,7 +140,7 @@ class CreativeController extends Controller {
         );
         $rules = array(
             'name' => 'required|min:4',
-            'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/',
+            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'related_category' => 'required'
         );
         $validator = Validator::make($post, $rules, $mensagens);

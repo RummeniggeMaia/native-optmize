@@ -3,7 +3,7 @@
 @section('content')
 
 <h1>Criar Creative</h1>
-{!! Form::open(['url' => 'creatives']) !!}
+{!! Form::open(['url' => 'creatives', 'files' => true]) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
@@ -24,7 +24,7 @@
 </div>
 <div class="form-group">
     {!! Form::label('Image', 'Image:') !!}
-    {!! Form::text('image',null,['class'=>'form-control']) !!}
+    {!! Form::file('image',['class'=>'form-control', 'accept'=>'.png,.jpg']) !!}
 </div>
 <div class="form-group {{ $errors->has('related_category') ? ' has-error' : '' }}">
     {!! Form::label('Category', 'Category:') !!}
