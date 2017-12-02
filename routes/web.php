@@ -21,6 +21,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/mw', ['middleware' => 'cors', function() {
+    return \Response::json('ok', 200);
+}]);
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
@@ -59,7 +63,11 @@ Route::delete('/categories/{campaingn}', 'CategoryController@destroy')->name('ca
 Route::get('/categories/{campaingn}/edit', 'CategoryController@edit')->name('categories.edit');
 Route::get('/categories/{page?}', 'CategoryController@index')->name('categories.index');
 
-Route::get('/mw', ['middleware' => 'cors', function() {
-    return \Response::json('ok', 200);
-}]);
-
+Route::post('/users', 'UserController@store')->name('users.store');
+Route::get('/users', 'UserController@index')->name('users');
+Route::get('/users/create', 'UserController@create')->name('users.create');
+Route::get('/users/{widget}', 'UserController@show')->name('users.show');
+Route::patch('/users/{widget}', 'UserController@update')->name('users.update');
+Route::delete('/users/{widget}', 'UserController@destroy')->name('users.destroy');
+Route::get('/users/{widget}/edit', 'UserController@edit')->name('users.edit');
+Route::get('users/{page?}', 'UserController@index')->name('users.index');

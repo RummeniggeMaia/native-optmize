@@ -8,18 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
-class CategoryController extends Controller
-{
-     /*
+class CategoryController extends Controller {
+    /*
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
-    {
-        $categories = Category::where('fixed', false)
-                ->orderBy('name', 'asc')->paginate(5);
-        return view('categories.index',compact('categories'));
+
+    public function index() {
+        $categories = Category::where('fixed', Auth::user()->hasRole('admin'))
+                        ->orderBy('name', 'asc')->paginate(5);
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -27,8 +26,7 @@ class CategoryController extends Controller
      *
      * @return Response
      */
-    public function create()
-    {
+    public function create() {
         return view('categories.create');
     }
 
@@ -36,8 +34,7 @@ class CategoryController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $post = $request->all();
         $v = $this->validar($post);
         if ($v->fails()) {
@@ -46,7 +43,7 @@ class CategoryController extends Controller
                             ->withErrors($v);
         } else {
             $post['owner'] = Auth::id();
-            $post['fixed'] = false;
+            $post['fixed'] = Auth::user()->hasRole('admin');
             Category::create($post);
             return redirect('categories');
         }
@@ -58,13 +55,12 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         $category = Category::find($id);
-        if ($category->fixed) {
+        if ($category->fixed && Auth::user()->hasRole('user')) {
             return $this->index();
         }
-        return view('categories.show',compact('category')); 
+        return view('categories.show', compact('category'));
     }
 
     /**
@@ -73,13 +69,12 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $category = Category::find($id);
-        if ($category->fixed) {
+        if ($category->fixed && Auth::user()->hasRole('user')) {
             return $this->index();
         }
-        return view('categories.update',compact('category'));
+        return view('categories.update', compact('category'));
     }
 
     /**
@@ -88,8 +83,7 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $post = $request->all();
         $v = $this->validar($post);
         if ($v->fails()) {
@@ -97,12 +91,8 @@ class CategoryController extends Controller
                             ->withErrors($v)
                             ->withInput();
         } else {
-            $categoryUpdate = $request->all();
             $category = Category::find($id);
-            if ($category->fixed) {
-                return $this->index();
-            }
-            $category->update($categoryUpdate);
+            $category->update($post);
             return redirect('categories');
         }
     }
@@ -113,12 +103,15 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
-    {
-        Category::find($id)->delete();
+    public function destroy($id) {
+        $category = Category::find($id);
+        if ($category->fixed && Auth::user()->hasRole('user')) {
+            return redirect('categories');
+        }
+        $category->delete();
         return redirect('categories');
     }
-    
+
     private function validar($post) {
         $mensagens = array(
             'name.required' => 'Insira um nome.',
@@ -130,4 +123,5 @@ class CategoryController extends Controller
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
+
 }

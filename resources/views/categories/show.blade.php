@@ -1,7 +1,7 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Dados da Categoria</h1>
+<h1>Dados da Category</h1>
 
 <form class="form-horizontal">
     <div class="form-group">

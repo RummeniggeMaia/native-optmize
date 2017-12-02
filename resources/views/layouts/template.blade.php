@@ -29,13 +29,13 @@
         <script type="text/javascript" src="{{ asset('js/i18n/defaults-pt_BR.min.js') }}"></script>
 
         <script type="text/javascript">
-            $(document).ready(function () {
-                $('.dropdown-toggle').dropdown();
-                var url = window.location;
-                $('ul.navegacao a').filter(function() {
-                    return url.href.indexOf(this.href) != -1;
-                }).parent().addClass('active');
-            });
+$(document).ready(function () {
+    $('.dropdown-toggle').dropdown();
+    var url = window.location;
+    $('ul.navegacao a').filter(function () {
+        return url.href.indexOf(this.href) != -1;
+    }).parent().addClass('active');
+});
         </script>
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -109,9 +109,13 @@
                         <ul class="nav navbar-nav navegacao">
                             @auth
                             <li><a href="{{ route('home') }}">Home</a></li>
+                            @If (Auth::user()->hasRole('admin'))
+                            <li><a href="{{ route('users') }}">Users</a></li>
+                            @else
                             <li><a href="{{ route('creatives') }}">Creatives</a></li>
                             <li><a href="{{ route('campaingns') }}">Campaings</a></li>
                             <li><a href="{{ route('widgets') }}">Widgets</a></li>
+                            @endif
                             <li><a href="{{ route('categories') }}">Categories</a></li>
                             @endauth
                         </ul>

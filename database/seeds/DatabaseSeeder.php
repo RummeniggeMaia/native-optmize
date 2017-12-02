@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Role;
 use App\Category;
 
 class DatabaseSeeder extends Seeder {
@@ -12,12 +13,32 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        DB::table('users')->delete();
-        User::create(array(
-            'name' => 'Usuario Teste',
-            'email' => 'teste@mail.com',
-            'password' => Hash::make('teste'),
+        DB::table('roles')->delete();
+        Role::create(array(
+            'name' => 'user'
         ));
+        Role::create(array(
+            'name' => 'admin'
+        ));
+        
+        $role_admin = Role::where('name', 'admin')->first();
+        $role_user = Role::where('name', 'user')->first();
+        
+        DB::table('users')->delete();
+        $usuario = new User();
+        $usuario->name = 'Admin Teste';
+        $usuario->email = 'admin@adm.in';
+        $usuario->password = Hash::make('qwerty');
+        $usuario->save();
+        $usuario->roles()->attach($role_admin);
+        
+        $usuario = new User();
+        $usuario->name = 'Usuário Teste';
+        $usuario->email = 'user@us.er';
+        $usuario->password = Hash::make('qwerty');
+        $usuario->save();
+        $usuario->roles()->attach($role_user);
+        
         DB::table('categories')->delete();
         Category::create(array(
             'name' => 'Category 1',

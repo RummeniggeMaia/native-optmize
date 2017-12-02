@@ -13,10 +13,14 @@
             </div>
             @auth
             <div class="links">
+                @If (Auth::user()->hasRole('admin'))
+                <a href="{{ route('users') }}">Users</a>
+                @else
                 <a href="{{ route('creatives') }}">Creatives</a>
                 <a href="{{ route('campaingns') }}">Campaings</a>
                 <a href="{{ route('widgets') }}">Widgets</a>
-                <a href="{{ route('categories') }}">Categorias</a>
+                @endif
+                <a href="{{ route('categories') }}">Categories</a>
             </div>
             @endauth
         </div>
