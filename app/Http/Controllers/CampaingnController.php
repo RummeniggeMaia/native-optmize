@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Campaingn;
 use App\Creative;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -22,7 +21,8 @@ class CampaingnController extends Controller {
     }
 
     public function index() {
-        $campaingns = Campaingn::where('owner', Auth::id())->orderBy('name', 'asc')->paginate(5);
+        $campaingns = Campaingn::where('owner', Auth::id())
+                        ->orderBy('name', 'asc')->paginate(5);
         return view('campaingns.index', compact('campaingns'));
     }
 
@@ -42,11 +42,11 @@ class CampaingnController extends Controller {
      */
     public function store(Request $request) {
         $post = $request->all();
-        $v = $this->validar($post);
-        if ($v->fails()) {
+        $validacao = $this->validar($post);
+        if ($validacao->fails()) {
             return redirect()->back()
                             ->withInput()
-                            ->withErrors($v);
+                            ->withErrors($validacao);
         } else {
             DB::beginTransaction();
             try {
@@ -54,10 +54,13 @@ class CampaingnController extends Controller {
                 $campaingn = Campaingn::create($post);
                 $campaingn->creatives()->sync($post['creatives']);
                 DB::commit();
+                return redirect('campaingns')
+                                ->with('success', 'Campaingn cadastrada com sucesso.');
             } catch (Exception $e) {
                 DB::rollBack();
+                return redirect('campaingns')
+                                ->with('error', 'Erro ao cadastrar Campaingn.');
             }
-            return redirect('campaingns');
         }
     }
 
@@ -69,7 +72,15 @@ class CampaingnController extends Controller {
      */
     public function show($id) {
         $campaingn = Campaingn::find($id);
-        return view('campaingns.show', compact('campaingn'));
+        if ($campaingn == null) {
+            return back()->with('error'
+                            , 'Campaingn não registrada no sistema.');
+        } else if ($campaingn->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode exibir os dados desta Campaingn.');
+        } else {
+            return view('campaingns.show', compact('campaingn'));
+        }
     }
 
     /**
@@ -80,9 +91,17 @@ class CampaingnController extends Controller {
      */
     public function edit($id) {
         $campaingn = Campaingn::find($id);
-        $creatives = Creative::all()->where('owner', Auth::id());
-        return view('campaingns.update', compact('campaingn'))
-                        ->with('creatives', $creatives);
+        if ($campaingn == null) {
+            return back()->with('error'
+                            , 'Campaingn não registrada no sistema.');
+        } else if ($campaingn->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode editar os dados desta Campaingn.');
+        } else {
+            $creatives = Creative::all()->where('owner', Auth::id());
+            return view('campaingns.update', compact('campaingn'))
+                            ->with('creatives', $creatives);
+        }
     }
 
     /**
@@ -93,22 +112,30 @@ class CampaingnController extends Controller {
      */
     public function update(Request $request, $id) {
         $post = $request->all();
-        $v = $this->validar($post);
-        if ($v->fails()) {
+        $validacao = $this->validar($post);
+        if ($validacao->fails()) {
             return redirect()->back()
                             ->withInput()
-                            ->withErrors($v);
+                            ->withErrors($validacao);
         } else {
-            DB::beginTransaction();
-            try {
-                $campaingn = Campaingn::find($id);
-                $campaingn->update($post);
-                $campaingn->creatives()->sync($post['creatives']);
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
+            $campaingn = Campaingn::find($id);
+            if ($campaingn == null) {
+                return back()->with('error'
+                                , 'Campaingn não registrada no sistema.');
+            } else if ($campaingn->owner != Auth::id()) {
+                return back()->with('error'
+                                , 'Não pode editar os dados desta Campaingn.');
+            } else {
+                DB::beginTransaction();
+                try {
+                    $campaingn->update($post);
+                    $campaingn->creatives()->sync($post['creatives']);
+                    DB::commit();
+                } catch (Exception $e) {
+                    DB::rollBack();
+                }
+                return redirect('campaingns');
             }
-            return redirect('campaingns');
         }
     }
 
@@ -119,8 +146,17 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function destroy($id) {
-        Campaingn::find($id)->delete();
-        return redirect('campaingns');
+        $campaingn = Campaingn::find($id);
+        if ($campaingn == null) {
+            return back()->with('error'
+                            , 'Campaingn não registrada no sistema.');
+        } else if ($campaingn->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode excluir esta Campaingn.');
+        } else {
+            $campaingn->delete();
+            return redirect('campaingns');
+        }
     }
 
     private function validar($post) {

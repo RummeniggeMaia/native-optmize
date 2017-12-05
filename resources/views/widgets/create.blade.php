@@ -29,7 +29,7 @@
         '1' => 'Barra Lateral Direita',
         '2' => 'Barra Lateral Esquerda',
         '3' => 'Central'] as $id => $type)
-        <<option value="{{ $id }}">{{ $type }}</option>
+        <option value="{{ $id }}">{{ $type }}</option>
         @endforeach
     </select>
 </div>

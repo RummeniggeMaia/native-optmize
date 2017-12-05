@@ -8,7 +8,6 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-
 use App\Providers\ImgCompressor;
 
 class CreativeController extends Controller {
@@ -23,8 +22,8 @@ class CreativeController extends Controller {
     }
 
     public function index() {
-        $creatives = Creative::where(
-                        'owner', Auth::id())->orderBy('name', 'asc')->paginate(5);
+        $creatives = Creative::where('owner', Auth::id())
+                        ->orderBy('name', 'asc')->paginate(5);
         return view('creatives.index', compact('creatives'));
     }
 
@@ -38,9 +37,10 @@ class CreativeController extends Controller {
                         ->orderBy('name', 'asc')->get();
         $myCategories = Category::where('owner', Auth::id())
                         ->orderBy('name', 'asc')->get();
-        return view('creatives.create')
-                        ->with('categories', $categories)
-                        ->with('myCategories', $myCategories);
+        return view('creatives.create', array(
+            'categories' => $categories,
+            'myCategories' => $myCategories
+        ));
     }
 
     /**
@@ -51,9 +51,17 @@ class CreativeController extends Controller {
      */
     public function show($id) {
         $creative = Creative::find($id);
-        $category = Category::find($creative->related_category);
-        return view('creatives.show', compact('creative'))->
-                        with('category', $category);
+        if ($creative == null) {
+            return back()->with('error'
+                            , 'Creative não registrado no sistema.');
+        } else if ($creative->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode exibir os dados deste Creative.');
+        } else {
+            $category = Category::find($creative->related_category);
+            return view('creatives.show', compact('creative'))
+                            ->with('category', $category);
+        }
     }
 
     /**
@@ -64,9 +72,22 @@ class CreativeController extends Controller {
      */
     public function edit($id) {
         $creative = Creative::find($id);
-        $categories = Category::all();
-        return view('creatives.update', compact('creative'))
-                        ->with('categories', $categories);
+        if ($creative == null) {
+            return back()->with('error'
+                            , 'Creative não registrado no sistema.');
+        } else if ($creative->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode editar os dados deste Creative.');
+        } else {
+            $categories = Category::where('fixed', true)
+                            ->orderBy('name', 'asc')->get();
+            $myCategories = Category::where('owner', Auth::id())
+                            ->orderBy('name', 'asc')->get();
+            return view('creatives.update'
+                    , compact('creative')
+                    , array('categories' => $categories, 'myCategories' => $myCategories)
+            );
+        }
     }
 
     /** Store a newly created resource in storage.
@@ -75,26 +96,27 @@ class CreativeController extends Controller {
      */
     public function store(Request $request) {
         $post = $request->all();
-        $v = $this->validar($post);
-        if ($v->fails()) {
+        $validacao = $this->validar($post);
+        if ($validacao->fails()) {
             return redirect()->back()
-                            ->withErrors($v)
+                            ->withErrors($validacao)
                             ->withInput();
         } else {
             $post['owner'] = Auth::id();
-            
-            if ($request->hasFile('image')){
-                $image = $request->file('image');
-                $image_name = $image->getClientOriginalName();
 
-                $image->storeAs('img/',$image_name,'teste');
-
-                $image_path = compress_image($image_name);
-                $post['image'] = $image_path;
-            }
-
+//            if ($request->hasFile('image')) {
+//                $image = $request->file('image');
+//                $image_name = $image->getClientOriginalName();
+//
+//                $image->storeAs('img/', $image_name, 'teste');
+//
+//                $image_path = $this->compress_image($image_name);
+//                $post['image'] = $image_path;
+//            }
             Creative::create($post);
-            return redirect('creatives');
+            return redirect('creatives')
+                            ->with('success'
+                                    , 'Creative cadastrado com sucesso.');
         }
     }
 
@@ -106,16 +128,25 @@ class CreativeController extends Controller {
      */
     public function update(Request $request, $id) {
         $post = $request->all();
-        $v = $this->validar($post);
-        if ($v->fails()) {
+        $validacao = $this->validar($post);
+        if ($validacao->fails()) {
             return redirect()->back()
-                            ->withErrors($v)
+                            ->withErrors($validacao)
                             ->withInput();
         } else {
-            $creativeUpdate = $request->all();
             $creative = Creative::find($id);
-            $creative->update($creativeUpdate);
-            return redirect('creatives');
+            if ($creative == null) {
+                return back()->with('error'
+                                , 'Creative não registrado no sistema.');
+            } else if ($creative->owner != Auth::id()) {
+                return back()->with('error'
+                                , 'Não pode atualizar os dados deste Creative.');
+            } else {
+                $creative->update($post);
+                return redirect('creatives')
+                                ->with('success'
+                                        , 'Creative atualizado com sucesso.');
+            }
         }
     }
 
@@ -126,8 +157,18 @@ class CreativeController extends Controller {
      * @return Response
      */
     public function destroy($id) {
-        Creative::find($id)->delete();
-        return redirect('creatives');
+        $creative = Creative::find($id);
+        if ($creative == null) {
+            return back()->with('error'
+                            , 'Creative não registrado no sistema.');
+        } else if ($creative->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode excluir este Creative.');
+        } else {
+            $creative->delete();
+            return redirect('creatives')
+                            ->with('success', 'Creative excluído com sucesso.');
+        }
     }
 
     private function validar($post) {
@@ -136,12 +177,14 @@ class CreativeController extends Controller {
             //'name.unique' => 'Já existe um creative com este nome.',
             'name.min' => 'Nome muito curto.',
             'url.regex' => 'URL inválido.',
-            'related_category.required' => 'Selecione uma Category'
+            'related_category.required' => 'Selecione uma Category',
+            'image.required' => 'Selecione uma imagem.'
         );
         $rules = array(
             'name' => 'required|min:4',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
-            'related_category' => 'required'
+            'related_category' => 'required',
+            'image' => 'required'
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
@@ -150,25 +193,26 @@ class CreativeController extends Controller {
     public function compress_image($image_name) {
         // setting
         $setting = array(
-           'directory' => Storage::disk('teste')->url("img/compressed") , // directory file compressed output
-           'file_type' => array( // file format allowed
-             'image/jpeg',
-             'image/png'
-           )
+            'directory' => Storage::disk('teste')->url("img/compressed"), // directory file compressed output
+            'file_type' => array(// file format allowed
+                'image/jpeg',
+                'image/png'
+            )
         );
-        
+
         $image_path = Storage::disk('teste')->url("img/{$image_name}");
-        
+
         // create object
         $ImgCompressor = new ImgCompressor($setting);
-        
+
         // run('STRING original file path', 'output file type', INTEGER Compression level: from 0 (no compression) to 9);
         // example level = 2 same quality 80%, level = 7 same quality 30% etc
-        $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg",'jpg', 1); 
-        
+        $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
+
         $compressed_image_name = $result['data']['compressed']['name'];
         $compressed_image_path = Storage::disk('teste')->url("img/compressed/{$compressed_image_name}");
 
         return $compressed_image_path;
     }
+
 }

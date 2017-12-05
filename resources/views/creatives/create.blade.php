@@ -22,9 +22,14 @@
     </span>
     @endif
 </div>
-<div class="form-group">
+<div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
     {!! Form::label('Image', 'Image:') !!}
     {!! Form::file('image',['class'=>'form-control', 'accept'=>'.png,.jpg']) !!}
+    @if ($errors->has('image'))
+    <span class="help-block">
+        <strong>{{ $errors->first('image') }}</strong>
+    </span>
+    @endif
 </div>
 <div class="form-group {{ $errors->has('related_category') ? ' has-error' : '' }}">
     {!! Form::label('Category', 'Category:') !!}

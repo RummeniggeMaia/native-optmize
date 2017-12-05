@@ -33,7 +33,7 @@ $(document).ready(function () {
     $('.dropdown-toggle').dropdown();
     var url = window.location;
     $('ul.navegacao a').filter(function () {
-        return url.href.indexOf(this.href) != -1;
+        return url.href.indexOf(this.href) !== -1;
     }).parent().addClass('active');
 });
         </script>
@@ -149,6 +149,7 @@ $(document).ready(function () {
                 </div>
             </nav>
             <div class="container">
+                @include('comum/flash-message')
                 @yield('content')
             </div>
         </div>

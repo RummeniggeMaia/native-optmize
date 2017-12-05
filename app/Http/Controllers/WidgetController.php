@@ -12,14 +12,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Validator;
-
 use App\Providers\Template;
 use Illuminate\Support\Facades\Storage;
 
-class WidgetController extends Controller
-{
-    public function __construct()
-    {
+class WidgetController extends Controller {
+
+    public function __construct() {
         $this->middleware('auth');
     }
 
@@ -30,7 +28,8 @@ class WidgetController extends Controller
      */
 
     public function index() {
-        $widgets = Widget::where('owner', Auth::id())->orderBy('name', 'asc')->paginate(5);
+        $widgets = Widget::where('owner', Auth::id())
+                        ->orderBy('name', 'asc')->paginate(5);
         return view('widgets.index', compact('widgets'));
     }
 
@@ -50,10 +49,10 @@ class WidgetController extends Controller
      */
     public function store(Request $request) {
         $post = $request->all();
-        $v = $this->validar($post);
-        if ($v->fails()) {
+        $validacao = $this->validar($post);
+        if ($validacao->fails()) {
             return redirect()->back()
-                            ->withErrors($v)
+                            ->withErrors($validacao)
                             ->withInput();
         } else {
             DB::beginTransaction();
@@ -66,10 +65,11 @@ class WidgetController extends Controller
                 $widget->hashid = Hash::make($widget->id);
                 $widget->save();
                 DB::commit();
+                return redirect('widgets')
+                                ->with('success', 'Widget cadastrado com sucesso.');
             } catch (Exception $e) {
                 DB::rollBack();
             }
-            return redirect('widgets');
         }
     }
 
@@ -81,7 +81,15 @@ class WidgetController extends Controller
      */
     public function show($id) {
         $widget = Widget::find($id);
-        return view('widgets.show', compact('widget'));
+        if ($widget == null) {
+            return back()->with('error'
+                            , 'Widget não registrado no sistema.');
+        } else if ($widget->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode exibir os dados deste Widget.');
+        } else {
+            return view('widgets.show', compact('widget'));
+        }
     }
 
     /**
@@ -92,9 +100,17 @@ class WidgetController extends Controller
      */
     public function edit($id) {
         $widget = Widget::find($id);
-        $campaingns = Campaingn::all()->where('owner', Auth::id());
-        return view('widgets.update', compact('widget'))
-                        ->with('campaingns', $campaingns);
+        if ($widget == null) {
+            return back()->with('error'
+                            , 'Widget não registrado no sistema.');
+        } else if ($widget->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode exibir os dados deste Widget.');
+        } else {
+            $campaingns = Campaingn::all()->where('owner', Auth::id());
+            return view('widgets.update', compact('widget'))
+                            ->with('campaingns', $campaingns);
+        }
     }
 
     /**
@@ -105,22 +121,32 @@ class WidgetController extends Controller
      */
     public function update(Request $request, $id) {
         $post = $request->all();
-        $v = $this->validar($post);
-        if ($v->fails()) {
+        $validacao = $this->validar($post);
+        if ($validacao->fails()) {
             return redirect()->back()
-                            ->withErrors($v)
+                            ->withErrors($validacao)
                             ->withInput();
         } else {
-            DB::beginTransaction();
-            try {
-                $widget = Widget::find($id);
-                $widget->update($post);
-                $widget->campaingns()->sync($post['campaingns']);
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
+            $widget = Widget::find($id);
+            if ($widget == null) {
+                return back()->with('error'
+                                , 'Widget não registrado no sistema.');
+            } else if ($widget->owner != Auth::id()) {
+                return back()->with('error'
+                                , 'Não pode exibir os dados deste Widget.');
+            } else {
+                DB::beginTransaction();
+                try {
+                    $widget->update($post);
+                    $widget->campaingns()->sync($post['campaingns']);
+                    DB::commit();
+                    return redirect('widgets')
+                                ->with('success', 'Widget editado com sucesso.');
+                } catch (Exception $e) {
+                    DB::rollBack();
+                }
+                return redirect('widgets');
             }
-            return redirect('widgets');
         }
     }
 
@@ -131,8 +157,18 @@ class WidgetController extends Controller
      * @return Response
      */
     public function destroy($id) {
-        Widget::find($id)->delete();
-        return redirect('widgets');
+        $widget = Widget::find($id);
+        if ($widget == null) {
+            return back()->with('error'
+                            , 'Widget não registrado no sistema.');
+        } else if ($widget->owner != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode excluir este Widget.');
+        } else {
+           $widget->delete();
+           return redirect('widgets')
+                                ->with('success', 'Widget excluído com sucesso.');
+        }
     }
 
     private function validar($post) {
@@ -150,27 +186,24 @@ class WidgetController extends Controller
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
-   
-    public function create_widget($id)
-    {
+
+    public function create_widget($id) {
         $widget = Widget::find($id);
-        
-        if (!Storage::disk('teste')->exists("data/{$id}"))
-        {
+
+        if (!Storage::disk('teste')->exists("data/{$id}")) {
             Storage::disk('teste')->makeDirectory("data/{$id}");
         }
 
         $folder_name = Storage::disk('teste')->url("data/{$id}");
         $file_name = $widget->name . '.js';
-        
-        $json_content = array('name' => $widget->name, 'url' => $widget->url, 
-                              'type' => $widgeg->type);
+
+        $json_content = array('name' => $widget->name, 'url' => $widget->url,
+            'type' => $widgeg->type);
 
         $this->create_json($folder_name, $file_name, $json_content);
     }
 
-    public function create_json($folder_name, $file_name, $json_content)
-    {
+    public function create_json($folder_name, $file_name, $json_content) {
         //$abrir = fopen($folder_name."/".$file_name, "w");
         $abrir = $folder_name . "/" . $file_name;
         $widget_base = Storage::disk('teste')->url('data/widget_example.js');
@@ -180,8 +213,7 @@ class WidgetController extends Controller
 
         $contador = 0;
 
-        foreach ($creatives as $creative) 
-        {
+        foreach ($creatives as $creative) {
             $tpl->TITLE = $creative->name;
             $tpl->IMAGE = $creative->image;
             $tpl->URL = $creative->url;
@@ -199,13 +231,12 @@ class WidgetController extends Controller
         Storage::disk('teste')->put($abrir, $json_content);
     }
 
-    public function create_widgets()
-    {
+    public function create_widgets() {
         $widgets = Widget::all()->where('owner', Auth::id());
 
-        foreach ($widgets as $widget) 
-        {
+        foreach ($widgets as $widget) {
             $this->create_widget($widget->id);
         }
     }
+
 }
