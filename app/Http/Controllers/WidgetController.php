@@ -190,23 +190,23 @@ class WidgetController extends Controller {
     public function create_widget($id) {
         $widget = Widget::find($id);
 
-        if (!Storage::disk('teste')->exists("data/{$id}")) {
-            Storage::disk('teste')->makeDirectory("data/{$id}");
+        if (!Storage::disk('native_storage')->exists("data/{$id}")) {
+            Storage::disk('native_storage')->makeDirectory("data/{$id}");
         }
 
-        $folder_name = Storage::disk('teste')->url("data/{$id}");
+        $folder_name = Storage::disk('native_storage')->url("data/{$id}");
         $file_name = $widget->name . '.js';
 
         $json_content = array('name' => $widget->name, 'url' => $widget->url,
             'type' => $widgeg->type);
 
-        $this->create_json($folder_name, $file_name, $json_content);
+        $this->create_json($folder_name, $file_name, $json_content, $id);
     }
 
-    public function create_json($folder_name, $file_name, $json_content) {
+    public function create_json($folder_name, $file_name, $json_content, $widget_id) {
         //$abrir = fopen($folder_name."/".$file_name, "w");
         $abrir = $folder_name . "/" . $file_name;
-        $widget_base = Storage::disk('teste')->url('data/widget_example.js');
+        $widget_base = Storage::disk('native_storage')->url('data/widget_example.js');
         $tpl = new Template($widget_base);
 
         $creatives = Creative::all()->where('owner', Auth::id());
@@ -223,12 +223,15 @@ class WidgetController extends Controller {
             $contador++;
         }
 
+        $tpl->HASHID = sha1($widget_id);
+        $tpl->block("BLOCK_AJAX", true);
+
         $json_content['js'] = $tpl->parse();
 
         //fwrite($abrir,json_encode($json_content));
         //fclose($abrir);
 
-        Storage::disk('teste')->put($abrir, $json_content);
+        Storage::disk('native_storage')->put($abrir, $json_content);
     }
 
     public function create_widgets() {
