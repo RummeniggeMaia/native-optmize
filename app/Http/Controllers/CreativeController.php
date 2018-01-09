@@ -9,8 +9,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Providers\ImgCompressor;
+use Illuminate\Support\Facades\Storage;
 
 class CreativeController extends Controller {
+
+    const DISK = "native_storage";
     /*
      * Display a listing of the resource.
      *
@@ -104,15 +107,15 @@ class CreativeController extends Controller {
         } else {
             $post['owner'] = Auth::id();
 
-//            if ($request->hasFile('image')) {
-//                $image = $request->file('image');
-//                $image_name = $image->getClientOriginalName();
-//
-//                $image->storeAs('img/', $image_name, 'teste');
-//
-//                $image_path = $this->compress_image($image_name);
-//                $post['image'] = $image_path;
-//            }
+           if ($request->hasFile('image')) {
+               $image = $request->file('image');
+               $image_name = $image->getClientOriginalName();
+
+               $image->storeAs('img/', $image_name, self::DISK);
+
+               $image_path = $this->compress_image($image_name);
+               $post['image'] = $image_path;
+           }
             Creative::create($post);
             return redirect('creatives')
                             ->with('success'
@@ -193,14 +196,14 @@ class CreativeController extends Controller {
     public function compress_image($image_name) {
         // setting
         $setting = array(
-            'directory' => Storage::disk('teste')->url("img/compressed"), // directory file compressed output
+            'directory' => Storage::disk(self::DISK)->url("img/compressed"), // directory file compressed output
             'file_type' => array(// file format allowed
                 'image/jpeg',
                 'image/png'
             )
         );
 
-        $image_path = Storage::disk('teste')->url("img/{$image_name}");
+        $image_path = Storage::disk(self::DISK)->url("img/{$image_name}");
 
         // create object
         $ImgCompressor = new ImgCompressor($setting);
@@ -210,7 +213,7 @@ class CreativeController extends Controller {
         $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
 
         $compressed_image_name = $result['data']['compressed']['name'];
-        $compressed_image_path = Storage::disk('teste')->url("img/compressed/{$compressed_image_name}");
+        $compressed_image_path = Storage::disk(self::DISK)->url("img/compressed/{$compressed_image_name}");
 
         return $compressed_image_path;
     }

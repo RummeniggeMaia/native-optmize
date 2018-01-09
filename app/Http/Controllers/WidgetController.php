@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Storage;
 
 class WidgetController extends Controller {
 
+    // const DISK = "local";
+    const DISK = "native_storage";
+
     public function __construct() {
         $this->middleware('auth');
     }
@@ -65,6 +68,7 @@ class WidgetController extends Controller {
                 $widget->hashid = Hash::make($widget->id);
                 $widget->save();
                 DB::commit();
+                $this->create_widget($widget->id);
                 return redirect('widgets')
                                 ->with('success', 'Widget cadastrado com sucesso.');
             } catch (Exception $e) {
@@ -180,7 +184,7 @@ class WidgetController extends Controller {
         );
         $rules = array(
             'name' => 'required|min:4',
-            'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/',
+            //'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/',
             'campaingns' => 'required|array|min:1'
         );
         $validator = Validator::make($post, $rules, $mensagens);
@@ -190,23 +194,27 @@ class WidgetController extends Controller {
     public function create_widget($id) {
         $widget = Widget::find($id);
 
-        if (!Storage::disk('teste')->exists("data/{$id}")) {
-            Storage::disk('teste')->makeDirectory("data/{$id}");
+        if (!Storage::disk(self::DISK)->exists("data/{$id}")) {
+            Storage::disk(self::DISK)->makeDirectory("data/{$id}");
         }
 
-        $folder_name = Storage::disk('teste')->url("data/{$id}");
-        $file_name = $widget->name . '.js';
+        //$folder_name = Storage::disk('native_storage')->url("data/{$id}");
+        $folder_name = "data/{$id}";
+        $file_name = $widget->name . '.json';
 
-        $json_content = array('name' => $widget->name, 'url' => $widget->url,
-            'type' => $widgeg->type);
+        $json_content = array(
+            'name' => $widget->name,
+            'url' => $widget->url,
+            'type' => $widget->type
+        );
 
-        $this->create_json($folder_name, $file_name, $json_content);
+        $this->create_json($folder_name, $file_name, $json_content, $id);
     }
 
-    public function create_json($folder_name, $file_name, $json_content) {
+    public function create_json($folder_name, $file_name, $json_content, $widget_id) {
         //$abrir = fopen($folder_name."/".$file_name, "w");
         $abrir = $folder_name . "/" . $file_name;
-        $widget_base = Storage::disk('teste')->url('data/widget_example.js');
+        $widget_base = Storage::disk(self::DISK)->url('data/widget_example.js');
         $tpl = new Template($widget_base);
 
         $creatives = Creative::all()->where('owner', Auth::id());
@@ -223,12 +231,15 @@ class WidgetController extends Controller {
             $contador++;
         }
 
+        $tpl->HASHID = sha1($widget_id);
+        $tpl->block("BLOCK_AJAX", true);
+
         $json_content['js'] = $tpl->parse();
 
         //fwrite($abrir,json_encode($json_content));
         //fclose($abrir);
 
-        Storage::disk('teste')->put($abrir, $json_content);
+        Storage::disk(self::DISK)->put($abrir, json_encode($json_content, JSON_PRETTY_PRINT));
     }
 
     public function create_widgets() {

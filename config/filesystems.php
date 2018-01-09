@@ -68,7 +68,13 @@ return [
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
-
+        'native_storage' => [
+            'driver' => 'local',
+            // 'root' => '/home/nativeoptimize/storage/',
+            // 'url' => '/home/nativeoptimize/storage/',
+            'root' => 'D:/storage',
+            'url' => 'D:/storage',
+        ],
     ],
 
 ];
