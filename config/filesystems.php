@@ -48,7 +48,7 @@ return [
             'root' => storage_path('app'),
         ],
 
-        'teste' => [
+        'native_storage' => [
             'driver' => 'local',
             'root' => '/home/daniel/Documents/storage/',
             'url' => '/home/daniel/Documents/storage/',
