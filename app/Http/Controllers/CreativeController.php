@@ -8,15 +8,15 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\File;
 use App\Providers\ImgCompressor;
-use Illuminate\Support\Facades\Storage;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class CreativeController extends Controller {
 
-    const DISK = "native_storage";
+    // const DISK = "native_storage";
+    const DISK = "public";
     /*
      * Display a listing of the resource.
      *
@@ -110,15 +110,16 @@ class CreativeController extends Controller {
         } else {
             $post['owner'] = Auth::id();
 
-           if ($request->hasFile('image')) {
-               $image = $request->file('image');
-               $image_name = $image->getClientOriginalName();
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                //$image_name = $image->getClientOriginalName();
+                $pathToImage = $image->store('img/' . Auth::id(), self::DISK);
 
-               $image->storeAs('img/', $image_name, self::DISK);
+                //$image_path = $this->compress_image($pathToImage, $image->hasName());
+                $image_path = $this->compress_image($pathToImage, $image->hashName());
 
-               $image_path = $this->compress_image($image_name);
-               $post['image'] = $image_path;
-           }
+                $post['image'] = "storage/" . $image_path;
+            }
             Creative::create($post);
             return redirect('creatives')
                             ->with('success'
@@ -148,6 +149,16 @@ class CreativeController extends Controller {
                 return back()->with('error'
                                 , 'Não pode atualizar os dados deste Creative.');
             } else {
+                if ($request->hasFile('image')) {
+                    $image = $request->file('image');
+                    //$image_name = $image->getClientOriginalName();
+                    $pathToImage = $image->store('img/' . Auth::id(), self::DISK);
+
+                    //$image_path = $this->compress_image($pathToImage, $image->hasName());
+                    $image_path = $this->compress_image($pathToImage, $image->hashName());
+
+                    $post['image'] = "storage/" . $image_path;
+                }
                 $creative->update($post);
                 return redirect('creatives')
                                 ->with('success'
@@ -196,17 +207,24 @@ class CreativeController extends Controller {
         return $validator;
     }
 
-    public function compress_image($image_name) {
+    public function compress_image($imgPath, $image_name) {
+
+        $path = "img/" . Auth::id() . "/compressed";
+        //Cria diretorio storage caso n exista no disco
+        if (!File::exists(Storage::disk(self::DISK)->path($path))) {
+            File::makeDirectory(Storage::disk(self::DISK)->path($path), 0775, true);
+        }
         // setting
         $setting = array(
-            'directory' => Storage::disk(self::DISK)->url("img/compressed"), // directory file compressed output
+            // 'directory' => "C:/xampp7/htdocs/native-optimize/storage/app/public/img/compressed", // directory file compressed output
+            'directory' => Storage::disk(self::DISK)->path($path), // directory file compressed output
             'file_type' => array(// file format allowed
                 'image/jpeg',
                 'image/png'
             )
         );
 
-        $image_path = Storage::disk(self::DISK)->url("img/{$image_name}");
+        $image_path = Storage::disk(self::DISK)->path($imgPath);
 
         // create object
         $ImgCompressor = new ImgCompressor($setting);
@@ -215,8 +233,9 @@ class CreativeController extends Controller {
         // example level = 2 same quality 80%, level = 7 same quality 30% etc
         $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
 
+        // return Storage::disk(self::DISK)->path($path . "/" . "compressed-{$image_name}.jpg");
         $compressed_image_name = $result['data']['compressed']['name'];
-        $compressed_image_path = Storage::disk(self::DISK)->url("img/compressed/{$compressed_image_name}");
+        $compressed_image_path = $path . "/" . $compressed_image_name;
 
         return $compressed_image_path;
     }

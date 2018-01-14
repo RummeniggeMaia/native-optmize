@@ -21,7 +21,7 @@
                 <td>{{ $creative->id }}</td>
                 <td>{{ $creative->name }}</td>
                 <td>{{ $creative->url }}</td>
-                <td><img src="{{asset('D:/storage/img/'.$creative->image)}}" height="35" width="70"></td>
+                <td><img src="{{ asset($creative->image) }}" height="35" width="70"></td>
                 <td><a href="{{route('creatives.show', $creative->id)}}" class="btn btn-primary">Mostrar</a></td>
                 <td><a href="{{route('creatives.edit', $creative->id)}}" class="btn btn-warning">Atualizar</a></td>
                 <td>

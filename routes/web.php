@@ -27,6 +27,7 @@ Route::get('/mw', ['middleware' => 'cors', function() {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
 Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
 Route::get('/creatives', 'CreativeController@index')->name('creatives');
 Route::get('/creatives/create', 'CreativeController@create')->name('creatives.create');
