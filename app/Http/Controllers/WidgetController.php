@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 class WidgetController extends Controller {
 
     // const DISK = "local";
-    const DISK = "native_storage";
+    const DISK = "public";
 
     public function __construct() {
         $this->middleware('auth');
@@ -184,7 +184,7 @@ class WidgetController extends Controller {
         );
         $rules = array(
             'name' => 'required|min:4',
-            //'url' => 'regex:/^((http[s]?):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/',
+            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'campaingns' => 'required|array|min:1'
         );
         $validator = Validator::make($post, $rules, $mensagens);
@@ -214,7 +214,7 @@ class WidgetController extends Controller {
     public function create_json($folder_name, $file_name, $json_content, $widget_id) {
         //$abrir = fopen($folder_name."/".$file_name, "w");
         $abrir = $folder_name . "/" . $file_name;
-        $widget_base = Storage::disk(self::DISK)->url('data/widget_example.js');
+        $widget_base = Storage::disk(self::DISK)->path('data/widget_example.js');
         $tpl = new Template($widget_base);
 
         $creatives = Creative::all()->where('owner', Auth::id());
