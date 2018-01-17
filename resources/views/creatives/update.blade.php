@@ -31,6 +31,12 @@
     </span>
     @endif
 </div>
+<div class="form-group">
+    <label for="image" class="col-sm-2 control-label">Imagem</label>
+    <div class="col-sm-10">
+        <img src="{{ asset($creative->image) }}" height="180" width="180" class="img-rounded">
+    </div>
+</div>
 <div class="form-group {{ $errors->has('related_category') ? ' has-error' : '' }}">
     {!! Form::label('Category', 'Category:') !!}
     <select id='related_category'
@@ -43,8 +49,8 @@
             data-deselect-all-text="Desmarcar todos">
         <optgroup label="Categories Fixas">
             @foreach($categories as $category)
-            <option 
-                title="{{$category->name}}" 
+            <option
+                title="{{$category->name}}"
                 value="{{$category->id}}"
                 @if($categories->contains($creative->related_category)) selected @endif
                 {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
@@ -54,8 +60,8 @@
         </optgroup>
         <optgroup label="Minhas Categories">
             @foreach($myCategories as $category)
-            <option 
-                title="{{$category->name}}" 
+            <option
+                title="{{$category->name}}"
                 value="{{$category->id}}"
                 @if($myCategories->contains($creative->related_category)) selected @endif
                 {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>

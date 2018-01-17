@@ -92,7 +92,9 @@ class WidgetController extends Controller {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Widget.');
         } else {
-            return view('widgets.show', compact('widget'));
+            $jsonFile = Storage::disk(self::DISK)->get("data/". Auth::id() . "/" . "$widget->id/$widget->name.json");
+            $json = json_decode($jsonFile);
+            return view('widgets.show', compact('widget'))->with('jsCode', $json->js);
         }
     }
 
@@ -192,14 +194,15 @@ class WidgetController extends Controller {
     }
 
     public function create_widget($id) {
+        $url = "data/". Auth::id() . "/{$id}";
         $widget = Widget::find($id);
 
-        if (!Storage::disk(self::DISK)->exists("data/{$id}")) {
-            Storage::disk(self::DISK)->makeDirectory("data/{$id}");
+        if (!Storage::disk(self::DISK)->exists($url)) {
+            Storage::disk(self::DISK)->makeDirectory($url);
         }
 
         //$folder_name = Storage::disk('native_storage')->url("data/{$id}");
-        $folder_name = "data/{$id}";
+        // $folder_name = "data/{$id}";
         $file_name = $widget->name . '.json';
 
         $json_content = array(
@@ -208,7 +211,7 @@ class WidgetController extends Controller {
             'type' => $widget->type
         );
 
-        $this->create_json($folder_name, $file_name, $json_content, $id);
+        $this->create_json($url, $file_name, $json_content, $id);
     }
 
     public function create_json($folder_name, $file_name, $json_content, $widget_id) {

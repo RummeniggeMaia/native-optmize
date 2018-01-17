@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Widget extends Model
 {
+
     protected $fillable = [
         'hashid',
         'name',
@@ -24,7 +25,7 @@ class Widget extends Model
     {
         return $this->belongsTo('App\User');
     }
-    
+
     public function creative_log() {
         return $this->hasOne('App\CreativeLog');
     }
