@@ -1,7 +1,7 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Categorias</h1>
+<h1>Categories</h1>
 <a href="{{route('categories.create')}}" class="btn btn-success">Nova Categoria</a>
 <hr>
 <table class="table table-striped table-bordered table-hover">

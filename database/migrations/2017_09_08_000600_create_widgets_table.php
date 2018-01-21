@@ -24,10 +24,6 @@ class CreateWidgetsTable extends Migration {
         Schema::table('widgets', function(Blueprint $table) {
             $table->bigInteger('owner')->unsigned();
             $table->foreign('owner')->references('id')->on('users');
-
-            $table->bigInteger('creative_log')->unsigned();
-            $table->foreign('creative_log')->references('id')
-                    ->on('creative_logs')->onDelete('cascade');
         });
     }
 

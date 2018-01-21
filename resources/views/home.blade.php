@@ -15,9 +15,9 @@
             <div class="links">
                 @If (Auth::user()->hasRole('admin'))
                 <a href="{{ route('users') }}">Users</a>
-                @else
                 <a href="{{ route('creatives') }}">Creatives</a>
-                <a href="{{ route('campaingns') }}">Campaings</a>
+                <a href="{{ route('campaingns') }}">Campaigns</a>
+                @else
                 <a href="{{ route('widgets') }}">Widgets</a>
                 @endif
                 <a href="{{ route('categories') }}">Categories</a>

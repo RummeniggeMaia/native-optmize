@@ -5,7 +5,7 @@
 <h1>Criar Creative</h1>
 {!! Form::open(['url' => 'creatives', 'files' => true]) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Name', 'Name:') !!}
+    {!! Form::label('Title', 'Title:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
@@ -41,26 +41,14 @@
             data-actions-box="false"
             data-select-all-text="Marcar todos"
             data-deselect-all-text="Desmarcar todos">
-        <optgroup label="Categories Fixas">
-            @foreach($categories as $category)
-            <option 
-                title="{{$category->name}}" 
-                value="{{$category->id}}"
-                {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
-                {{$category->name}}
-            </option>
-            @endforeach
-        </optgroup>
-        <optgroup label="Minhas Categories">
-            @foreach($myCategories as $category)
-            <option 
-                title="{{$category->name}}" 
-                value="{{$category->id}}"
-                {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
-                {{$category->name}}
-            </option>
-            @endforeach
-        </optgroup>
+        @foreach($categories as $category)
+        <option
+            title="{{$category->name}}"
+            value="{{$category->id}}"
+            {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
+            {{$category->name}}
+        </option>
+        @endforeach
     </select>
     @if ($errors->has('related_category'))
     <span class="help-block">

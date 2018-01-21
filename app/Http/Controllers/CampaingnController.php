@@ -8,6 +8,7 @@ use App\Creative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use Carbon\Carbon;
 
 class CampaingnController extends Controller {
     /*
@@ -32,7 +33,8 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function create() {
-        $creatives = Creative::all()->where('owner', Auth::id());
+        $creatives = Creative::where('owner', Auth::id())
+                        ->orderBy('name', 'asc')->get();
         return view('campaingns.create')->with(['creatives' => $creatives]);
     }
 
@@ -51,6 +53,8 @@ class CampaingnController extends Controller {
             DB::beginTransaction();
             try {
                 $post['owner'] = Auth::id();
+                $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
+                
                 $campaingn = Campaingn::create($post);
                 $campaingn->creatives()->sync($post['creatives']);
                 DB::commit();

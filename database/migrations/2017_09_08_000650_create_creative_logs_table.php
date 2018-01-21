@@ -17,10 +17,19 @@ class CreateCreativeLogsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->string('article')->nullable();
-            $table->integer('impressions')->default(0);
-            $table->integer('clicks')->default(0);
+            $table->string('click_id')->nullable();
             $table->double('revenue')->default(0.0);
+        });
+        Schema::table('creative_logs', function(Blueprint $table) {
+            $table->bigInteger('creative_id')->unsigned();
+            $table->foreign('creative_id')->references('id')->on('creatives');
+            $table->bigInteger('widget_id')->unsigned();
+            $table->foreign('widget_id')->references('id')->on('widgets');
+            $table->bigInteger('campaingn_id')->unsigned();
+            $table->foreign('campaingn_id')->references('id')->on('campaingns');
+
+            $table->bigInteger('owner')->unsigned();
+            $table->foreign('owner')->references('id')->on('users');
         });
     }
 

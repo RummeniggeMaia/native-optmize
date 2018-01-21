@@ -1,8 +1,8 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Campaings</h1>
-<a href="{{route('campaingns.create')}}" class="btn btn-success">Nova Campaingn</a>
+<h1>Campaigns</h1>
+<a href="{{route('campaingns.create')}}" class="btn btn-success">Nova Campaign</a>
 <hr>
 <table class="table table-striped table-bordered table-hover">
     <thead>

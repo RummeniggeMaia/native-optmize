@@ -12,4 +12,16 @@ class CreativeLog extends Model
         'clicks',
         'revenue',
     ];
+    
+    public function creative() {
+        return $this->belongsTo('App\User');
+    }
+    
+    public function widget() {
+        return $this->belongsTo('App\Widget');
+    }
+    
+    public function campaingn() {
+        return $this->belongsTo('App\Campaingn');
+    }
 }

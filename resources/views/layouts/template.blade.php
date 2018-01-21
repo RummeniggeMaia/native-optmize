@@ -111,9 +111,9 @@ $(document).ready(function () {
                             <li><a href="{{ route('home') }}">Home</a></li>
                             @If (Auth::user()->hasRole('admin'))
                             <li><a href="{{ route('users') }}">Users</a></li>
-                            @else
                             <li><a href="{{ route('creatives') }}">Creatives</a></li>
-                            <li><a href="{{ route('campaingns') }}">Campaings</a></li>
+                            <li><a href="{{ route('campaingns') }}">Campaigns</a></li>
+                            @else
                             <li><a href="{{ route('widgets') }}">Widgets</a></li>
                             @endif
                             <li><a href="{{ route('categories') }}">Categories</a></li>

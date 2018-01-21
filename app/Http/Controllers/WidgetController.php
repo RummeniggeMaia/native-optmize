@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Providers\Template;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class WidgetController extends Controller {
 
@@ -42,7 +43,7 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function create() {
-        $campaingns = Campaingn::all()->where('owner', Auth::id());
+        $campaingns = Campaingn::where('owner', Auth::id())->get();
         return view('widgets.create')->with(['campaingns' => $campaingns]);
     }
 
@@ -61,12 +62,9 @@ class WidgetController extends Controller {
             DB::beginTransaction();
             try {
                 $post['owner'] = Auth::id();
-                $log = CreativeLog::create()->id;
-                $post['creative_log'] = $log;
+                $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 $widget = Widget::create($post);
-                $widget->campaingns()->sync($post['campaingns']);
-                $widget->hashid = Hash::make($widget->id);
-                $widget->save();
+//                $widget->campaingns()->sync($post['campaingns']);
                 DB::commit();
                 $this->create_widget($widget->id);
                 return redirect('widgets')
@@ -92,7 +90,8 @@ class WidgetController extends Controller {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Widget.');
         } else {
-            $jsonFile = Storage::disk(self::DISK)->get("data/". Auth::id() . "/" . "$widget->id/$widget->name.json");
+            $jsonFile = Storage::disk(self::DISK)
+                    ->get("data/" . Auth::id() . "/" . "$widget->id/$widget->name.json");
             $json = json_decode($jsonFile);
             return view('widgets.show', compact('widget'))->with('jsCode', $json->js);
         }
@@ -147,7 +146,7 @@ class WidgetController extends Controller {
                     $widget->campaingns()->sync($post['campaingns']);
                     DB::commit();
                     return redirect('widgets')
-                                ->with('success', 'Widget editado com sucesso.');
+                                    ->with('success', 'Widget editado com sucesso.');
                 } catch (Exception $e) {
                     DB::rollBack();
                 }
@@ -171,9 +170,9 @@ class WidgetController extends Controller {
             return back()->with('error'
                             , 'Não pode excluir este Widget.');
         } else {
-           $widget->delete();
-           return redirect('widgets')
-                                ->with('success', 'Widget excluído com sucesso.');
+            $widget->delete();
+            return redirect('widgets')
+                            ->with('success', 'Widget excluído com sucesso.');
         }
     }
 
@@ -194,7 +193,7 @@ class WidgetController extends Controller {
     }
 
     public function create_widget($id) {
-        $url = "data/". Auth::id() . "/{$id}";
+        $url = "data/" . Auth::id() . "/{$id}";
         $widget = Widget::find($id);
 
         if (!Storage::disk(self::DISK)->exists($url)) {

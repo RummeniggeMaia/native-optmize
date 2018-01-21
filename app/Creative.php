@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Creative extends Model {
 
     protected $fillable = [
+        'hashid',
         'name',
         'url',
         'image',
@@ -17,12 +18,16 @@ class Creative extends Model {
     public function campaingns() {
         return $this->belongsToMany('App\Campaingn')->withTimestamps();
     }
-    
+
     public function category() {
         return $this->belongsTo('App\Category');
     }
-    
+
     public function user() {
         return $this->belongsTo('App\User');
+    }
+    
+    public function creativeLog() {
+        return $this->hasMany('App\CreativeLog');
     }
 }

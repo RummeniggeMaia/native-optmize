@@ -2,7 +2,7 @@
 
 @section('content')
 {!! Form::open(['url' => 'campaingns']) !!}
-<h1>Criar Campaingn</h1>
+<h1>Criar Campaign</h1>
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['id'=>'name','class'=>'form-control']) !!}

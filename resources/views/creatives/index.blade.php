@@ -9,19 +9,19 @@
         <thead>
             <tr class="bg-info">
                 <th>Id</th>
-                <th>Name</th>
-                <th>Url</th>
                 <th>Image</th>
-                <th colspan="3">Actions</th>
+                <th>Title</th>
+                <th>Url</th>
+                <th colspan="3">Ações</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($creatives as $creative)
             <tr>
                 <td>{{ $creative->id }}</td>
+                <td><img src="{{ asset($creative->image) }}" height="336" width="280"></td>
                 <td>{{ $creative->name }}</td>
                 <td>{{ $creative->url }}</td>
-                <td><img src="{{ asset($creative->image) }}" height="35" width="70"></td>
                 <td><a href="{{route('creatives.show', $creative->id)}}" class="btn btn-primary">Mostrar</a></td>
                 <td><a href="{{route('creatives.edit', $creative->id)}}" class="btn btn-warning">Atualizar</a></td>
                 <td>

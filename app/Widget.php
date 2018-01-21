@@ -26,7 +26,7 @@ class Widget extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function creative_log() {
-        return $this->hasOne('App\CreativeLog');
+    public function creativeLog() {
+        return $this->hasMany('App\CreativeLog');
     }
 }

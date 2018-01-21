@@ -39,7 +39,7 @@
     <div class="form-group">
         <label for="isbn" class="col-sm-2 control-label">Código:</label>
         <div class="col-sm-10">
-            {{ Form::textarea('notes', $jsCode, ['class'=>'form-control']) }}
+            {{ Form::textarea('jscode', $jsCode, ['class'=>'form-control']) }}
         </div>
     </div>
     <div class="form-group">

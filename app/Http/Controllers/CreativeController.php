@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Creative;
 use App\Category;
+use App\CreativeLog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Providers\ImgCompressor;
-use Spatie\ImageOptimizer\OptimizerChainFactory;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class CreativeController extends Controller {
 
     // const DISK = "native_storage";
     const DISK = "public";
+
     /*
      * Display a listing of the resource.
      *
@@ -29,7 +32,7 @@ class CreativeController extends Controller {
 
     public function index() {
         $creatives = Creative::where('owner', Auth::id())
-                        ->orderBy('name', 'asc')->paginate(5);
+                ->orderBy('name', 'asc')->paginate(5);
         return view('creatives.index', compact('creatives'));
     }
 
@@ -41,11 +44,8 @@ class CreativeController extends Controller {
     public function create() {
         $categories = Category::where('fixed', true)
                         ->orderBy('name', 'asc')->get();
-        $myCategories = Category::where('owner', Auth::id())
-                        ->orderBy('name', 'asc')->get();
         return view('creatives.create', array(
-            'categories' => $categories,
-            'myCategories' => $myCategories
+            'categories' => $categories
         ));
     }
 
@@ -65,8 +65,19 @@ class CreativeController extends Controller {
                             , 'Não pode exibir os dados deste Creative.');
         } else {
             $category = Category::find($creative->related_category);
-            return view('creatives.show', compact('creative'))
-                            ->with('category', $category);
+            $logs = CreativeLog::where([
+                        ['click_id', '!=', null],
+                        ['creative_id', $creative->id]
+                    ])->get();
+            $impressions = CreativeLog::where([
+                        ['click_id', null],
+                        ['creative_id', $creative->id]
+                    ])->count();
+            return view('creatives.show', compact('creative'))->with([
+                        'category' => $category,
+                        'clicks' => count($logs),
+                        'impressions' => $impressions,
+                        'logs' => $logs]);
         }
     }
 
@@ -87,11 +98,9 @@ class CreativeController extends Controller {
         } else {
             $categories = Category::where('fixed', true)
                             ->orderBy('name', 'asc')->get();
-            $myCategories = Category::where('owner', Auth::id())
-                            ->orderBy('name', 'asc')->get();
             return view('creatives.update'
                     , compact('creative')
-                    , array('categories' => $categories, 'myCategories' => $myCategories)
+                    , array('categories' => $categories)
             );
         }
     }
@@ -109,13 +118,11 @@ class CreativeController extends Controller {
                             ->withInput();
         } else {
             $post['owner'] = Auth::id();
+            $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                //$image_name = $image->getClientOriginalName();
-                $pathToImage = $image->store('img/' . Auth::id(), self::DISK);
-
-                //$image_path = $this->compress_image($pathToImage, $image->hasName());
+                $pathToImage = $image->store('img/', self::DISK);
                 $image_path = $this->compress_image($pathToImage, $image->hashName());
 
                 $post['image'] = "storage/" . $image_path;
@@ -151,10 +158,7 @@ class CreativeController extends Controller {
             } else {
                 if ($request->hasFile('image')) {
                     $image = $request->file('image');
-                    //$image_name = $image->getClientOriginalName();
-                    $pathToImage = $image->store('img/' . Auth::id(), self::DISK);
-
-                    //$image_path = $this->compress_image($pathToImage, $image->hasName());
+                    $pathToImage = $image->store('img/', self::DISK);
                     $image_path = $this->compress_image($pathToImage, $image->hashName());
 
                     $post['image'] = "storage/" . $image_path;
@@ -209,7 +213,7 @@ class CreativeController extends Controller {
 
     public function compress_image($imgPath, $image_name) {
 
-        $path = "img/" . Auth::id() . "/compressed";
+        $path = "img/compressed";
         //Cria diretorio storage caso n exista no disco
         if (!File::exists(Storage::disk(self::DISK)->path($path))) {
             File::makeDirectory(Storage::disk(self::DISK)->path($path), 0775, true);
