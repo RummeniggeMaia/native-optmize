@@ -25,47 +25,51 @@
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Category</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="title" value="{{ $category->name }}" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="category" value="{{ $category->name }}" readonly>
         </div>
     </div>
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Clicks</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="title" value="{{ $clicks }}" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="clicks" value="{{ count($clicks) }}" readonly>
         </div>
     </div>
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Impressions</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="title" value="{{ $impressions }}" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="impressions" value="{{ $impressions }}" readonly>
         </div>
     </div>
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">CTR</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="title" value="@If($clicks > 0){{ number_format($impressions / $clicks, 2) }}@else 0.00 @endif" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="ctr" value="@If($clicks > 0){{ number_format($impressions / count($clicks), 2) }}@else 0.00 @endif" readonly>
         </div>
     </div>
-    <table class="table table-striped table-bordered table-hover ">
-        <thead>
-            <tr class="bg-info">
-                <th>click_id</th>
-                <th>Creative</th>
-                <th>Campaign</th>
-                <th>Widget</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($logs as $log)
-            <tr>
-                <td>{{ $log->click_id }}</td>
-                <td>{{ $log->creative->name }}</td>
-                <td>{{ $log->campaingn->name }}</td>
-                <td>{{ $log->widget->name }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="form-group">
+        <label for="clicks" class="col-sm-2 control-label">Clicks</label>
+        <div class="col-sm-10">
+            <table class="table table-striped table-bordered table-hover ">
+                <thead>
+                    <tr class="bg-info">
+                        <th>click_id</th>
+                        <th>Creative</th>
+                        <th>Widget</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clicks as $click)
+                    <tr>
+                        <td>{{ $click->click_id }}</td>
+                        <td>{{ $click->creative->name }}</td>
+                        <td>{{ $click->widget->name }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <a href="{{ route('creatives')}}" class="btn btn-primary">Voltar</a>

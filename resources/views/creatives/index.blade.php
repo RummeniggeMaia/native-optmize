@@ -19,7 +19,7 @@
             @foreach ($creatives as $creative)
             <tr>
                 <td>{{ $creative->id }}</td>
-                <td><img src="{{ asset($creative->image) }}" height="336" width="280"></td>
+                <td><img src="{{ asset($creative->image) }}" height="154" width="128"></td>
                 <td>{{ $creative->name }}</td>
                 <td>{{ $creative->url }}</td>
                 <td><a href="{{route('creatives.show', $creative->id)}}" class="btn btn-primary">Mostrar</a></td>

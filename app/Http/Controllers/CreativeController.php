@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Creative;
+use App\Widget;
 use App\Category;
 use App\CreativeLog;
 use App\Http\Controllers\Controller;
@@ -66,20 +67,22 @@ class CreativeController extends Controller {
                             , 'Não pode exibir os dados deste Creative.');
         } else {
             $category = Category::find($creative->related_category);
-            $logs = CreativeLog::where([
-                        ['click_id', '!=', null],
-                        ['creative_id', $creative->id]
-                    ])->get();
-            $impressions = CreativeLog::where([
-                        ['click_id', null],
-                        ['creative_id', $creative->id]
-                    ])->count();
-            Log::info($logs);
+            $logs = CreativeLog::where('creative_id', $creative->id)->get();
+            $impressions = 0;
+            $clicks = array();
+            foreach ($logs as $log) {
+                if ($log->click_id == null) {
+                    $impressions++;
+                } else {
+                    $log['creative'] = Creative::find($log->creative_id);
+                    $log['widget'] = Widget::find($log->widget_id);
+                    $clicks[] = $log;
+                }
+            }
             return view('creatives.show', compact('creative'))->with([
                         'category' => $category,
-                        'clicks' => count($logs),
-                        'impressions' => $impressions,
-                        'logs' => $logs]);
+                        'clicks' => $clicks,
+                        'impressions' => $impressions]);
         }
     }
 
@@ -113,7 +116,7 @@ class CreativeController extends Controller {
      */
     public function store(Request $request) {
         $post = $request->all();
-        $validacao = $this->validar($post);
+        $validacao = $this->validar($post, false);
         if ($validacao->fails()) {
             return redirect()->back()
                             ->withErrors($validacao)
@@ -144,7 +147,7 @@ class CreativeController extends Controller {
      */
     public function update(Request $request, $id) {
         $post = $request->all();
-        $validacao = $this->validar($post);
+        $validacao = $this->validar($post, true);
         if ($validacao->fails()) {
             return redirect()->back()
                             ->withErrors($validacao)
@@ -194,7 +197,7 @@ class CreativeController extends Controller {
         }
     }
 
-    private function validar($post) {
+    private function validar($post, $edit) {
         $mensagens = array(
             'name.required' => 'Insira um nome.',
             //'name.unique' => 'Já existe um creative com este nome.',
@@ -207,7 +210,7 @@ class CreativeController extends Controller {
             'name' => 'required|min:4',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'related_category' => 'required',
-            'image' => 'required'
+            'image' => $edit ? '' : 'required'
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

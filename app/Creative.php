@@ -27,7 +27,7 @@ class Creative extends Model {
         return $this->belongsTo('App\User');
     }
     
-    public function creativeLog() {
+    public function creativeLogs() {
         return $this->hasMany('App\CreativeLog');
     }
 }

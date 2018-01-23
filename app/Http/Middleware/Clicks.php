@@ -38,7 +38,6 @@ class Clicks {
                     CreativeLog::create([
                         'click_id' => ($request->has('click_id') ? $request->input('click_id') : null),
                         'creative_id' => $creative->id,
-                        'campaingn_id' => 1,
                         'widget_id' => $widget->id
                     ]);
                     return response()->json('ok', 200);
