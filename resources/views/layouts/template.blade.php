@@ -113,10 +113,10 @@ $(document).ready(function () {
                             <li><a href="{{ route('users') }}">Users</a></li>
                             <li><a href="{{ route('creatives') }}">Creatives</a></li>
                             <li><a href="{{ route('campaingns') }}">Campaigns</a></li>
+                            <li><a href="{{ route('categories') }}">Categories</a></li>
                             @else
                             <li><a href="{{ route('widgets') }}">Widgets</a></li>
                             @endif
-                            <li><a href="{{ route('categories') }}">Categories</a></li>
                             @endauth
                         </ul>
 

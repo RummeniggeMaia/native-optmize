@@ -17,10 +17,10 @@
                 <a href="{{ route('users') }}">Users</a>
                 <a href="{{ route('creatives') }}">Creatives</a>
                 <a href="{{ route('campaingns') }}">Campaigns</a>
+                <a href="{{ route('categories') }}">Categories</a>
                 @else
                 <a href="{{ route('widgets') }}">Widgets</a>
                 @endif
-                <a href="{{ route('categories') }}">Categories</a>
             </div>
             @endauth
         </div>

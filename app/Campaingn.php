@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Campaingn extends Model {
 
     protected $fillable = [
+        'hashid',
         'brand',
         'name',
-        'owner'
+        'owner',
     ];
 
     public function creatives() {

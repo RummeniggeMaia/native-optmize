@@ -28,15 +28,6 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">Campaingns</label>
-        <div class="col-sm-10">
-            @foreach($widget->campaingns as $campaingn)
-                <input type="text" class="form-control" style="margin-bottom: 5px"
-                    placeholder="{{ $campaingn->name }}" readonly>
-            @endforeach
-        </div>
-    </div>
-    <div class="form-group">
         <label for="isbn" class="col-sm-2 control-label">Código:</label>
         <div class="col-sm-10">
             {{ Form::textarea('jscode', $jsCode, ['class'=>'form-control']) }}

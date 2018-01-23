@@ -27,6 +27,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            \App\Http\Middleware\Cors::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -57,6 +58,8 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'cors' => \App\Http\Middleware\Cors::class,
-        'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
+        'clicks' => \App\Http\Middleware\Clicks::class,
+        'random_creatives' => \App\Http\Middleware\RandomCreatives::class,
+        //'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
     ];
 }

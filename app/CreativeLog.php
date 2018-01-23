@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class CreativeLog extends Model
 {
     protected $fillable = [
-        'article',
-        'impressions',
-        'clicks',
+        'click_id',
         'revenue',
+        'creative_id',
+        'widget_id',
+        'campaingn_id',
     ];
     
     public function creative() {

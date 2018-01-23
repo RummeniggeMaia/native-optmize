@@ -25,11 +25,8 @@ class CreateCreativeLogsTable extends Migration
             $table->foreign('creative_id')->references('id')->on('creatives');
             $table->bigInteger('widget_id')->unsigned();
             $table->foreign('widget_id')->references('id')->on('widgets');
-            $table->bigInteger('campaingn_id')->unsigned();
+            $table->bigInteger('campaingn_id')->unsigned()->nullable();
             $table->foreign('campaingn_id')->references('id')->on('campaingns');
-
-            $table->bigInteger('owner')->unsigned();
-            $table->foreign('owner')->references('id')->on('users');
         });
     }
 

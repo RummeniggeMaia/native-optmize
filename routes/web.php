@@ -1,15 +1,15 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+  |--------------------------------------------------------------------------
+  | Web Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where you can register web routes for your application. These
+  | routes are loaded by the RouteServiceProvider within a group which
+  | contains the "web" middleware group. Now create something great!
+  |
+ */
 
 Route::get('/', function () {
     if (Auth::guest()) {
@@ -21,12 +21,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/mw', ['middleware' => 'cors', function() {
-    return \Response::json('ok', 200);
-}]);
+//Route::get('/clicks', ['middleware' => 'cors', function() {
+//    return \Response::json('ok', 200);
+//}]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-
 
 Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
 Route::get('/creatives', 'CreativeController@index')->name('creatives');
@@ -36,6 +35,11 @@ Route::patch('/creatives/{creative}', 'CreativeController@update')->name('creati
 Route::delete('/creatives/{creative}', 'CreativeController@destroy')->name('creatives.destroy');
 Route::get('/creatives/{creative}/edit', 'CreativeController@edit')->name('creatives.edit');
 Route::get('/creatives/{page?}', 'CreativeController@index')->name('creatives');
+
+//Route::middleware('cors')->group(function() {
+//    Route::get('/creatives/random_creatives', 'CreativeController@getRandomCreatives');
+//    Route::get('/creatives/clicks/{ct}{cp}{wg}', 'CreativeController@clicks');
+//});
 
 Route::post('/campaingns', 'CampaingnController@store')->name('campaingns.store');
 Route::get('/campaingns', 'CampaingnController@index')->name('campaingns');
@@ -72,3 +76,6 @@ Route::patch('/users/{widget}', 'UserController@update')->name('users.update');
 Route::delete('/users/{widget}', 'UserController@destroy')->name('users.destroy');
 Route::get('/users/{widget}/edit', 'UserController@edit')->name('users.edit');
 Route::get('users/{page?}', 'UserController@index')->name('users.index');
+
+Route::post('/clicks')->middleware('clicks');
+Route::get('/random_creatives')->middleware('random_creatives');

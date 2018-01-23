@@ -186,7 +186,7 @@ class WidgetController extends Controller {
         $rules = array(
             'name' => 'required|min:4',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
-            'campaingns' => 'required|array|min:1'
+           //'campaingns' => 'required|array|min:1'
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
@@ -219,22 +219,25 @@ class WidgetController extends Controller {
         $widget_base = Storage::disk(self::DISK)->path('data/widget_example.js');
         $tpl = new Template($widget_base);
 
-        $creatives = Creative::all()->where('owner', Auth::id());
-
-        $contador = 0;
-
-        foreach ($creatives as $creative) {
-            $tpl->TITLE = $creative->name;
-            $tpl->IMAGE = $creative->image;
-            $tpl->URL = $creative->url;
-            $tpl->CONTADOR = $contador;
-            $tpl->block("BLOCK_CONTEUDO", true);
-
-            $contador++;
-        }
-
-        $tpl->HASHID = sha1($widget_id);
-        $tpl->block("BLOCK_AJAX", true);
+        $tpl->WIDGET_HASHID = Widget::find($widget_id)->hashid;
+        $tpl->block("BLOCK_CONTEUDO", true);
+        
+//        $creatives = Creative::all()->where('owner', Auth::id());
+//
+//        $contador = 0;
+//
+//        foreach ($creatives as $creative) {
+//            $tpl->TITLE = $creative->name;
+//            $tpl->IMAGE = $creative->image;
+//            $tpl->URL = $creative->url;
+//            $tpl->CONTADOR = $contador;
+//            $tpl->block("BLOCK_CONTEUDO", true);
+//
+//            $contador++;
+//        }
+//
+//        $tpl->HASHID = sha1($widget_id);
+//        $tpl->block("BLOCK_AJAX", true);
 
         $json_content['js'] = $tpl->parse();
 

@@ -43,7 +43,7 @@
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">CTR</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="title" value="@If($clicks > 0){{ number_format($impressions / $clicks, 2) }}@else 0.00 @endif %" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="title" value="@If($clicks > 0){{ number_format($impressions / $clicks, 2) }}@else 0.00 @endif" readonly>
         </div>
     </div>
     <table class="table table-striped table-bordered table-hover ">

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use App\Providers\ImgCompressor;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CreativeController extends Controller {
 
@@ -73,6 +74,7 @@ class CreativeController extends Controller {
                         ['click_id', null],
                         ['creative_id', $creative->id]
                     ])->count();
+            Log::info($logs);
             return view('creatives.show', compact('creative'))->with([
                         'category' => $category,
                         'clicks' => count($logs),
@@ -243,5 +245,5 @@ class CreativeController extends Controller {
 
         return $compressed_image_path;
     }
-
+    
 }
