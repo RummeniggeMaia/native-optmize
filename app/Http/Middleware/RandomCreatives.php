@@ -6,6 +6,7 @@ use Closure;
 use App\Creative;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class RandomCreatives
 {
@@ -23,12 +24,13 @@ class RandomCreatives
                             ->header('Access-Control-Allow-Origin', '*')
                             ->header('Access-Control-Allow-Methods', 'GET', 'OPTIONS');
         } else {
-            $creatives = Creative::all('hashid', 'name', 'url', 'image');
-            if (count($creatives) > 3) {
-                $creatives = $creatives->random(3);
+            $t = $request->route('type') == "3" ? 3 : 6;
+            $creatives = Creative::all('id', 'hashid', 'name', 'url', 'image');
+            if (count($creatives) > $t) {
+                $creatives = $creatives->random($t);
             }
-            foreach ($creatives as $c) {
-                $c['c_id'] = Hash::make(Carbon::now()->toDateTimeString());
+            foreach ($creatives as $creative) {
+                $creative['c_id'] = Hash::make(Carbon::now()->toDateTimeString());
             }
             return response()->json($creatives);
         }

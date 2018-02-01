@@ -3,9 +3,12 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CreateWidgetsTable extends Migration {
 
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     /**
      * Run the migrations.
      *
@@ -22,6 +25,7 @@ class CreateWidgetsTable extends Migration {
         });
 
         Schema::table('widgets', function(Blueprint $table) {
+            $table->softDeletes();
             $table->bigInteger('owner')->unsigned();
             $table->foreign('owner')->references('id')->on('users');
         });

@@ -143,8 +143,9 @@ class WidgetController extends Controller {
                 DB::beginTransaction();
                 try {
                     $widget->update($post);
-                    $widget->campaingns()->sync($post['campaingns']);
+//                    $widget->campaingns()->sync($post['campaingns']);
                     DB::commit();
+                    $this->create_widget($widget->id);
                     return redirect('widgets')
                                     ->with('success', 'Widget editado com sucesso.');
                 } catch (Exception $e) {
@@ -218,8 +219,11 @@ class WidgetController extends Controller {
         $abrir = $folder_name . "/" . $file_name;
         $widget_base = Storage::disk(self::DISK)->path('data/widget_example.js');
         $tpl = new Template($widget_base);
-
-        $tpl->WIDGET_HASHID = Widget::find($widget_id)->hashid;
+        
+        $widget = Widget::find($widget_id);
+        $tpl->WIDGET_HASHID = $widget->hashid;
+        $tpl->WIDGET_TYPE = $widget->type;
+        $tpl->WIDGET_ID = $widget->id;
         $tpl->block("BLOCK_CONTEUDO", true);
         
 //        $creatives = Creative::all()->where('owner', Auth::id());

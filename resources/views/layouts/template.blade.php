@@ -35,6 +35,7 @@ $(document).ready(function () {
     $('ul.navegacao a').filter(function () {
         return url.href.indexOf(this.href) !== -1;
     }).parent().addClass('active');
+    //$('.selectpicker').selectpicker();
 });
         </script>
         <!-- Styles -->

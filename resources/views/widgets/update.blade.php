@@ -32,31 +32,6 @@
         @endforeach
     </select>
 </div>
-<div class="form-group {{ $errors->has('campaingns') ? ' has-error' : '' }}">
-    {!! Form::label('Campaingns', 'Campaingns:') !!}
-    <select name="campaingns[]"
-            class="selectpicker form-control"
-            data-live-search="true"
-            title="Nenhuma Campaingn selecionada"
-            data-actions-box="false"
-            data-select-all-text="Marcar todas"
-            data-deselect-all-text="Desmarcar todas"
-            multiple>
-        @foreach($campaingns as $campaingn)
-            <option title="{{ $campaingn->name }}"
-                    value="{{ $campaingn->id }}"
-                    @if($widget->campaingns->contains($campaingn)) selected @endif>
-                {{ $campaingn->name }},
-                {{ $campaingn->brand }}
-            </option>
-        @endforeach
-    </select>
-    @if ($errors->has('campaingns'))
-    <span class="help-block">
-        <strong>{{ $errors->first('campaingns') }}</strong>
-    </span>
-    @endif
-</div>
 <div class="form-group">
     {!! Form::submit('Atualizar', ['class' => 'btn btn-primary form-control']) !!}
 </div>

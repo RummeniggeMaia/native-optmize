@@ -22,11 +22,11 @@ class CreateCreativeLogsTable extends Migration
         });
         Schema::table('creative_logs', function(Blueprint $table) {
             $table->bigInteger('creative_id')->unsigned();
-            $table->foreign('creative_id')->references('id')->on('creatives');
-            $table->bigInteger('widget_id')->unsigned();
-            $table->foreign('widget_id')->references('id')->on('widgets');
+            $table->foreign('creative_id')->references('id')->on('creatives')->onDelete('cascade');
+            $table->bigInteger('widget_id')->unsigned()->nullable();
+            $table->foreign('widget_id')->references('id')->on('widgets')->onDelete('set null');
             $table->bigInteger('campaingn_id')->unsigned()->nullable();
-            $table->foreign('campaingn_id')->references('id')->on('campaingns');
+            $table->foreign('campaingn_id')->references('id')->on('campaingns')->onDelete('set null');
         });
     }
 
