@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -50,6 +51,7 @@ class UserController extends Controller {
         } else {
             $post['password'] = Hash::make($post['password']);
             $user = User::create($post);
+            $user->roles()->attach(Role::where('name', 'user')->first());
             return redirect('users');
         }
     }

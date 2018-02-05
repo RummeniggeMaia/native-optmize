@@ -27,7 +27,7 @@ class CreateWidgetsTable extends Migration {
         Schema::table('widgets', function(Blueprint $table) {
             $table->softDeletes();
             $table->bigInteger('owner')->unsigned();
-            $table->foreign('owner')->references('id')->on('users');
+            $table->foreign('owner')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
