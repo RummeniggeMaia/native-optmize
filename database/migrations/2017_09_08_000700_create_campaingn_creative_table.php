@@ -16,7 +16,7 @@ class CreateCampaingnCreativeTable extends Migration {
             $table->timestamps();
         });
 
-		Schema::table('campaingn_creative', function(Blueprint $table) {
+        Schema::table('campaingn_creative', function(Blueprint $table) {
             $table->bigInteger('campaingn_id')->unsigned();
             $table->foreign('campaingn_id')->references('id')
                     ->on('campaingns')->onDelete('cascade');

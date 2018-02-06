@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CreateWidgetsTable extends Migration {
 
     use SoftDeletes;
+
     protected $dates = ['deleted_at'];
+
     /**
      * Run the migrations.
      *
@@ -26,8 +28,9 @@ class CreateWidgetsTable extends Migration {
 
         Schema::table('widgets', function(Blueprint $table) {
             $table->softDeletes();
-            $table->bigInteger('owner')->unsigned();
-            $table->foreign('owner')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')
+                    ->onDelete('cascade');
         });
     }
 

@@ -10,7 +10,8 @@
             <tr class="bg-info">
                 <th>Id</th>
                 <th>Image</th>
-                <th>Title</th>
+                <th>Brand</th>
+                <th>Name</th>
                 <th>Url</th>
                 <th colspan="3">Ações</th>
             </tr>
@@ -20,6 +21,7 @@
             <tr>
                 <td>{{ $creative->id }}</td>
                 <td><img src="{{ asset($creative->image) }}" height="154" width="128"></td>
+                <td>{{ $creative->brand }}</td>
                 <td>{{ $creative->name }}</td>
                 <td>{{ $creative->url }}</td>
                 <td><a href="{{route('creatives.show', $creative->id)}}" class="btn btn-primary">Mostrar</a></td>

@@ -4,26 +4,28 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CreativeLog extends Model
-{
+class Click extends Model {
+
     protected $fillable = [
-        'clicks',
-        'impressions',
-        'revenue',
+        'click_id',
         'creative_id',
-        'widget_id',
-        'campaingn_id',
+        'widget_id'
     ];
     
     public function creative() {
         return $this->belongsTo('App\Creative');
     }
-    
+
     public function widget() {
         return $this->belongsTo('App\Widget');
     }
-    
+
     public function campaingn() {
         return $this->belongsTo('App\Campaingn');
     }
+    
+    public function postback() {
+        return $this->hasOne('App\Postback');
+    }
+
 }

@@ -4,8 +4,17 @@
 
 <h1>Criar Creative</h1>
 {!! Form::open(['url' => 'creatives', 'files' => true]) !!}
+<div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
+    {!! Form::label('Brand', 'Brand:') !!}
+    {!! Form::text('brand',null,['class'=>'form-control']) !!}
+    @if ($errors->has('brand'))
+    <span class="help-block">
+        <strong>{{ $errors->first('brand') }}</strong>
+    </span>
+    @endif
+</div>
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Title', 'Title:') !!}
+    {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
@@ -31,10 +40,10 @@
     </span>
     @endif
 </div>
-<div class="form-group {{ $errors->has('related_category') ? ' has-error' : '' }}">
+<div class="form-group {{ $errors->has('category') ? ' has-error' : '' }}">
     {!! Form::label('Category', 'Category:') !!}
-    <select id='related_category'
-            name="related_category"
+    <select id='category'
+            name="category_id"
             class="selectpicker form-control"
             data-live-search="true"
             title="Nenhuma Category selecionada"
@@ -45,14 +54,14 @@
         <option
             title="{{$category->name}}"
             value="{{$category->id}}"
-            {{ (collect(old('related_category'))->contains($category->id)) ? 'selected':'' }}>
+            {{ (collect(old('category'))->contains($category->id)) ? 'selected':'' }}>
             {{$category->name}}
         </option>
         @endforeach
     </select>
-    @if ($errors->has('related_category'))
+    @if ($errors->has('category'))
     <span class="help-block">
-        <strong>{{ $errors->first('related_category') }}</strong>
+        <strong>{{ $errors->first('category') }}</strong>
     </span>
     @endif
 </div>

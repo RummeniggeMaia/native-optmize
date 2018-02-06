@@ -21,8 +21,9 @@ class CreateCampaingnsTable extends Migration {
         });
 
         Schema::table('campaingns', function(Blueprint $table) {
-            $table->bigInteger('owner')->unsigned();
-            $table->foreign('owner')->references('id')->on('users');
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')
+                    ->onDelete('cascade');
         });
     }
 

@@ -16,7 +16,7 @@ class CategoryController extends Controller {
      */
 
     public function index() {
-        $categories = Category::where('fixed', Auth::user()->hasRole('admin'))
+        $categories = Category::where('fixed', true)
                         ->orderBy('name', 'asc')->paginate(5);
         return view('categories.index', compact('categories'));
     }
@@ -42,7 +42,7 @@ class CategoryController extends Controller {
                             ->withInput()
                             ->withErrors($v);
         } else {
-            $post['owner'] = Auth::id();
+            $post['user_id'] = Auth::id();
             $post['fixed'] = Auth::user()->hasRole('admin');
             Category::create($post);
             return redirect('categories');

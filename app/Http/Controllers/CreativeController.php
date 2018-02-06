@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Creative;
 use App\Widget;
+use App\Click;
 use App\Category;
 use App\CreativeLog;
 use App\Http\Controllers\Controller;
@@ -33,8 +34,8 @@ class CreativeController extends Controller {
     }
 
     public function index() {
-        $creatives = Creative::where('owner', Auth::id())
-                ->orderBy('name', 'asc')->paginate(5);
+        $creatives = Creative::where('user_id', Auth::id())
+                        ->orderBy('name', 'asc')->paginate(5);
         return view('creatives.index', compact('creatives'));
     }
 
@@ -58,31 +59,25 @@ class CreativeController extends Controller {
      * @return Response
      */
     public function show($id) {
-        $creative = Creative::find($id);
+        $creative = Creative::with(['category', 'user'])
+                        ->where('id', $id)->first();
         if ($creative == null) {
             return back()->with('error'
                             , 'Creative não registrado no sistema.');
-        } else if ($creative->owner != Auth::id()) {
+        } else if ($creative->user->id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Creative.');
         } else {
-            $category = Category::find($creative->related_category);
-            $logs = CreativeLog::where('creative_id', $creative->id)->get();
-            $impressions = 0;
-            $clicks = array();
-            foreach ($logs as $log) {
-                if ($log->click_id == null) {
-                    $impressions++;
-                } else {
-                    $log['creative'] = Creative::find($log->creative_id);
-                    $log['widget'] = Widget::find($log->widget_id);
-                    $clicks[] = $log;
-                }
-            }
-            return view('creatives.show', compact('creative'))->with([
-                        'category' => $category,
-                        'clicks' => $clicks,
-                        'impressions' => $impressions]);
+            $clicks = CreativeLog::where('creative_id', $creative->id)
+                    ->sum('clicks');
+            $impressions = CreativeLog::where('creative_id', $creative->id)
+                    ->sum('impressions');
+            $clickList = Click::where('creative_id', $creative->id)->get();
+            return view('creatives.show', compact('creative'))
+                            ->with([
+                                'clickList' => $clickList,
+                                'clicks' => $clicks,
+                                'impressions' => $impressions]);
         }
     }
 
@@ -93,11 +88,12 @@ class CreativeController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $creative = Creative::find($id);
+        $creative = Creative::with(['category', 'user'])
+                        ->where('id', $id)->first();
         if ($creative == null) {
             return back()->with('error'
                             , 'Creative não registrado no sistema.');
-        } else if ($creative->owner != Auth::id()) {
+        } else if ($creative->user->id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode editar os dados deste Creative.');
         } else {
@@ -122,7 +118,7 @@ class CreativeController extends Controller {
                             ->withErrors($validacao)
                             ->withInput();
         } else {
-            $post['owner'] = Auth::id();
+            $post['user_id'] = Auth::id();
             $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
 
             if ($request->hasFile('image')) {
@@ -157,7 +153,7 @@ class CreativeController extends Controller {
             if ($creative == null) {
                 return back()->with('error'
                                 , 'Creative não registrado no sistema.');
-            } else if ($creative->owner != Auth::id()) {
+            } else if ($creative->user_id != Auth::id()) {
                 return back()->with('error'
                                 , 'Não pode atualizar os dados deste Creative.');
             } else {
@@ -187,7 +183,7 @@ class CreativeController extends Controller {
         if ($creative == null) {
             return back()->with('error'
                             , 'Creative não registrado no sistema.');
-        } else if ($creative->owner != Auth::id()) {
+        } else if ($creative->user_id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode excluir este Creative.');
         } else {
@@ -199,17 +195,20 @@ class CreativeController extends Controller {
 
     private function validar($post, $edit) {
         $mensagens = array(
+            'brand.required' => 'Insira uma brand.',
+            'brand.min' => 'Brand muito curto.',
             'name.required' => 'Insira um nome.',
             //'name.unique' => 'Já existe um creative com este nome.',
             'name.min' => 'Nome muito curto.',
             'url.regex' => 'URL inválido.',
-            'related_category.required' => 'Selecione uma Category',
+            'category_id.required' => 'Selecione uma Category',
             'image.required' => 'Selecione uma imagem.'
         );
         $rules = array(
+            'brand' => 'required|min:4',
             'name' => 'required|min:4',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
-            'related_category' => 'required',
+            'category_id' => 'required',
             'image' => $edit ? '' : 'required'
         );
         $validator = Validator::make($post, $rules, $mensagens);
@@ -248,5 +247,5 @@ class CreativeController extends Controller {
 
         return $compressed_image_path;
     }
-    
+
 }

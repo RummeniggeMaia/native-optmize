@@ -79,4 +79,6 @@ Route::middleware(['user'])->group(function () {
 });
 
 Route::post('/clicks')->middleware('clicks');
+Route::post('/impressions')->middleware('impressions');
+Route::get('/postbacks')->middleware('postbacks');
 Route::get('/random_creatives/{type?}')->middleware('random_creatives');

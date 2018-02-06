@@ -55,12 +55,11 @@ class User extends Authenticatable {
         return null !== $this->roles()->where('name', $role)->first();
     }
 
-    public function creatives() {
-        return $this->hasMany('App\Creative');
-    }
-
     public function roles() {
         return $this->belongsToMany(Role::class);
     }
 
+    public function widgets() {
+        return $this->hasMany('App\Widget');
+    }
 }

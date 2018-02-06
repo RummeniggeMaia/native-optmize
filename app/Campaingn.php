@@ -10,7 +10,7 @@ class Campaingn extends Model {
         'hashid',
         'brand',
         'name',
-        'owner',
+        'user_id',
     ];
 
     public function creatives() {

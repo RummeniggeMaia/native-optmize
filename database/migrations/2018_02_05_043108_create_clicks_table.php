@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoleUserTable extends Migration {
+class CreateClicksTable extends Migration {
 
     /**
      * Run the migrations.
@@ -12,18 +12,18 @@ class CreateRoleUserTable extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('role_user', function (Blueprint $table) {
+        Schema::create('clicks', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
+            $table->string('click_id')->nullable();
             $table->timestamps();
         });
 
-        Schema::table('role_user', function(Blueprint $table) {
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')
+        Schema::table('clicks', function(Blueprint $table) {
+            $table->bigInteger('creative_id')->unsigned();
+            $table->foreign('creative_id')->references('id')->on('creatives')
                     ->onDelete('cascade');
-
-            $table->bigInteger('role_id')->unsigned()->nullable();
-            $table->foreign('role_id')->references('id')->on('roles')
+            $table->bigInteger('widget_id')->unsigned()->nullable();
+            $table->foreign('widget_id')->references('id')->on('widgets')
                     ->onDelete('set null');
         });
     }
@@ -34,7 +34,7 @@ class CreateRoleUserTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('clicks');
     }
 
 }

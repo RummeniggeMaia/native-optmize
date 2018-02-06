@@ -8,11 +8,12 @@ class Creative extends Model {
 
     protected $fillable = [
         'hashid',
+        'brand',
         'name',
         'url',
         'image',
-        'related_category',
-        'owner'
+        'user_id',
+        'category_id'
     ];
 
     public function campaingns() {

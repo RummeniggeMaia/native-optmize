@@ -23,7 +23,7 @@ class CampaingnController extends Controller {
     }
 
     public function index() {
-        $campaingns = Campaingn::where('owner', Auth::id())
+        $campaingns = Campaingn::where('user_id', Auth::id())
                         ->orderBy('name', 'asc')->paginate(5);
         return view('campaingns.index', compact('campaingns'));
     }
@@ -34,7 +34,7 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function create() {
-        $creatives = Creative::where('owner', Auth::id())
+        $creatives = Creative::where('user_id', Auth::id())
                         ->orderBy('name', 'asc')->get();
         return view('campaingns.create')->with(['creatives' => $creatives]);
     }
@@ -53,7 +53,7 @@ class CampaingnController extends Controller {
         } else {
             DB::beginTransaction();
             try {
-                $post['owner'] = Auth::id();
+                $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 
                 $campaingn = Campaingn::create($post);
@@ -76,11 +76,11 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function show($id) {
-        $campaingn = Campaingn::find($id);
+        $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
         if ($campaingn == null) {
             return back()->with('error'
                             , 'Campaingn não registrada no sistema.');
-        } else if ($campaingn->owner != Auth::id()) {
+        } else if ($campaingn->user->id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode exibir os dados desta Campaingn.');
         } else {
@@ -95,15 +95,15 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $campaingn = Campaingn::find($id);
+        $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
         if ($campaingn == null) {
             return back()->with('error'
                             , 'Campaingn não registrada no sistema.');
-        } else if ($campaingn->owner != Auth::id()) {
+        } else if ($campaingn->user->id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode editar os dados desta Campaingn.');
         } else {
-            $creatives = Creative::all()->where('owner', Auth::id());
+            $creatives = Creative::all()->where('user_id', Auth::id());
             return view('campaingns.update', compact('campaingn'))
                             ->with('creatives', $creatives);
         }
@@ -123,11 +123,11 @@ class CampaingnController extends Controller {
                             ->withInput()
                             ->withErrors($validacao);
         } else {
-            $campaingn = Campaingn::find($id);
+            $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
             if ($campaingn == null) {
                 return back()->with('error'
                                 , 'Campaingn não registrada no sistema.');
-            } else if ($campaingn->owner != Auth::id()) {
+            } else if ($campaingn->user->id != Auth::id()) {
                 return back()->with('error'
                                 , 'Não pode editar os dados desta Campaingn.');
             } else {
@@ -151,11 +151,11 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function destroy($id) {
-        $campaingn = Campaingn::find($id);
+        $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
         if ($campaingn == null) {
             return back()->with('error'
                             , 'Campaingn não registrada no sistema.');
-        } else if ($campaingn->owner != Auth::id()) {
+        } else if ($campaingn->user->id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode excluir esta Campaingn.');
         } else {

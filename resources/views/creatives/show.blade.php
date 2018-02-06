@@ -11,6 +11,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label for="isbn" class="col-sm-2 control-label">Brand</label>
+        <div class="col-sm-10">
+            <input type="text" style="background-color:white" class="form-control" id="isbn" value="{{ $creative->brand }}" readonly>
+        </div>
+    </div>
+    <div class="form-group">
         <label for="isbn" class="col-sm-2 control-label">Name</label>
         <div class="col-sm-10">
             <input type="text" style="background-color:white" class="form-control" id="isbn" value="{{ $creative->name }}" readonly>
@@ -25,13 +31,13 @@
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Category</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="category" value="{{ $category->name }}" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="category" value="{{ $creative->category->name }}" readonly>
         </div>
     </div>
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Clicks</label>
         <div class="col-sm-10">
-            <input type="text" style="background-color:white" class="form-control" id="clicks" value="{{ count($clicks) }}" readonly>
+            <input type="text" style="background-color:white" class="form-control" id="clicks" value="{{ $clicks }}" readonly>
         </div>
     </div>
     <div class="form-group">
@@ -53,15 +59,13 @@
                 <thead>
                     <tr class="bg-info">
                         <th>click_id</th>
-                        <th>Creative</th>
                         <th>Widget</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($clicks as $click)
+                    @foreach ($clickList as $click)
                     <tr>
                         <td>{{ $click->click_id }}</td>
-                        <td>{{ $click->creative->name }}</td>
                         <td>{{ $click->widget->name }}</td>
                     </tr>
                     @endforeach

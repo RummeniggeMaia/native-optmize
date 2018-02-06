@@ -4,12 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Creative;
-use App\Click;
 use App\Widget;
 use App\CreativeLog;
 use Illuminate\Support\Facades\Log;
 
-class Clicks {
+class Impressions {
 
     /**
      * Handle an incoming request.
@@ -19,7 +18,7 @@ class Clicks {
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        if ($request->has(['ct', 'wg', 'click_id'])) {
+        if ($request->has(['ct', 'wg'])) {
             $creative = Creative::where('hashid', $request->input('ct'))
                     ->first(['id']);
             $widget = Widget::where('hashid', $request->input('wg'))
@@ -29,20 +28,14 @@ class Clicks {
                             ['creative_id', $creative->id],
                             ['widget_id', $widget->id]
                         ])->first();
-                if ($log) {
-                    if (!Click::where('click_id', $request->input('click_id'))
-                                    ->exists()) {
-                        Click::create(array(
-                            'click_id' => $request->input('click_id'),
-                            'creative_id' => $creative->id,
-                            'widget_id' => $widget->id
-                        ));
-                        $log->increment('clicks');
-                    } else {
-                        return response()->json('exists', 409);
-                    }
+                if (!$log) {
+                    CreativeLog::create(array(
+                        'creative_id' => $creative->id,
+                        'widget_id' => $widget->id,
+                        'impressions' => 1
+                    ));
                 } else {
-                    return response()->json('not found', 404);
+                    $log->increment('impressions');
                 }
                 return response()->json('ok', 200);
             } else {

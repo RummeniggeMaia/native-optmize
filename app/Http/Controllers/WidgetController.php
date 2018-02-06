@@ -32,7 +32,7 @@ class WidgetController extends Controller {
      */
 
     public function index() {
-        $widgets = Widget::where('owner', Auth::id())
+        $widgets = Widget::where('user_id', Auth::id())
                         ->orderBy('name', 'asc')->paginate(5);
         return view('widgets.index', compact('widgets'));
     }
@@ -43,7 +43,7 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function create() {
-        $campaingns = Campaingn::where('owner', Auth::id())->get();
+        $campaingns = Campaingn::where('user_id', Auth::id())->get();
         return view('widgets.create')->with(['campaingns' => $campaingns]);
     }
 
@@ -61,7 +61,7 @@ class WidgetController extends Controller {
         } else {
             DB::beginTransaction();
             try {
-                $post['owner'] = Auth::id();
+                $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 $widget = Widget::create($post);
 //                $widget->campaingns()->sync($post['campaingns']);
@@ -86,7 +86,7 @@ class WidgetController extends Controller {
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');
-        } else if ($widget->owner != Auth::id()) {
+        } else if ($widget->user_id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Widget.');
         } else {
@@ -108,11 +108,11 @@ class WidgetController extends Controller {
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');
-        } else if ($widget->owner != Auth::id()) {
+        } else if ($widget->user_id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Widget.');
         } else {
-            $campaingns = Campaingn::all()->where('owner', Auth::id());
+            $campaingns = Campaingn::all()->where('user_id', Auth::id());
             return view('widgets.update', compact('widget'))
                             ->with('campaingns', $campaingns);
         }
@@ -136,7 +136,7 @@ class WidgetController extends Controller {
             if ($widget == null) {
                 return back()->with('error'
                                 , 'Widget não registrado no sistema.');
-            } else if ($widget->owner != Auth::id()) {
+            } else if ($widget->user_id != Auth::id()) {
                 return back()->with('error'
                                 , 'Não pode exibir os dados deste Widget.');
             } else {
@@ -167,7 +167,7 @@ class WidgetController extends Controller {
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');
-        } else if ($widget->owner != Auth::id()) {
+        } else if ($widget->user_id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode excluir este Widget.');
         } else {
@@ -226,7 +226,7 @@ class WidgetController extends Controller {
         $tpl->WIDGET_ID = $widget->id;
         $tpl->block("BLOCK_CONTEUDO", true);
         
-//        $creatives = Creative::all()->where('owner', Auth::id());
+//        $creatives = Creative::all()->where('user_id', Auth::id());
 //
 //        $contador = 0;
 //
@@ -252,7 +252,7 @@ class WidgetController extends Controller {
     }
 
     public function create_widgets() {
-        $widgets = Widget::all()->where('owner', Auth::id());
+        $widgets = Widget::all()->where('user_id', Auth::id());
 
         foreach ($widgets as $widget) {
             $this->create_widget($widget->id);

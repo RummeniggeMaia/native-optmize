@@ -18,12 +18,12 @@ class CreateCampaingnWidgetTable extends Migration {
 
         Schema::table('campaingn_widget', function(Blueprint $table) {
             $table->bigInteger('widget_id')->unsigned();
-			$table->foreign('widget_id')->references('id')
+            $table->foreign('widget_id')->references('id')
                     ->on('widgets')->onDelete('cascade');
 
             $table->bigInteger('campaingn_id')->unsigned();
-            $table->foreign('campaingn_id')->references('id')->
-                    on('campaingns')->onDelete('cascade');;
+            $table->foreign('campaingn_id')->references('id')
+                    ->on('campaingns')->onDelete('cascade');
         });
     }
 
