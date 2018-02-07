@@ -26,8 +26,8 @@
     {!! Form::label('Quantity', 'Quantity:') !!}
     <select name="quantity" class="selectpicker form-control">
         @foreach([
-        '0' => 2,
-        '1' => 3,
+        '0' => 3,
+        '1' => 4,
         '2' => 6] as $id => $quantity)
         <option value="{{ $id }}">{{ $quantity }}</option>
         @endforeach

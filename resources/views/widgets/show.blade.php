@@ -33,8 +33,8 @@
         <div class="col-sm-10">
             <input type="text" class="form-control" id="quantity"
                     placeholder="{{ [
-                        '0' => 2,
-                        '1' => 3,
+                        '0' => 3,
+                        '1' => 4,
                         '2' => 6,
                     ][$widget->quantity] }}" readonly>
         </div>
