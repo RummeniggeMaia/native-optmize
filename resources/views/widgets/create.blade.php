@@ -21,6 +21,19 @@
     </span>
     @endif
 </div>
+
+<div class="form-group">
+    {!! Form::label('Quantity', 'Quantity:') !!}
+    <select name="quantity" class="selectpicker form-control">
+        @foreach([
+        '0' => 2,
+        '1' => 3,
+        '2' => 6] as $id => $quantity)
+        <option value="{{ $id }}">{{ $quantity }}</option>
+        @endforeach
+    </select>
+</div>
+
 <div class="form-group">
     {!! Form::label('Type', 'Type:') !!}
     <select name="type" class="selectpicker form-control">

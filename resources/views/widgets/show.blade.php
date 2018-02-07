@@ -27,6 +27,19 @@
                     ][$widget->type] }}" readonly>
         </div>
     </div>
+
+    <div class="form-group">
+        <label for="type" class="col-sm-2 control-label">Quantity</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="quantity"
+                    placeholder="{{ [
+                        '0' => 2,
+                        '1' => 3,
+                        '2' => 6,
+                    ][$widget->quantity] }}" readonly>
+        </div>
+    </div>
+
     <div class="form-group">
         <label for="isbn" class="col-sm-2 control-label">Código:</label>
         <div class="col-sm-10">
