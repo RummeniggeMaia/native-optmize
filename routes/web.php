@@ -21,13 +21,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//Route::get('/clicks', ['middleware' => 'cors', function() {
-//    return \Response::json('ok', 200);
-//}]);
-
 Route::get('/home', 'HomeController@index')->name('home');
-
-
 
 Route::middleware(['admin'])->group(function () {
     Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
@@ -81,4 +75,4 @@ Route::middleware(['user'])->group(function () {
 Route::post('/clicks')->middleware('clicks');
 Route::post('/impressions')->middleware('impressions');
 Route::get('/postbacks')->middleware('postbacks');
-Route::get('/random_creatives/{type?}')->middleware('random_creatives');
+Route::get('/random_creatives')->middleware('random_creatives');

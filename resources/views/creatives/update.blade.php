@@ -4,21 +4,21 @@
 
 <h1>Atualizar Creative</h1>
 {!! Form::model($creative,['method' => 'patch','route'=>['creatives.update',$creative->id], 'files' => true]) !!}
-<div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
-    {!! Form::label('Brand', 'Brand:') !!}
-    {!! Form::text('brand',null,['class'=>'form-control']) !!}
-    @if ($errors->has('brand'))
-    <span class="help-block">
-        <strong>{{ $errors->first('brand') }}</strong>
-    </span>
-    @endif
-</div>
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
         <strong>{{ $errors->first('name') }}</strong>
+    </span>
+    @endif
+</div>
+<div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
+    {!! Form::label('Brand', 'Brand:') !!}
+    {!! Form::text('brand',null,['class'=>'form-control']) !!}
+    @if ($errors->has('brand'))
+    <span class="help-block">
+        <strong>{{ $errors->first('brand') }}</strong>
     </span>
     @endif
 </div>

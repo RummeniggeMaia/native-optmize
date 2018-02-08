@@ -4,21 +4,21 @@
 
 <h1>Criar Creative</h1>
 {!! Form::open(['url' => 'creatives', 'files' => true]) !!}
-<div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
-    {!! Form::label('Brand', 'Brand:') !!}
-    {!! Form::text('brand',null,['class'=>'form-control']) !!}
-    @if ($errors->has('brand'))
-    <span class="help-block">
-        <strong>{{ $errors->first('brand') }}</strong>
-    </span>
-    @endif
-</div>
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Name:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
         <strong>{{ $errors->first('name') }}</strong>
+    </span>
+    @endif
+</div>
+<div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
+    {!! Form::label('Brand', 'Brand:') !!}
+    {!! Form::text('brand',null,['class'=>'form-control']) !!}
+    @if ($errors->has('brand'))
+    <span class="help-block">
+        <strong>{{ $errors->first('brand') }}</strong>
     </span>
     @endif
 </div>

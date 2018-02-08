@@ -21,15 +21,13 @@ class Postbacks {
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        $params = array();
-        $str = explode('?', $request->fullUrl());
-        parse_str(isset($str[1]) ? $str[1] : "", $params);
-        if (isset($params['tid'], $params['amt'], $params['senha'])) {
-            $amt = $params['amt'];
+        $query = $request->query();
+        if (isset($query['tid'], $query['amt'], $query['senha'])) {
+            $amt = $query['amt'];
             if (is_numeric($amt) && $amt >= 0.0) {
-                $pw = Password::where('senha', $params['senha'])->first();
+                $pw = Password::where('senha', $query['senha'])->first();
                 $click = Click::with(['creative', 'widget.user', 'postback'])
-                        ->where('click_id', $params['tid'])->first();
+                        ->where('click_id', $query['tid'])->first();
                 if ($pw && $click) {
                     if ($click->postback) {
                         return response()->json('conflict', 409);
@@ -49,5 +47,4 @@ class Postbacks {
         }
         return response()->json("invalid request", 400);
     }
-
 }

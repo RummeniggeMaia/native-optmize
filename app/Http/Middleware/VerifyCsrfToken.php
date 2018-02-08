@@ -14,6 +14,7 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         '/clicks',
         '/impressions',
-        '/postbacks'
+        '/postbacks',
+        '/random_creatives'
     ];
 }

@@ -4,12 +4,13 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Creative;
+use App\Widget;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class RandomCreatives
-{
+class RandomCreatives {
+
     /**
      * Handle an incoming request.
      *
@@ -17,22 +18,43 @@ class RandomCreatives
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-        if ($request->isMethod('OPTIONS')) {
-            return $next($request)
-                            ->header('Access-Control-Allow-Origin', '*')
-                            ->header('Access-Control-Allow-Methods', 'GET', 'OPTIONS');
-        } else {
-            $t = $request->route('type') == "3" ? 3 : 6;
-            $creatives = Creative::all('id', 'hashid', 'name', 'url', 'image');
-            if (count($creatives) > $t) {
-                $creatives = $creatives->random($t);
+    public function handle($request, Closure $next) {
+        $query = $request->query();
+        if (!isset($query['wg'])) {
+            return response()->json("invalid request", 400);
+        }
+        $widget = Widget::where('hashid', $query['wg'])->first();
+        if ($widget) {
+            $creatives = Creative::all(
+                            'id', 'hashid', 'name', 'brand', 'url', 'image');
+            if (count($creatives) > $widget->quantity) {
+                $creatives = $creatives->random($widget->quantity);
             }
+            $params = array(
+                '[click_id]',
+                '[widget_id]',
+                '[creative_id]',
+                '[image]',
+                '[headline]'
+            );
             foreach ($creatives as $creative) {
-                $creative['c_id'] = Hash::make(Carbon::now()->toDateTimeString());
+                $cId = Hash::make($creative->name
+                                . "hashid"
+                                . Carbon::now()->toDateTimeString());
+                $creative['c_id'] = $cId;
+                $fields = array(
+                    $cId,
+                    $widget->id,
+                    $creative->id,
+                    url('/') . '/' . $creative->image,
+                    $creative->name
+                );
+                $creative->url = str_replace($params, $fields, $creative->url);
             }
             return response()->json($creatives);
+        } else {
+            return response()->json("not found", 404);
         }
     }
+
 }

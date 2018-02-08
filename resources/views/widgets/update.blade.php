@@ -20,31 +20,27 @@
     </span>
     @endif
 </div>
-
-<div class="form-group">
+<div class="form-group {{ $errors->has('quantity') ? ' has-error' : '' }}">
     {!! Form::label('Quantity', 'Quantity:') !!}
-    <select name="quantity" class="selectpicker form-control">
-        @foreach([
-        '0' => 3,
-        '1' => 4,
-        '2' => 6] as $id => $quantity)
-        <option value="{{ $id }}">{{ $quantity }}</option>
-        @endforeach
-    </select>
+    {{ Form::select('quantity', ['3'=>3,'4'=>4,'6'=>6], null, ['class'=>'selectpicker form-control']) }}
+    @if ($errors->has('quantity'))
+    <span class="help-block">
+        <strong>{{ $errors->first('quantity') }}</strong>
+    </span>
+    @endif
 </div>
-
-
 <div class="form-group">
     {!! Form::label('Type', 'Type:') !!}
-    <select name="type" class="selectpicker form-control">
-        @foreach([
-            '0' => '----------------------',
-            '1' => 'Barra Lateral Direita',
-            '2' => 'Barra Lateral Esquerda',
-            '3' => 'Central'] as $typeId => $type)
-            <option value="{{ $typeId}}" @if($widget->type == $typeId) selected @endif>{{ $type }}</option>
-        @endforeach
-    </select>
+    {{ Form::select(
+            'type', 
+            [
+                '----------------------', 
+                'Barra Lateral Direita', 
+                'Barra Lateral Esquerda', 
+                'Central'
+            ],
+            null, 
+            ['class'=>'selectpicker form-control']) }}
 </div>
 <div class="form-group">
     {!! Form::submit('Atualizar', ['class' => 'btn btn-primary form-control']) !!}

@@ -32,18 +32,14 @@
         <label for="type" class="col-sm-2 control-label">Quantity</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="quantity"
-                    placeholder="{{ [
-                        '0' => 3,
-                        '1' => 4,
-                        '2' => 6,
-                    ][$widget->quantity] }}" readonly>
+                    placeholder="{{ $widget->quantity }}" readonly>
         </div>
     </div>
 
     <div class="form-group">
         <label for="isbn" class="col-sm-2 control-label">Código:</label>
         <div class="col-sm-10">
-            {{ Form::textarea('jscode', $jsCode, ['class'=>'form-control']) }}
+            {{ Form::textarea('code', $code, ['class'=>'form-control', 'rows' => 2]) }}
         </div>
     </div>
     <div class="form-group">

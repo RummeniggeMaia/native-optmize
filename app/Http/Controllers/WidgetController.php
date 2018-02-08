@@ -15,6 +15,7 @@ use Validator;
 use App\Providers\Template;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class WidgetController extends Controller {
 
@@ -66,7 +67,7 @@ class WidgetController extends Controller {
                 $widget = Widget::create($post);
 //                $widget->campaingns()->sync($post['campaingns']);
                 DB::commit();
-                $this->create_widget($widget->id);
+                //$this->create_widget($widget->id);
                 return redirect('widgets')
                                 ->with('success', 'Widget cadastrado com sucesso.');
             } catch (Exception $e) {
@@ -90,10 +91,14 @@ class WidgetController extends Controller {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Widget.');
         } else {
-            $jsonFile = Storage::disk(self::DISK)
-                    ->get("data/" . Auth::id() . "/" . "$widget->id/$widget->name.json");
+            $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
             $json = json_decode($jsonFile);
-            return view('widgets.show', compact('widget'))->with('jsCode', $json->js);
+            $json->js = str_replace('[url]', addslashes(url('/')), $json->js);
+            $json->html = str_replace(
+                    '[widget_hashid]', addslashes($widget->hashid), $json->html);
+            $code = $json->js . "\n" . $json->html;
+            return view('widgets.show', compact('widget'))
+                            ->with('code', $code);
         }
     }
 
@@ -145,7 +150,7 @@ class WidgetController extends Controller {
                     $widget->update($post);
 //                    $widget->campaingns()->sync($post['campaingns']);
                     DB::commit();
-                    $this->create_widget($widget->id);
+                    //$this->create_widget($widget->id);
                     return redirect('widgets')
                                     ->with('success', 'Widget editado com sucesso.');
                 } catch (Exception $e) {
@@ -181,13 +186,15 @@ class WidgetController extends Controller {
         $mensagens = array(
             'name.required' => 'Insira um nome.',
             'name.min' => 'Nome muito curto.',
+            'quantity.in' => 'Quantidade inválida.' . $post['quantity'],
             'url.regex' => 'URL inválido.',
             'campaingns.required' => 'Selecione ao menos uma Campaingn.'
         );
         $rules = array(
             'name' => 'required|min:4',
+            'quantity' => 'in:3,4,6',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
-           //'campaingns' => 'required|array|min:1'
+                //'campaingns' => 'required|array|min:1'
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
@@ -219,13 +226,13 @@ class WidgetController extends Controller {
         $abrir = $folder_name . "/" . $file_name;
         $widget_base = Storage::disk(self::DISK)->path('data/widget_example.js');
         $tpl = new Template($widget_base);
-        
+
         $widget = Widget::find($widget_id);
         $tpl->WIDGET_HASHID = $widget->hashid;
         $tpl->WIDGET_TYPE = $widget->type;
         $tpl->WIDGET_ID = $widget->id;
         $tpl->block("BLOCK_CONTEUDO", true);
-        
+
 //        $creatives = Creative::all()->where('user_id', Auth::id());
 //
 //        $contador = 0;
