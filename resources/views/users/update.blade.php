@@ -21,6 +21,15 @@
     </span>
     @endif
 </div>
+<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
+    {!! Form::label('Password', 'Password:') !!}
+    {!! Form::password('password',['id'=>'password', 'class'=>'form-control']) !!}
+    @if ($errors->has('password'))
+    <span class="help-block">
+        <strong>{{ $errors->first('password') }}</strong>
+    </span>
+    @endif
+</div>
 <div class="form-group">
     {!! Form::submit('Atualizar', ['class' => 'btn btn-primary form-control']) !!}
 </div>

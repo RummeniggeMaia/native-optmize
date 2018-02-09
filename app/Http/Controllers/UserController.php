@@ -50,8 +50,11 @@ class UserController extends Controller {
                             ->withInput();
         } else {
             $post['password'] = Hash::make($post['password']);
+            $role = Role::where('name', 'user')->first();
             $user = User::create($post);
-            $user->roles()->attach(Role::where('name', 'user')->first());
+            $user->roles()->sync([$role->id]);
+//            $user->roles()->attach(Role::where('name', 'user')->first());
+            
             return redirect('users');
         }
     }
@@ -93,6 +96,7 @@ class UserController extends Controller {
                             ->withErrors($v)
                             ->withInput();
         } else {
+            $post['password'] = Hash::make($post['password']);
             $user = User::find($id);
             $user->update($post);
             return redirect('users');

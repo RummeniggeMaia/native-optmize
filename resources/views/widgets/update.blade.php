@@ -22,7 +22,7 @@
 </div>
 <div class="form-group {{ $errors->has('quantity') ? ' has-error' : '' }}">
     {!! Form::label('Quantity', 'Quantity:') !!}
-    {{ Form::select('quantity', ['3'=>3,'4'=>4,'6'=>6], null, ['class'=>'selectpicker form-control']) }}
+    {{ Form::select('quantity', ['3'=>3,'4'=>4,'5'=>5,'6'=>6], null, ['class'=>'selectpicker form-control']) }}
     @if ($errors->has('quantity'))
     <span class="help-block">
         <strong>{{ $errors->first('quantity') }}</strong>

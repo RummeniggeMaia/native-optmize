@@ -47,7 +47,7 @@ class RandomCreatives {
                     $widget->id,
                     $creative->id,
                     url('/') . '/' . $creative->image,
-                    $creative->name
+                    urlencode($creative->name)
                 );
                 $creative->url = str_replace($params, $fields, $creative->url);
             }

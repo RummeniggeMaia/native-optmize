@@ -93,7 +93,11 @@ class WidgetController extends Controller {
         } else {
             $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
             $json = json_decode($jsonFile);
-            $json->js = str_replace('[url]', addslashes(url('/')), $json->js);
+            $json->js = str_replace(
+                    ['[url]','[version]'], 
+                    [addslashes(url('/')), md5(time())], 
+                    $json->js
+            );
             $json->html = str_replace(
                     '[widget_hashid]', addslashes($widget->hashid), $json->html);
             $code = $json->js . "\n" . $json->html;
@@ -192,7 +196,7 @@ class WidgetController extends Controller {
         );
         $rules = array(
             'name' => 'required|min:4',
-            'quantity' => 'in:3,4,6',
+            'quantity' => 'in:3,4,5,6',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
                 //'campaingns' => 'required|array|min:1'
         );
