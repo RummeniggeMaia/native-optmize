@@ -72,6 +72,12 @@ Route::middleware(['user'])->group(function () {
     Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
 });
 
+Route::get('/auth/account', 'Auth\AuthController@edit')->name('auth.account');
+Route::get('/auth/change', 'Auth\AuthController@changePassword')->name('auth.changePassword');
+Route::patch('/auth/update', 'Auth\AuthController@update')->name('auth.update');
+Route::patch('/auth/updatePassword', 'Auth\AuthController@updatePassword')
+        ->name('auth.updatePassword');
+
 Route::post('/clicks')->middleware('clicks');
 Route::post('/impressions')->middleware('impressions');
 Route::get('/postbacks')->middleware('postbacks');

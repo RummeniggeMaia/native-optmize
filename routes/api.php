@@ -18,10 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('campaingns','CampaingnController');
-Route::resource('campaingn_creatives','CampaingnCreativeController');
+//Route::resource('campaingn_creatives','CampaingnCreativeController');
 Route::resource('widgets','WidgetController');
-Route::resource('widget_campaingns','WidgetCampaingnController');
-Route::resource('creatives','CreativeController');
-Route::resource('creative_logs','CreativeLogController');
+//Route::resource('widget_campaingns','WidgetCampaingnController');
+//Route::resource('creatives','CreativeController');
 Route::resource('categories','CategoryController');
 Route::resource('users', 'UserController');

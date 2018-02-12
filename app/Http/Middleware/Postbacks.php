@@ -32,8 +32,9 @@ class Postbacks {
                     if ($click->postback) {
                         return response()->json('conflict', 409);
                     }
-                    $click->creative->increment('revenue', $amt / 2);
-                    $click->widget->user->increment('revenue', $amt / 2);
+                    $value = round(($amt / 2), 2, PHP_ROUND_HALF_UP);
+                    $click->creative->increment('revenue', $value);
+                    $click->widget->user->increment('revenue', $value);
                     Postback::create(array(
                         'ip' => $request->ip(),
                         'amt' => $amt,
