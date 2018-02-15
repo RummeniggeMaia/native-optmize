@@ -18,32 +18,33 @@ class Impressions {
      * @return mixed
      */
     public function handle($request, Closure $next) {
-        if ($request->has(['ct', 'wg'])) {
-            $creative = Creative::where('hashid', $request->input('ct'))
-                    ->first(['id']);
-            $widget = Widget::where('hashid', $request->input('wg'))
-                    ->first(['id']);
-            if ($creative && $widget) {
-                $log = CreativeLog::with(['creative', 'widget'])->where([
-                            ['creative_id', $creative->id],
-                            ['widget_id', $widget->id]
-                        ])->first();
-                if (!$log) {
-                    CreativeLog::create(array(
-                        'creative_id' => $creative->id,
-                        'widget_id' => $widget->id,
-                        'impressions' => 1
-                    ));
-                } else {
-                    $log->increment('impressions');
-                }
-                return response()->json('ok', 200);
-            } else {
-                return response()->json('not found', 404);
-            }
-        } else {
-            return response()->json('invalid input', 400);
-        }
+        return response()->json('no content', 204);
+//        if ($request->has(['ct', 'wg'])) {
+//            $creative = Creative::where('hashid', $request->input('ct'))
+//                    ->first(['id']);
+//            $widget = Widget::where('hashid', $request->input('wg'))
+//                    ->first(['id']);
+//            if ($creative && $widget) {
+//                $log = CreativeLog::with(['creative', 'widget'])->where([
+//                            ['creative_id', $creative->id],
+//                            ['widget_id', $widget->id]
+//                        ])->first();
+//                if (!$log) {
+//                    CreativeLog::create(array(
+//                        'creative_id' => $creative->id,
+//                        'widget_id' => $widget->id,
+//                        'impressions' => 1
+//                    ));
+//                } else {
+//                    $log->increment('impressions');
+//                }
+//                return response()->json('ok', 200);
+//            } else {
+//                return response()->json('not found', 404);
+//            }
+//        } else {
+//            return response()->json('invalid input', 400);
+//        }
     }
 
 }
