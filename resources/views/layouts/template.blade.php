@@ -45,7 +45,6 @@ $(document).ready(function () {
                 background-color: #fff;
                 color: #636b6f;
                 font-family: 'Raleway', sans-serif;
-                font-weight: 100;
                 height: 100vh;
                 margin: 0;
             }
@@ -100,7 +99,7 @@ $(document).ready(function () {
                         </button>
 
                         <!-- Branding Image -->
-                        <a class="navbar-brand" href="{{ url('/') }}">
+                        <a class="navbar-brand" href="{{ route('home') }}">
                             Native-Optimize
                         </a>
                     </div>
@@ -154,6 +153,7 @@ $(document).ready(function () {
                     </div>
                 </div>
             </nav>
+            <br />
             <div class="container">
                 @include('comum/flash-message')
                 @yield('content')

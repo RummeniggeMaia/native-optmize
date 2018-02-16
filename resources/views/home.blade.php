@@ -8,7 +8,7 @@
 <div class="body">
     <div class="flex-center position-ref full-height">
         <div class="content">
-            <div class="title m-b-md">
+            <div class="title m-b-md" style="font-weight: 100;">
                 Native Optimize
             </div>
             @auth
@@ -22,6 +22,35 @@
                 <a href="{{ route('widgets') }}">Widgets</a>
                 @endif
             </div>
+            <br />
+            @If (Auth::user()->hasRole('user'))
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Widget</th>
+                        <th>Clicks</th>
+                        <th>Impressions</th>
+                        <th>Revenues</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($widgets as $widget)
+                    <tr style="opacity: 1">
+                        <td>{{ $widget->name }}</td>
+                        <td>{{ $widget->creativeLogs->sum('clicks') }}</td>
+                        <td>{{ $widget->creativeLogs->sum('impressions') }}</td>
+                        <?php $revenues = 0; ?>
+                        @foreach ($widget->creativeLogs as $log)
+                            <?php $revenues += $log->creative->clicks->sum('postback.amt'); ?>
+                        @endforeach
+                        <td>
+                            {{ $revenues }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
             @endauth
         </div>
     </div>

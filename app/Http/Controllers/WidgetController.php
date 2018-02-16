@@ -44,8 +44,8 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function create() {
-        $campaingns = Campaingn::where('user_id', Auth::id())->get();
-        return view('widgets.create')->with(['campaingns' => $campaingns]);
+        //$campaingns = Campaingn::where('user_id', Auth::id())->get();
+        return view('widgets.create');//->with(['campaingns' => $campaingns]);
     }
 
     /** Store a newly created resource in storage.
@@ -83,7 +83,8 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function show($id) {
-        $widget = Widget::find($id);
+        $widget = Widget::with(['creativeLogs.creative.clicks.postback'])
+                ->where('id', $id)->first();
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');

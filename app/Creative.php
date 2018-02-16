@@ -31,4 +31,8 @@ class Creative extends Model {
     public function creativeLogs() {
         return $this->hasMany('App\CreativeLog');
     }
+    
+    public function clicks() {
+        return $this->hasMany('App\Click');
+    }
 }

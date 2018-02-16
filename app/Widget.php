@@ -27,4 +27,8 @@ class Widget extends Model {
         return $this->hasMany('App\CreativeLog');
     }
 
+    public function clicks() {
+        return $this->hasMany('App\Click');
+    }
+
 }
