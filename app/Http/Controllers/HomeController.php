@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Widget;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller {
 
@@ -22,7 +23,8 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $widgets = Widget::with(['creativeLogs.creative.clicks.postback'])->get();
+        $widgets = Widget::with(['creativeLogs.creative.clicks.postback'])
+                ->where('user_id', Auth::id())->get();
         return view('home', compact('widgets'));
     }
 

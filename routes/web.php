@@ -15,7 +15,7 @@ Route::get('/', function () {
     if (Auth::guest()) {
         return view('auth.login');
     } else {
-        return view('home');
+        return view('home')->with('widgets', array());
     }
 });
 
