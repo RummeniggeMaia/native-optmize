@@ -4,7 +4,7 @@
 <h1>Criar User</h1>
 {!! Form::open(['url' => 'users']) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Name', 'Name:') !!}
+    {!! Form::label('Name', 'Nome:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
@@ -22,7 +22,7 @@
     @endif
 </div>
 <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-    {!! Form::label('Password', 'Password:') !!}
+    {!! Form::label('Password', 'Senha:') !!}
     {!! Form::password('password',['id'=>'password', 'class'=>'form-control']) !!}
     @if ($errors->has('password'))
     <span class="help-block">

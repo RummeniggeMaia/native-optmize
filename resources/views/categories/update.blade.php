@@ -4,7 +4,7 @@
 <h1>Atualizar Categoria</h1>
 {!! Form::model($category,['method' => 'patch','route'=>['categories.update',$category->id]]) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Name', 'Name:') !!}
+    {!! Form::label('Name', 'Nome:') !!}
     {!! Form::text('name',null,['id'=>'name', 'class'=>'form-control']) !!}
     @if ($errors->has('name'))
         <span class="help-block">

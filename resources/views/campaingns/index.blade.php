@@ -8,9 +8,9 @@
     <thead>
         <tr class="bg-info">
             <th>Id</th>
-            <th>Name</th>
-            <th>Brand</th>
-            <th colspan="3">Actions</th>
+            <th>Nome</th>
+            <th>Marca</th>
+            <th colspan="3">Ações</th>
         </tr>
     </thead>
     <tbody>

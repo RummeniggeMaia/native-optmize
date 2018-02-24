@@ -4,7 +4,7 @@
 <h1>Criar Widget</h1>
 {!! Form::open(['url' => 'widgets']) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Name', 'Name:') !!}
+    {!! Form::label('Name', 'Nome:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
@@ -22,7 +22,7 @@
     @endif
 </div>
 <div class="form-group {{ $errors->has('quantity') ? ' has-error' : '' }}">
-    {!! Form::label('Quantity', 'Quantity:') !!}
+    {!! Form::label('Quantity', 'Quantidade:') !!}
     {{ Form::select('quantity', ['3'=>3,'4'=>4,'5'=>5,'6'=>6], null, ['class'=>'selectpicker form-control']) }}
     @if ($errors->has('quantity'))
     <span class="help-block">
@@ -31,7 +31,7 @@
     @endif
 </div>
 <div class="form-group">
-    {!! Form::label('Type', 'Type:') !!}
+    {!! Form::label('Type', 'Tipo:') !!}
     {{ Form::select(
             'type', 
             [

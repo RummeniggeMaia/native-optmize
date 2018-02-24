@@ -5,19 +5,19 @@
 
 <form class="form-horizontal">
     <div class="form-group">
-        <label for="image" class="col-sm-2 control-label">Image</label>
+        <label for="image" class="col-sm-2 control-label">Imagem</label>
         <div class="col-sm-10">
             <img src="{{ asset($creative->image) }}" height="180" width="180" class="img-rounded">
         </div>
     </div>
     <div class="form-group">
-        <label for="isbn" class="col-sm-2 control-label">Brand</label>
+        <label for="isbn" class="col-sm-2 control-label">Marca</label>
         <div class="col-sm-10">
             <input type="text" style="background-color:white" class="form-control" id="isbn" value="{{ $creative->brand }}" readonly>
         </div>
     </div>
     <div class="form-group">
-        <label for="isbn" class="col-sm-2 control-label">Name</label>
+        <label for="isbn" class="col-sm-2 control-label">Nome</label>
         <div class="col-sm-10">
             <input type="text" style="background-color:white" class="form-control" id="isbn" value="{{ $creative->name }}" readonly>
         </div>
@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="title" class="col-sm-2 control-label">Category</label>
+        <label for="title" class="col-sm-2 control-label">Categoria</label>
         <div class="col-sm-10">
             <input type="text" style="background-color:white" class="form-control" id="category" value="{{ $creative->category->name }}" readonly>
         </div>

@@ -8,8 +8,8 @@
     <thead>
         <tr class="bg-info">
             <th>Id</th>
-            <th>Name</th>
-            <th colspan="3">Actions</th>
+            <th>Nome</th>
+            <th colspan="3">Ações</th>
         </tr>
     </thead>
     <tbody>

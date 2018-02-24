@@ -4,13 +4,13 @@
 
 <form class="form-horizontal">
     <div class="form-group">
-        <label for="name" class="col-sm-2 control-label">Name</label>
+        <label for="name" class="col-sm-2 control-label">Nome</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="name" placeholder="{{ $campaingn->name }}" readonly>
         </div>
     </div>
     <div class="form-group">
-        <label for="brand" class="col-sm-2 control-label">Brand</label>
+        <label for="brand" class="col-sm-2 control-label">Marca</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="brand" placeholder="{{ $campaingn->brand }}" readonly>
         </div>

@@ -4,7 +4,7 @@
 
 <form class="form-horizontal">
     <div class="form-group">
-        <label for="urlname" class="col-sm-2 control-label">Name</label>
+        <label for="urlname" class="col-sm-2 control-label">Nome</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="name" placeholder="{{ $widget->name }}" readonly>
         </div>
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="type" class="col-sm-2 control-label">Type</label>
+        <label for="type" class="col-sm-2 control-label">Tipo</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="type"
                    placeholder="{{ [
@@ -29,7 +29,7 @@
     </div>
 
     <div class="form-group">
-        <label for="type" class="col-sm-2 control-label">Quantity</label>
+        <label for="type" class="col-sm-2 control-label">Quantidade</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="quantity"
                    placeholder="{{ $widget->quantity }}" readonly>

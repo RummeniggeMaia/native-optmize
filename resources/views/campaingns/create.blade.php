@@ -4,7 +4,7 @@
 {!! Form::open(['url' => 'campaingns']) !!}
 <h1>Criar Campaign</h1>
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Name', 'Name:') !!}
+    {!! Form::label('Name', 'Nome:') !!}
     {!! Form::text('name',null,['id'=>'name','class'=>'form-control']) !!}
     @if ($errors->has('name'))
         <span class="help-block">
@@ -13,7 +13,7 @@
     @endif
 </div>
 <div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
-    {!! Form::label('Brand', 'Brand:') !!}
+    {!! Form::label('Brand', 'Marca:') !!}
     {!! Form::text('brand',null,['id'=>'brand','class'=>'form-control']) !!}
     @if ($errors->has('brand'))
         <span class="help-block">

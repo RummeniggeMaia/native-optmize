@@ -9,10 +9,10 @@
         <thead>
             <tr class="bg-info">
                 <th>Id</th>
-                <th>Image</th>
-                <th>Brand</th>
-                <th>Name</th>
-                <th>Url</th>
+                <th>Imagem</th>
+                <th>Marca</th>
+                <th>Nome</th>
+                <th>URL</th>
                 <th colspan="3">Ações</th>
             </tr>
         </thead>

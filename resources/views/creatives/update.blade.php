@@ -5,7 +5,7 @@
 <h1>Atualizar Creative</h1>
 {!! Form::model($creative,['method' => 'patch','route'=>['creatives.update',$creative->id], 'files' => true]) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-    {!! Form::label('Name', 'Name:') !!}
+    {!! Form::label('Name', 'Nome:') !!}
     {!! Form::text('name',null,['class'=>'form-control']) !!}
     @if ($errors->has('name'))
     <span class="help-block">
@@ -14,7 +14,7 @@
     @endif
 </div>
 <div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
-    {!! Form::label('Brand', 'Brand:') !!}
+    {!! Form::label('Brand', 'Marca:') !!}
     {!! Form::text('brand',null,['class'=>'form-control']) !!}
     @if ($errors->has('brand'))
     <span class="help-block">
@@ -33,7 +33,7 @@
 </div>
 <div class="row">
     <div class="form-group col-sm-6 {{ $errors->has('image') ? ' has-error' : '' }}">
-        {!! Form::label('Image', 'Image:') !!}
+        {!! Form::label('Image', 'Imagem:') !!}
         {!! Form::file('image',['class'=>'form-control', 'accept'=>'.png,.jpg']) !!}
         @if ($errors->has('image'))
         <span class="help-block">
@@ -48,7 +48,7 @@
     </div>
 </div>
 <div class="form-group {{ $errors->has('category_id') ? ' has-error' : '' }}">
-    {!! Form::label('Category', 'Category:') !!}
+    {!! Form::label('Category', 'Categoria:') !!}
     <select id='category_id'
             name="category_id"
             class="selectpicker form-control"
