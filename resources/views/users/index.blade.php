@@ -10,6 +10,7 @@
             <th>Id</th>
             <th>Nome</th>
             <th>E-mail</th>
+            <th>Skype</th>
             <th colspan="3">Ações</th>
         </tr>
     </thead>
@@ -19,6 +20,7 @@
             <td>{{ $user->id }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
+            <td>{{ $user->skype }}</td>
             <td><a href="{{route('users.show', $user->id)}}" class="btn btn-primary">Mostrar</a></td>
             <td><a href="{{route('users.edit', $user->id)}}" class="btn btn-warning">Atualizar</a></td>
             <td>

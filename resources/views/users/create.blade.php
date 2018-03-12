@@ -21,6 +21,15 @@
     </span>
     @endif
 </div>
+<div class="form-group {{ $errors->has('skype') ? ' has-error' : '' }}">
+    {!! Form::label('Skype', 'Skype:') !!}
+    {!! Form::text('skype',null,['id'=>'skype', 'class'=>'form-control']) !!}
+    @if ($errors->has('skype'))
+    <span class="help-block">
+        <strong>{{ $errors->first('skype') }}</strong>
+    </span>
+    @endif
+</div>
 <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
     {!! Form::label('Password', 'Senha:') !!}
     {!! Form::password('password',['id'=>'password', 'class'=>'form-control']) !!}

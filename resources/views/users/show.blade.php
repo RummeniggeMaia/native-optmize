@@ -17,6 +17,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label for="skype" class="col-sm-2 control-label">Skype</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="skype" placeholder="{{ $user->skype }}" readonly>
+        </div>
+    </div>
+    <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <a href="{{ route('users.index')}}" class="btn btn-primary">Voltar</a>
         </div>
