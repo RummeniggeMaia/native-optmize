@@ -83,8 +83,8 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function show($id) {
-        $widget = Widget::with(['creativeLogs.creative.clicks.postback'])
-                ->where(['id' => $id, 'user_id' => Auth::id()])->first();
+        $widget = Widget::with(['creativeLogs'])
+                 ->where(['id' => $id, 'user_id' => Auth::id()])->first();
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');

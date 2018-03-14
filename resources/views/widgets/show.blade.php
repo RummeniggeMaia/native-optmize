@@ -62,7 +62,7 @@
                         <td><img src="{{ asset($log->creative->image) }}" height="154" width="128"></td>
                         <td>{{ $log->clicks }}</td>
                         <td>{{ $log->impressions }}</td>
-                        <td>R$ {{ $log->creative->clicks->sum('postback.amt') }}</td>
+                        <td>R$ {{ 0 }}</td>
                     </tr>
                     @endforeach
                 </tbody>
