@@ -39,6 +39,20 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('skype') ? ' has-error' : '' }}">
+                            <label for="email" class="col-md-4 control-label">Skype</label>
+
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control" name="skype" required>
+
+                                @if ($errors->has('skype'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('skype') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
