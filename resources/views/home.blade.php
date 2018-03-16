@@ -40,11 +40,8 @@
                         <td>{{ $widget->creativeLogs->sum('clicks') }}</td>
                         <td>{{ $widget->creativeLogs->sum('impressions') }}</td>
                         <?php $revenues = 0; ?>
-                        @foreach ($widget->creativeLogs as $log)
-                            <?php $revenues += $log->creative->clicks->sum('postback.amt'); ?>
-                        @endforeach
                         <td>
-                            {{ $revenues }}
+                            {{ 0 }}
                         </td>
                     </tr>
                     @endforeach
