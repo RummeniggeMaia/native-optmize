@@ -23,7 +23,7 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $widgets = Widget::with(['creativeLogs.creative.clicks.postback'])
+        $widgets = Widget::with(['creativeLogs'])
                 ->where('user_id', Auth::id())->get();
         return view('home', compact('widgets'));
     }
