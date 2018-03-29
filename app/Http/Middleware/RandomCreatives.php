@@ -39,7 +39,7 @@ class RandomCreatives {
                 '[headline]'
             );
             foreach ($creatives as $creative) {
-                $cId = Hash::make($creative->name
+                $cId = hash("sha256", $creative->name
                                 . "hashid"
                                 . Carbon::now()->toDateTimeString());
                 $creative['click_id'] = $cId;
@@ -47,7 +47,7 @@ class RandomCreatives {
                     $cId,
                     $widget->id,
                     $creative->id,
-                    url('/') . '/' . $creative->image,
+                    urlencode(url('/') . '/' . $creative->image),
                     urlencode($creative->name)
                 );
                 $creative->url = str_replace($params, $fields, $creative->url);
@@ -55,6 +55,7 @@ class RandomCreatives {
                 $this->impressions($widget, $creative);
                 unset($creative['id']);
             }
+            $widget->increment('impressions');
             return response()->json($creatives);
         } else {
             return response()->json("not found", 404);

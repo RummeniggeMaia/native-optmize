@@ -61,8 +61,8 @@
                         <td>{{ $log->creative->name }}</td>
                         <td><img src="{{ asset($log->creative->image) }}" height="154" width="128"></td>
                         <td>{{ $log->clicks }}</td>
-                        <td>{{ $log->impressions }}</td>
-                        <td>R$ {{ 0 }}</td>
+                        <td>{{ $widget->impressions }}</td>
+                        <td>R$ {{ $log->revenues }}</td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -38,11 +38,8 @@
                     <tr style="opacity: 1">
                         <td>{{ $widget->name }}</td>
                         <td>{{ $widget->creativeLogs->sum('clicks') }}</td>
-                        <td>{{ $widget->creativeLogs->sum('impressions') }}</td>
-                        <?php $revenues = 0; ?>
-                        <td>
-                            {{ 0 }}
-                        </td>
+                        <td>{{ $widget->impressions }}</td>
+                        <td>R$ {{ $widget->creativeLogs->sum('revenues') }}</td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -61,7 +61,7 @@
         <option
             title="{{$category->name}}"
             value="{{$category->id}}"
-            @if($category->id == $creative->category->id) selected @endif
+            @if($creative->category != null && $category->id == $creative->category->id) selected @endif
             {{ (collect(old('category_id'))->contains($category->id)) ? 'selected':'' }}>
             {{$category->name}}
         </option>

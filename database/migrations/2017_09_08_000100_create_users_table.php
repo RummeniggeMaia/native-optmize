@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->string('skype')->nullable();
+            $table->string('phone')->nullable();
             $table->string('password');
             $table->double('revenue')->default(0.0);
             $table->string('remember_token')->nullable();

@@ -200,14 +200,14 @@ class CreativeController extends Controller {
             'name.required' => 'Insira um nome.',
             //'name.unique' => 'Já existe um creative com este nome.',
             'name.min' => 'Nome muito curto.',
-            'url.regex' => 'URL inválido.',
+            //'url.regex' => 'URL inválido.',
             'category_id.required' => 'Selecione uma Category',
             'image.required' => 'Selecione uma imagem.'
         );
         $rules = array(
             'brand' => 'required|min:4',
             'name' => 'required|min:4',
-            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
+            //'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'category_id' => 'required',
             'image' => $edit ? '' : 'required'
         );

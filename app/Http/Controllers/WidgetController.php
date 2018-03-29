@@ -7,6 +7,8 @@ use App\Campaingn;
 use App\Creative;
 use App\Http\Requests;
 use App\CreativeLog;
+use App\Click;
+use App\Postback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -45,7 +47,7 @@ class WidgetController extends Controller {
      */
     public function create() {
         //$campaingns = Campaingn::where('user_id', Auth::id())->get();
-        return view('widgets.create');//->with(['campaingns' => $campaingns]);
+        return view('widgets.create'); //->with(['campaingns' => $campaingns]);
     }
 
     /** Store a newly created resource in storage.
@@ -83,8 +85,8 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function show($id) {
-        $widget = Widget::with(['creativeLogs'])
-                 ->where(['id' => $id, 'user_id' => Auth::id()])->first();
+        $widget = Widget::with(['creativeLogs.creative'])
+                        ->where(['id' => $id, 'user_id' => Auth::id()])->first();
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');
@@ -95,13 +97,21 @@ class WidgetController extends Controller {
             $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
             $json = json_decode($jsonFile);
             $json->js = str_replace(
-                    ['[url]','[version]'], 
-                    [addslashes(url('/')), md5(time())], 
-                    $json->js
+                    ['[url]', '[version]'], [addslashes(url('/')), md5(time())], $json->js
             );
             $json->html = str_replace(
                     '[widget_hashid]', addslashes($widget->hashid), $json->html);
             $code = $json->js . "\n" . $json->html;
+
+            foreach ($widget->creativeLogs as $log) {
+                $clicks = Click::with(['postback'])->where([
+                            'creative_id' => $log->creative->id,
+                            'widget_id' => $widget->id
+                        ])->get();
+                $log['revenues'] = round(
+                        ($clicks->sum('postback.amt') / 2), 2, PHP_ROUND_HALF_UP
+                );
+            }
             return view('widgets.show', compact('widget'))
                             ->with('code', $code);
         }
