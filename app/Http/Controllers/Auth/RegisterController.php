@@ -68,6 +68,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'skype' => $data['skype'],
+            'phone' => $data['phone'],
             'password' => bcrypt($data['password']),
         ]);
         $user->roles()->attach($role_user);

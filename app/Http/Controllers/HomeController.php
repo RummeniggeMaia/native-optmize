@@ -26,14 +26,16 @@ class HomeController extends Controller {
     public function index() {
         $widgets = Widget::with(['creativeLogs.creative'])
                         ->where('user_id', Auth::id())->get();
-        foreach ($widget->creativeLogs as $log) {
-            $clicks = Click::with(['postback'])->where([
-                        'creative_id' => $log->creative->id,
-                        'widget_id' => $widget->id
-                    ])->get();
-            $log['revenues'] = round(
-                    ($clicks->sum('postback.amt') / 2), 2, PHP_ROUND_HALF_UP
-            );
+        foreach ($widgets as $widget) {
+            foreach ($widget->creativeLogs as $log) {
+                $clicks = Click::with(['postback'])->where([
+                            'creative_id' => $log->creative->id,
+                            'widget_id' => $widget->id
+                        ])->get();
+                $log['revenues'] = round(
+                        ($clicks->sum('postback.amt') / 2), 2, PHP_ROUND_HALF_UP
+                );
+            }
         }
         return view('home', compact('widgets'));
     }
