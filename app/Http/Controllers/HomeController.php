@@ -6,6 +6,8 @@ use App\Widget;
 use App\Click;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class HomeController extends Controller {
 
@@ -38,6 +40,26 @@ class HomeController extends Controller {
             }
         }
         return view('home', compact('widgets'));
+    }
+
+    public function indexDataTable() {
+        $widgets = Widget::with(['creativeLogs'])
+                        ->where('user_id', Auth::id())->get();
+        foreach ($widgets as $widget) {
+            $revenues = 0;
+            DB::table('clicks')
+                    ->where('clicks.widget_id', $widget->id)
+                    ->join('postbacks', 'clicks.id', 'postbacks.click_id')
+                    ->orderBy('clicks.id')
+                    ->chunk(60000, function($clicks) use (&$revenues) {
+                        foreach ($clicks as $click) {
+                            $revenues += $click->amt;
+                        }
+                    });
+            $widget->revenues = round($revenues / 2, 2, PHP_ROUND_HALF_UP);
+            $widget->clicks = $widget->creativeLogs->sum('clicks');
+        }
+        return Datatables::of($widgets)->make(true);
     }
 
 }

@@ -18,6 +18,7 @@ use App\Providers\Template;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\DataTables;
 
 class WidgetController extends Controller {
 
@@ -35,9 +36,38 @@ class WidgetController extends Controller {
      */
 
     public function index() {
-        $widgets = Widget::where('user_id', Auth::id())
-                        ->orderBy('name', 'asc')->paginate(5);
-        return view('widgets.index', compact('widgets'));
+        //$widgets = Widget::where('user_id', Auth::id())->paginate(10);
+        return view('widgets.index');
+    }
+
+    public function indexDataTable() {
+        $widgets = DB::table('widgets')->where('user_id', Auth::id())->get();
+        return Datatables::of($widgets)->addColumn('edit', function($widget) {
+                    return view('comum.button_edit', [
+                        'id' => $widget->id,
+                        'route' => 'widgets.edit'
+                    ]);
+                })->addColumn('show', function($widget) {
+                    return view('comum.button_show', [
+                        'id' => $widget->id,
+                        'route' => 'widgets.show'
+                    ]);
+                })->addColumn('delete', function($widget) {
+                    return view('comum.button_delete', [
+                        'id' => $widget->id,
+                        'route' => 'widgets.destroy'
+                    ]);
+                })->editColumn('type', function($widget) {
+                    $types = [
+                        '----------------------',
+                        'Barra Lateral Direita',
+                        'Barra Lateral Esquerda',
+                        'Central'
+                    ];
+                    return $types[$widget->type];
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
     }
 
     /**
@@ -201,15 +231,16 @@ class WidgetController extends Controller {
         $mensagens = array(
             'name.required' => 'Insira um nome.',
             'name.min' => 'Nome muito curto.',
-            'quantity.in' => 'Quantidade inválida.' . $post['quantity'],
+            'quantity.in' => 'Quantidade inválida.',
             'url.regex' => 'URL inválido.',
-            'campaingns.required' => 'Selecione ao menos uma Campaingn.'
+            'campaingns.required' => 'Selecione ao menos uma Campaingn.',
+            'type.in' => 'Tipo inválido',
         );
         $rules = array(
             'name' => 'required|min:4',
             'quantity' => 'in:3,4,5,6',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
-                //'campaingns' => 'required|array|min:1'
+            'type' => 'in:1,2,3,4',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

@@ -70,6 +70,9 @@ Route::middleware(['user'])->group(function () {
     Route::delete('/widgets/{widget}', 'WidgetController@destroy')->name('widgets.destroy');
     Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
     Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
+    Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
+    
+    Route::get('/homedata', 'HomeController@indexDataTable')->name('home.data');
 });
 
 Route::get('/auth/account', 'Auth\AuthController@edit')->name('auth.account');

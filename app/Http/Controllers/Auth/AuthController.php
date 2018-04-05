@@ -23,7 +23,7 @@ class AuthController extends Controller {
     }
 
     public function update(Request $request) {
-        $post = $request->only('name');
+        $post = $request->only(['name', 'skype', 'phone']);
         $validacao = $this->validar($post);
         if ($validacao->fails()) {
             return redirect()->back()

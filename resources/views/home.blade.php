@@ -1,30 +1,24 @@
 @extends('layouts.template')
 
 @section('content')
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-<!-- Styles -->
-<div class="body">
-    <div class="flex-center position-ref full-height">
-        <div class="content">
-            <div class="title m-b-md" style="font-weight: 100;">
-                Native Optimize
-            </div>
-            @auth
-            <div class="links">
-                @If (Auth::user()->hasRole('admin'))
-                <a href="{{ route('users') }}">Users</a>
-                <a href="{{ route('creatives') }}">Creatives</a>
-                <a href="{{ route('campaingns') }}">Campaigns</a>
-                <a href="{{ route('categories') }}">Categories</a>
-                @else
-                <a href="{{ route('widgets') }}">Widgets</a>
-                @endif
-            </div>
-            <br />
-            @If (Auth::user()->hasRole('user'))
-            <table class="table table-striped table-bordered table-hover">
+@auth
+@If (Auth::user()->hasRole('user'))
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+</ul>
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-tv"></i>Estatísticas por <b>Widgets</b><br><small>Este é seu painel, cuide bem dele :)</small>
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="row"> 
+    <div class="col-md-12">             
+        <div class="table-responsive">
+            <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                 <thead>
                     <tr>
                         <th>Widget</th>
@@ -33,20 +27,33 @@
                         <th>Revenues</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($widgets as $widget)
-                    <tr style="opacity: 1">
-                        <td>{{ $widget->name }}</td>
-                        <td>{{ $widget->creativeLogs->sum('clicks') }}</td>
-                        <td>{{ $widget->impressions }}</td>
-                        <td>R$ {{ $widget->creativeLogs->sum('revenues') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
             </table>
-            @endif
-            @endauth
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        App.datatables();
+        $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{!! route("home.data") !!}',
+                type: 'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                }
+            },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'clicks', name: 'clicks'},
+                {data: 'impressions', name: 'impressions'},
+                {data: 'revenues', name: 'revenues'},
+            ],
+
+        });
+    });
+</script>
+@endif
+@endauth
 @endsection

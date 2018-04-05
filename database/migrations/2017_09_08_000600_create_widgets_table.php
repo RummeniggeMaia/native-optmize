@@ -24,7 +24,7 @@ class CreateWidgetsTable extends Migration {
             $table->char('url', 255);
             $table->char('type', 255);
             $table->integer('quantity');
-            $table->integer('impressions');
+            $table->integer('impressions')->nullable();
             $table->timestamps();
         });
 
