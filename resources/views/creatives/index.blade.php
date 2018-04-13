@@ -1,8 +1,21 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Creatives</h1>
-<a href="{{route('creatives.create')}}" class="btn btn-success">Novo Creative</a>
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="">Lista de Anúncios</a></li>
+</ul>
+
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="lnr lnr-power-switch"></i>Lista de <b>Anúncios</b><br><small>Este é seu painel, cuide bem dele :)</small>
+            </h1>
+        </div>
+    </div>
+</div>
+
 <hr>
 <div class="table-responsive">
     <table class="table table-striped table-bordered table-hover">

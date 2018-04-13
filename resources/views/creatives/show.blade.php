@@ -1,7 +1,20 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Dados do Creative</h1>
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="">Exibir Anúncios</a></li>
+</ul>
+
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="lnr lnr-power-switch"></i>Dados do <b>Anúncio</b><br><small>Este é seu painel, cuide bem dele :)</small>
+            </h1>
+        </div>
+    </div>
+</div>
 
 <form class="form-horizontal">
     <div class="form-group">

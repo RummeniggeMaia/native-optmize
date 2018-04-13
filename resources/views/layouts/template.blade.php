@@ -47,7 +47,7 @@
                                     <a href="#" class="sidebar-nav-menu active"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
                                     <ul>
                                         <li>
-                                            <a href="#">Adicionar Usuário</a>
+                                            <a href="{{ route('users.create') }}">Adicionar Usuário</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('users') }}">Listar Usuários</a>
@@ -58,7 +58,7 @@
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
                                     <ul>
                                         <li>
-                                            <a href="#">Adicionar Anúncios</a>
+                                            <a href="{{ route('creatives.create') }}">Adicionar Anúncios</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('creatives') }}">Listar Anúncios</a>
@@ -69,7 +69,7 @@
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-list sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Categorias</span></a>
                                     <ul>
                                         <li>
-                                            <a href="#">Adicionar Categoria</a>
+                                            <a href="{{ route('categories.create') }}">Adicionar Categoria</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('categories') }}">Listar Categorias</a>

@@ -1,8 +1,21 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Users</h1>
-<a href="{{route('users.create')}}" class="btn btn-success">Novo User</a>
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="">Lista de Usuários</a></li>
+</ul>
+
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="lnr lnr-power-switch"></i>Lista de <b>Usuários</b><br><small>Este é seu painel, cuide bem dele :)</small>
+            </h1>
+        </div>
+    </div>
+</div>
+
 <hr>
 <table class="table table-striped table-bordered table-hover">
     <thead>

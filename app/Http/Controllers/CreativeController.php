@@ -39,6 +39,29 @@ class CreativeController extends Controller {
         return view('creatives.index', compact('creatives'));
     }
 
+    public function indexDataTable() {
+        $creatives = DB::table('creatives')->where('user_id', Auth::id())->get();
+        return Datatables::of($creatives)->addColumn('edit', function($creative) {
+                    return view('comum.button_edit', [
+                        'id' => $creative->id,
+                        'route' => 'creatives.edit'
+                    ]);
+                })->addColumn('show', function($creative) {
+                    return view('comum.button_show', [
+                        'id' => $creative->id,
+                        'route' => 'creatives.show'
+                    ]);
+                })->addColumn('delete', function($creative) {
+                    return view('comum.button_delete', [
+                        'id' => $creative->id,
+                        'route' => 'creatives.destroy'
+                    ]);
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
+    }
+    
+
     /**
      * Show the form for creating a new resource.
      *

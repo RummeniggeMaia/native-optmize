@@ -21,6 +21,28 @@ class CategoryController extends Controller {
         return view('categories.index', compact('categories'));
     }
 
+    public function indexDataTable() {
+        $categories = DB::table('categories')->where('user_id', Auth::id())->get();
+        return Datatables::of($categories)->addColumn('edit', function($category) {
+                    return view('comum.button_edit', [
+                        'id' => $category->id,
+                        'route' => 'categories.edit'
+                    ]);
+                })->addColumn('show', function($category) {
+                    return view('comum.button_show', [
+                        'id' => $category->id,
+                        'route' => 'categories.show'
+                    ]);
+                })->addColumn('delete', function($category) {
+                    return view('comum.button_delete', [
+                        'id' => $category->id,
+                        'route' => 'categories.destroy'
+                    ]);
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
