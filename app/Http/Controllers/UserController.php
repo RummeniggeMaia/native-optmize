@@ -26,6 +26,28 @@ class UserController extends Controller {
         return view('users.index', compact('users'));
     }
 
+    public function indexDataTable() {
+        $users = DB::table('users')->where('user_id', Auth::id())->get();
+        return Datatables::of($users)->addColumn('edit', function($user) {
+                    return view('comum.button_edit', [
+                        'id' => $user->id,
+                        'route' => 'users.edit'
+                    ]);
+                })->addColumn('show', function($user) {
+                    return view('comum.button_show', [
+                        'id' => $user->id,
+                        'route' => 'users.show'
+                    ]);
+                })->addColumn('delete', function($user) {
+                    return view('comum.button_delete', [
+                        'id' => $user->id,
+                        'route' => 'users.destroy'
+                    ]);
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

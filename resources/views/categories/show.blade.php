@@ -1,8 +1,20 @@
 @extends('layouts/template')
 
 @section('content')
-<h1>Dados da Category</h1>
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="">Exibir Categorias</a></li>
+</ul>
 
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="lnr lnr-power-switch"></i>Dados da <b>Categoria</b><br><small>Este é seu painel, cuide bem dele :)</small>
+            </h1>
+        </div>
+    </div>
+</div>
 <form class="form-horizontal">
     <div class="form-group">
         <label for="name" class="col-sm-2 control-label">Nome</label>

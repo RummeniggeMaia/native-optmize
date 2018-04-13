@@ -28,6 +28,28 @@ class CampaingnController extends Controller {
         return view('campaingns.index', compact('campaingns'));
     }
 
+    public function indexDataTable() {
+        $campaingns = DB::table('campaingns')->where('user_id', Auth::id())->get();
+        return Datatables::of($campaingns)->addColumn('edit', function($campaingn) {
+                    return view('comum.button_edit', [
+                        'id' => $campaingn->id,
+                        'route' => 'campaingns.edit'
+                    ]);
+                })->addColumn('show', function($campaingn) {
+                    return view('comum.button_show', [
+                        'id' => $campaingn->id,
+                        'route' => 'campaingns.show'
+                    ]);
+                })->addColumn('delete', function($campaingn) {
+                    return view('comum.button_delete', [
+                        'id' => $campaingn->id,
+                        'route' => 'campaingns.destroy'
+                    ]);
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

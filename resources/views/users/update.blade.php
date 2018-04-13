@@ -1,7 +1,20 @@
 @extends('layouts.template')
 
 @section('content')
-<h1>Atualizar User</h1>
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="">Editar Usuário</a></li>
+</ul>
+
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="lnr lnr-power-switch"></i>Editar <b>Usuário</b><br><small>Este é seu painel, cuide bem dele :)</small>
+            </h1>
+        </div>
+    </div>
+</div>
 {!! Form::model($user,['method' => 'patch','route'=>['users.update',$user->id]]) !!}
 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
     {!! Form::label('Name', 'Nome:') !!}
