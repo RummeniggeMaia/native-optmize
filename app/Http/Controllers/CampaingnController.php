@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Campaingn;
 use App\Creative;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class CampaingnController extends Controller {
     /*

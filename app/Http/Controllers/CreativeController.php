@@ -17,6 +17,8 @@ use App\Providers\ImgCompressor;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class CreativeController extends Controller {
 
@@ -56,8 +58,12 @@ class CreativeController extends Controller {
                         'id' => $creative->id,
                         'route' => 'creatives.destroy'
                     ]);
+                })->editColumn('image', function($creative) {
+                    return view('comum.image', [
+                        'image' => $creative->image
+                    ]);
                 })->rawColumns(
-                        ['edit', 'show', 'delete']
+                        ['edit', 'show', 'delete', 'image']
                 )->make(true);
     }
     

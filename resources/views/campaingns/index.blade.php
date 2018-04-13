@@ -10,51 +10,51 @@
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-power-switch"></i>Lista de <b>Campanhas</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                <i class="lnr lnr-bullhorn"></i>Lista de <b>Campanhas</b>
             </h1>
         </div>
     </div>
 </div>
+<div class="row"> 
+    <div class="col-md-12">             
+        <div class="table-responsive">
+            <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
+                <thead>
+                    <tr class="bg-info">
+                        <th class="text-center">NOME</th>
+                        <th class="text-center">MARCA</th>
+                        <th class="text-center">EDITAR</th>
+                        <th class="text-center">EXIBIR</th>
+                        <th class="text-center">EXCLUIR</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        App.datatables();
+        $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{!! route("campaingns.data") !!}',
+                type: 'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                }
+            },
+            columns: [
+                {data: 'brand', name: 'brand'},
+                {data: 'name', name: 'name'},
+                {data: 'edit', name: 'edit', orderable: false, searchable: false},
+                {data: 'show', name: 'show', orderable: false, searchable: false},
+                {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            ],
 
-<hr>
-<table class="table table-striped table-bordered table-hover">
-    <thead>
-        <tr class="bg-info">
-            <th>Id</th>
-            <th>Nome</th>
-            <th>Marca</th>
-            <th colspan="3">Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($campaingns as $campaingn)
-        <tr>
-            <td>{{ $campaingn->id }}</td>
-            <td>{{ $campaingn->name }}</td>
-            <td>{{ $campaingn->brand }}</td>
-            <td><a href="{{route('campaingns.show', $campaingn->id)}}" class="btn btn-primary">Mostrar</a></td>
-            <td><a href="{{route('campaingns.edit', $campaingn->id)}}" class="btn btn-warning">Atualizar</a></td>
-            <td>
-                {!! Form::open(['method' => 'DELETE', 'route'=>['campaingns.destroy', $campaingn->id]]) !!}
-                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                {!! Form::close() !!}
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-    <tfoot class="bg-info">
-        <tr>
-            <td colspan="7" style="text-align: right;font-weight: bold">
-                Exibindo de {{ ($campaingns->currentPage() - 1) * 5 + 1 }}
-                a @if(($campaingns->currentPage() - 1) * 5 + 5 > $campaingns->total())
-                    {{ $campaingns->total() }}
-                  @else
-                    {{ ($campaingns->currentPage() - 1) * 5 + 5 }}
-                  @endif
-                de {{ $campaingns->total() }} campaingns
-            </td>
-        </tr>
-    </tfoot>
-</table>
-{{ $campaingns->links() }}
+        });
+        $('.dataTables_filter input').attr('placeholder', 'Buscar');
+    });
+</script>
 @endsection

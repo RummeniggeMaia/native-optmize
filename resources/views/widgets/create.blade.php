@@ -10,7 +10,7 @@
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-power-switch"></i>Adicionar <b>Widget</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                <i class="lnr lnr-power-switch"></i>Adicionar <b>Widget</b>
             </h1>
         </div>
     </div>
@@ -22,7 +22,7 @@
             <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-user"></i></span>
-                    {!! Form::text('name',null,['class'=>'form-control input-lg', 'placeholder' => 'Nome']) !!}
+                    {!! Form::text('name',null,['class'=>'form-control input-lg', 'placeholder' => 'Nome', 'required']) !!}
                 </div>
                 @if ($errors->has('name'))
                 <span class="help-block">
@@ -33,7 +33,7 @@
             <div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-globe"></i></span>
-                    {!! Form::text('url',null,['class'=>'form-control input-lg', 'placeholder' => 'URL']) !!}
+                    {!! Form::text('url',null,['class'=>'form-control input-lg', 'placeholder' => 'URL', 'required']) !!}
                 </div>
                 @if ($errors->has('url'))
                 <span class="help-block">
@@ -49,7 +49,7 @@
                         'quantity', 
                         ['3'=>3,'4'=>4,'5'=>5,'6'=>6], 
                         null, 
-                        ['class'=>'selectpicker form-control input-lg', 'placeholder'=>'Selecione uma quantidade']) 
+                        ['class'=>'selectpicker form-control input-lg', 'placeholder'=>'Selecione uma quantidade', 'required']) 
                     }}
                 </div>
                 @if ($errors->has('quantity'))
@@ -69,7 +69,7 @@
                             '4'=>'Central'
                         ],
                         Input::old('type'), 
-                        ['placeholder'=>'Selecione um tipo', 'class'=>'selectpicker form-control input-lg']) 
+                        ['placeholder'=>'Selecione um tipo', 'class'=>'selectpicker form-control input-lg', 'required']) 
                     }}
                 </div>
                 @if ($errors->has('type'))

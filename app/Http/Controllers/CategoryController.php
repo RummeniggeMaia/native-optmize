@@ -7,6 +7,8 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class CategoryController extends Controller {
     /*

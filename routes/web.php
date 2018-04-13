@@ -24,6 +24,16 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware(['admin'])->group(function () {
+    Route::post('/users', 'UserController@store')->name('users.store');
+    Route::get('/users', 'UserController@index')->name('users');
+    Route::get('/users/create', 'UserController@create')->name('users.create');
+    Route::get('/users/{widget}', 'UserController@show')->name('users.show');
+    Route::patch('/users/{widget}', 'UserController@update')->name('users.update');
+    Route::delete('/users/{widget}', 'UserController@destroy')->name('users.destroy');
+    Route::get('/users/{widget}/edit', 'UserController@edit')->name('users.edit');
+    Route::get('users/{page?}', 'UserController@index')->name('users.index');
+    Route::get('/usersdata', 'UserController@indexDataTable')->name('users.data');
+    
     Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
     Route::get('/creatives', 'CreativeController@index')->name('creatives');
     Route::get('/creatives/create', 'CreativeController@create')->name('creatives.create');
@@ -32,6 +42,7 @@ Route::middleware(['admin'])->group(function () {
     Route::delete('/creatives/{creative}', 'CreativeController@destroy')->name('creatives.destroy');
     Route::get('/creatives/{creative}/edit', 'CreativeController@edit')->name('creatives.edit');
     Route::get('/creatives/{page?}', 'CreativeController@index')->name('creatives');
+    Route::get('/creativesdata', 'CreativeController@indexDataTable')->name('creatives.data');
 
     Route::post('/campaingns', 'CampaingnController@store')->name('campaingns.store');
     Route::get('/campaingns', 'CampaingnController@index')->name('campaingns');
@@ -41,6 +52,7 @@ Route::middleware(['admin'])->group(function () {
     Route::delete('/campaingns/{campaingn}', 'CampaingnController@destroy')->name('campaingns.destroy');
     Route::get('/campaingns/{campaingn}/edit', 'CampaingnController@edit')->name('campaingns.edit');
     Route::get('/campaingns/{page?}', 'CampaingnController@index')->name('campaingns');
+    Route::get('/campaignsdata', 'CampaingnController@indexDataTable')->name('campaingns.data');
 
     Route::post('/categories', 'CategoryController@store')->name('categories.store');
     Route::get('/categories', 'CategoryController@index')->name('categories');
@@ -50,15 +62,7 @@ Route::middleware(['admin'])->group(function () {
     Route::delete('/categories/{campaingn}', 'CategoryController@destroy')->name('categories.destroy');
     Route::get('/categories/{campaingn}/edit', 'CategoryController@edit')->name('categories.edit');
     Route::get('/categories/{page?}', 'CategoryController@index')->name('categories.index');
-
-    Route::post('/users', 'UserController@store')->name('users.store');
-    Route::get('/users', 'UserController@index')->name('users');
-    Route::get('/users/create', 'UserController@create')->name('users.create');
-    Route::get('/users/{widget}', 'UserController@show')->name('users.show');
-    Route::patch('/users/{widget}', 'UserController@update')->name('users.update');
-    Route::delete('/users/{widget}', 'UserController@destroy')->name('users.destroy');
-    Route::get('/users/{widget}/edit', 'UserController@edit')->name('users.edit');
-    Route::get('users/{page?}', 'UserController@index')->name('users.index');
+    Route::get('/categoriesdata', 'CategoryController@indexDataTable')->name('categories.data');
 });
 
 Route::middleware(['user'])->group(function () {
@@ -71,7 +75,7 @@ Route::middleware(['user'])->group(function () {
     Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
     Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
     Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
-    
+
     Route::get('/homedata', 'HomeController@indexDataTable')->name('home.data');
 });
 

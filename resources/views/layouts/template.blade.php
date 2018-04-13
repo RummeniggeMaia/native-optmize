@@ -55,13 +55,24 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
                                     <ul>
                                         <li>
                                             <a href="{{ route('creatives.create') }}">Adicionar Anúncios</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('creatives') }}">Listar Anúncios</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Campanhas</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('campaingns.create') }}">Adicionar Campanha</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('campaingns') }}">Listar Campanhas</a>
                                         </li>
                                     </ul>
                                 </li>

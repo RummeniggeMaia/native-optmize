@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller {
 
@@ -27,7 +29,7 @@ class UserController extends Controller {
     }
 
     public function indexDataTable() {
-        $users = DB::table('users')->where('user_id', Auth::id())->get();
+        $users = DB::table('users')->get();
         return Datatables::of($users)->addColumn('edit', function($user) {
                     return view('comum.button_edit', [
                         'id' => $user->id,
@@ -76,7 +78,7 @@ class UserController extends Controller {
             $user = User::create($post);
             $user->roles()->sync([$role->id]);
 //            $user->roles()->attach(Role::where('name', 'user')->first());
-            
+
             return redirect('users');
         }
     }
