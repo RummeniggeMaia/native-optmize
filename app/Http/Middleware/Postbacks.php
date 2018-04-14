@@ -9,6 +9,7 @@ use App\Creative;
 use App\Postback;
 use App\Widget;
 use App\User;
+use App\CreativeLog;
 use Illuminate\Support\Facades\Log;
 
 class Postbacks {
@@ -35,6 +36,15 @@ class Postbacks {
                     $value = round(($amt / 2), 2, PHP_ROUND_HALF_UP);
                     $click->creative->increment('revenue', $value);
                     $click->widget->user->increment('revenue', $value);
+                    $log = CreativeLog::where([
+                        'creative_id' => $click->creative->id,
+                        'widget_id' => $click->widget->id
+                    ]);
+                    if ($log) {
+                        $log->increment('revenue', $value);
+                    } else {
+                        response()->json("no register", 400);
+                    }
                     Postback::create(array(
                         'ip' => $request->ip(),
                         'amt' => $amt,

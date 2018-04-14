@@ -2,13 +2,14 @@
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="{{ route('widgets') }}">Lista de Widgets</a></li>
     <li><a href="#">Exibir Widgets</a></li>
 </ul>
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-power-switch"></i>Dados do <b>Widget</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                <i class="lnr lnr-power-switch"></i>Exibir <b>Widget</b>
             </h1>
         </div>
     </div>
@@ -59,27 +60,16 @@
                 <div class="row"> 
                     <div class="col-md-12">             
                         <div class="table-responsive">
-                            <table class="table table-vcenter table-borderbottom table-condensed">
+                            <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                                 <thead>
                                     <tr class="bg-info">
-                                        <th>Creative</th>
-                                        <th>Image</th>
-                                        <th>Clicks</th>
-                                        <th>Impressions</th>
-                                        <th>Revenue</th>
+                                        <th>CREATIVE</th>
+                                        <th>IMAGEM</th>
+                                        <th>CLICKS</th>
+                                        <th>VISUALIZAÇÕES</th>
+                                        <th>REVENUES</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($widget->creativeLogs as $log)
-                                    <tr>
-                                        <td>{{ $log->creative->name }}</td>
-                                        <td><img src="{{ asset($log->creative->image) }}" height="154" width="128"></td>
-                                        <td>{{ $log->clicks }}</td>
-                                        <td>{{ $widget->impressions }}</td>
-                                        <td>R$ {{ $log->revenues }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -88,4 +78,29 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        App.datatables();
+        $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{!! route("widgets.logs", $widget->id) !!}',
+                type: 'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                }
+            },
+            columns: [
+                {data: 'creative.name', name: 'creative.name'},
+                {data: 'creative.image', name: 'creative.name'},
+                {data: 'clicks', name: 'clicks'},
+                {data: 'impressions', name: 'impressions'},
+                {data: 'revenue', name: 'revenue'},
+            ],
+
+        });
+        $('.dataTables_filter input').attr('placeholder', 'Buscar');
+    });
+</script>
 @stop

@@ -115,8 +115,7 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function show($id) {
-        $widget = Widget::with(['creativeLogs.creative'])
-                        ->where(['id' => $id, 'user_id' => Auth::id()])->first();
+        $widget = Widget::where(['id' => $id, 'user_id' => Auth::id()])->first();
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');
@@ -133,18 +132,18 @@ class WidgetController extends Controller {
                     '[widget_hashid]', addslashes($widget->hashid), $json->html);
             $code = $json->js . "\n" . $json->html;
 
-            foreach ($widget->creativeLogs as $log) {
-                $clicks = Click::with(['postback'])->where([
-                            'creative_id' => $log->creative->id,
-                            'widget_id' => $widget->id
-                        ])->get();
-                $log['revenues'] = round(
-                        ($clicks->sum('postback.amt') / 2), 2, PHP_ROUND_HALF_UP
-                );
-            }
             return view('widgets.show', compact('widget'))
                             ->with('code', $code);
         }
+    }
+
+    public function logsDataTable($id) {
+        $logs = CreativeLog::with(['creative'])->where('widget_id', $id);
+        return Datatables::of($logs)->editColumn('creative.image', function($log) {
+                    return view('comum.image', [
+                        'image' => $log->creative->image
+                    ]);
+                })->make(true);
     }
 
     /**

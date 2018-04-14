@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="block">
-            {!! Form::open(['url' => 'creatives', 'files' => true]) !!}
+            {!! Form::open(['url' => 'creatives', 'files' => true, 'class'=>'form-bordered']) !!}
             <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-user"></i></span>

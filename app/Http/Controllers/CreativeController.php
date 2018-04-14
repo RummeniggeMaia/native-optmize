@@ -67,7 +67,6 @@ class CreativeController extends Controller {
                 )->make(true);
     }
     
-
     /**
      * Show the form for creating a new resource.
      *
@@ -101,13 +100,16 @@ class CreativeController extends Controller {
                     ->sum('clicks');
             $impressions = CreativeLog::where('creative_id', $creative->id)
                     ->sum('impressions');
-            $clickList = Click::where('creative_id', $creative->id)->get();
             return view('creatives.show', compact('creative'))
                             ->with([
-                                'clickList' => $clickList,
                                 'clicks' => $clicks,
                                 'impressions' => $impressions]);
         }
+    }
+    
+    public function clicksDataTable($id) {
+        $clickList = Click::where('creative_id', $id)->with(['widget'])->get();
+        return Datatables::of($clickList)->make(true);
     }
 
     /**

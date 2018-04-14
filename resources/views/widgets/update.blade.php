@@ -2,6 +2,7 @@
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="{{ route('widgets') }}">Lista de Widgets</a></li>
     <li><a href="">Editar Widget</a></li>
 </ul>
 
@@ -9,7 +10,7 @@
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-power-switch"></i>Editar <b>Widget</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                <i class="lnr lnr-power-switch"></i>Editar <b>Widget</b>
             </h1>
         </div>
     </div>
@@ -21,7 +22,7 @@
             <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-user"></i></span>
-                    {!! Form::text('name',null,['class'=>'form-control input-lg']) !!}
+                    {!! Form::text('name',null,['class'=>'form-control input-lg', 'placeholder'=>'Nome', 'required']) !!}
                 </div>
                 @if ($errors->has('name'))
                 <span class="help-block">
@@ -32,7 +33,7 @@
             <div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-globe"></i></span>
-                    {!! Form::text('url',null,['class'=>'form-control input-lg']) !!}
+                    {!! Form::text('url',null,['class'=>'form-control input-lg', placeholder='URL', 'required']) !!}
                 </div>
                 @if ($errors->has('url'))
                 <span class="help-block">

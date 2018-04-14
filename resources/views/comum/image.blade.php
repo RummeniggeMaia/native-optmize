@@ -1,1 +1,1 @@
-<img src="{{ asset($image) }}" height="128" width="128">
+<img src="{{ asset($image) }}" class="img-fluid img-thumbnail">

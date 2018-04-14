@@ -43,6 +43,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/creatives/{creative}/edit', 'CreativeController@edit')->name('creatives.edit');
     Route::get('/creatives/{page?}', 'CreativeController@index')->name('creatives');
     Route::get('/creativesdata', 'CreativeController@indexDataTable')->name('creatives.data');
+    Route::get('/creativeclicksdata/{creative}', 'CreativeController@clicksDataTable')->name('creatives.clicks');
 
     Route::post('/campaingns', 'CampaingnController@store')->name('campaingns.store');
     Route::get('/campaingns', 'CampaingnController@index')->name('campaingns');
@@ -75,7 +76,8 @@ Route::middleware(['user'])->group(function () {
     Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
     Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
     Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
-
+    Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs');
+    
     Route::get('/homedata', 'HomeController@indexDataTable')->name('home.data');
 });
 

@@ -24,7 +24,7 @@ class CategoryController extends Controller {
     }
 
     public function indexDataTable() {
-        $categories = DB::table('categories')->where('user_id', Auth::id())->get();
+        $categories = DB::table('categories')->get();
         return Datatables::of($categories)->addColumn('edit', function($category) {
                     return view('comum.button_edit', [
                         'id' => $category->id,
