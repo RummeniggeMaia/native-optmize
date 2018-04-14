@@ -33,7 +33,8 @@ class Postbacks {
                     if ($click->postback) {
                         return response()->json('conflict', 409);
                     }
-                    $value = round(($amt / 2), 2, PHP_ROUND_HALF_UP);
+//                    $value = round(($amt / 2), 2, PHP_ROUND_HALF_UP);
+                    $value = $amt / 2;
                     $click->creative->increment('revenue', $value);
                     $click->widget->user->increment('revenue', $value);
                     $log = CreativeLog::where([

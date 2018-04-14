@@ -93,7 +93,7 @@
             },
             columns: [
                 {data: 'creative.name', name: 'creative.name'},
-                {data: 'creative.image', name: 'creative.name'},
+                {data: 'image', name: 'creative.image'},
                 {data: 'clicks', name: 'clicks'},
                 {data: 'impressions', name: 'impressions'},
                 {data: 'revenue', name: 'revenue'},

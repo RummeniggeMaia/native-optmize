@@ -139,11 +139,15 @@ class WidgetController extends Controller {
 
     public function logsDataTable($id) {
         $logs = CreativeLog::with(['creative'])->where('widget_id', $id);
-        return Datatables::of($logs)->editColumn('creative.image', function($log) {
+        return Datatables::of($logs)->editColumn('image', function($log) {
                     return view('comum.image', [
                         'image' => $log->creative->image
                     ]);
-                })->make(true);
+                })->editColumn('revenue', function($log) {
+                    return 'R$ ' . round($log->revenue, 2, PHP_ROUND_HALF_UP);
+                })->rawColumns(
+                        ['image']
+                )->make(true);
     }
 
     /**
