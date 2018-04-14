@@ -26,40 +26,29 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $widgets = Widget::with(['creativeLogs.creative'])
-                        ->where('user_id', Auth::id())->get();
-        foreach ($widgets as $widget) {
-            foreach ($widget->creativeLogs as $log) {
-                $clicks = Click::with(['postback'])->where([
-                            'creative_id' => $log->creative->id,
-                            'widget_id' => $widget->id
-                        ])->get();
-                $log['revenues'] = round(
-                        ($clicks->sum('postback.amt') / 2), 2, PHP_ROUND_HALF_UP
-                );
-            }
-        }
-        return view('home', compact('widgets'));
+        return view('home');
     }
 
     public function indexDataTable() {
         $widgets = Widget::with(['creativeLogs'])
                         ->where('user_id', Auth::id())->get();
         foreach ($widgets as $widget) {
-            $revenues = 0;
-            DB::table('clicks')
-                    ->where('clicks.widget_id', $widget->id)
-                    ->join('postbacks', 'clicks.id', 'postbacks.click_id')
-                    ->orderBy('clicks.id')
-                    ->chunk(60000, function($clicks) use (&$revenues) {
-                        foreach ($clicks as $click) {
-                            $revenues += $click->amt;
-                        }
-                    });
-            $widget->revenues = round($revenues / 2, 2, PHP_ROUND_HALF_UP);
+//            $revenues = 0;
+//            DB::table('clicks')
+//                    ->where('clicks.widget_id', $widget->id)
+//                    ->join('postbacks', 'clicks.id', 'postbacks.click_id')
+//                    ->orderBy('clicks.id')
+//                    ->chunk(60000, function($clicks) use (&$revenues) {
+//                        foreach ($clicks as $click) {
+//                            $revenues += $click->amt;
+//                        }
+//                    });
+            $widget->revenues = $widget->creativeLogs->sum('revenue');
             $widget->clicks = $widget->creativeLogs->sum('clicks');
         }
-        return Datatables::of($widgets)->make(true);
+        return Datatables::of($widgets)->editColumn('revenues', function($widget) {
+                    return 'R$ ' . round($widget->revenues, 2, PHP_ROUND_HALF_UP);
+                })->make(true);
     }
 
 }
