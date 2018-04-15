@@ -1,4 +1,5 @@
 @extends('layouts/template')
+@section('title', 'Mudar Senha')
 
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
@@ -11,7 +12,7 @@
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-users"></i>Mudar senha do <b>Usuário</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                <i class="lnr lnr-users"></i>Mudar senha do <b>Usuário</b>
             </h1>
         </div>
     </div>

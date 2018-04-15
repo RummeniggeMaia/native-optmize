@@ -1,6 +1,7 @@
 @extends('layouts.template')
-@section('content')
+@section('title', 'Widgets')
 
+@section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('home') }}">Home</a></li>
     <li><a href="#">Adicionar Widget</a></li>

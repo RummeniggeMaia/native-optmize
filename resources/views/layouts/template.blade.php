@@ -15,7 +15,7 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Native-Optimize</title>
+        <title> @yield('title') | Ads4XXX</title>
 
         <!-- Scripts -->
         <script src="{{ asset('pago/js/vendor/jquery.min.js') }}"></script>

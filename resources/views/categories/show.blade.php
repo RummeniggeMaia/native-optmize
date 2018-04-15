@@ -1,4 +1,5 @@
 @extends('layouts/template')
+@section('title', 'Categorias')
 
 @section('content')
 <ul class="breadcrumb breadcrumb-top">

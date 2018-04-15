@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Anúncios')
 
 @section('content')
 

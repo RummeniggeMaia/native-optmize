@@ -13,22 +13,16 @@
         <script src="{{ asset('pago/js/vendor/modernizr.min.js') }}"></script>
         <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
         <!-- CSRF Token -->
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Native-Optimize</title>
+        <title>Login | Ads4XXX</title>
 
         <!-- Scripts -->
         <script src="{{ asset('pago/js/vendor/jquery.min.js') }}"></script>
         <script src="{{ asset('pago/js/vendor/bootstrap.min.js') }}"></script>
         <script src="{{ asset('pago/js/plugins.js') }}"></script>
         <script src="{{ asset('pago/js/main.js') }}"></script>
-        <style>
-            #datatable td {
-                text-align: center
-            }
-        </style>
     </head>
-    <body>
+    <body style="background-color: #5A732D">
         <div id="page-wrapper">
             <div class="container">
                 <div class="row">
@@ -42,7 +36,12 @@
 
                             <div class="block">
                                 <form action="{{ route('login') }}" method="post" id="form-login" name="form-login" class="form-horizontal">
-                                    {{ csrf_field() }}
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    @if (session('csrf_error'))
+                                    <div class="alert alert-success">
+                                        {{ session('csrf_error') }}
+                                    </div>
+                                    @endif
                                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                         <div class="col-xs-12">
                                             <div class="input-group">
@@ -71,15 +70,15 @@
                                     </div>
                                     <div class="form-group form-actions"> 
                                         <div class="col-xs-12 text-center">
-                                            <button type="submit" class="btn btn-md btn-primary">Logar</button>
                                             <div class="checkbox">
                                                 <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Lembrar-me
                                             </div>
+                                            <button type="submit" class="btn btn-md btn-primary">LOGAR</button><br/>
                                             <a class="btn btn-link" href="{{ route('register') }}">
-                                                Inscreva-se
+                                                INSCREVA-SE
                                             </a>
                                             <a class="btn btn-link" href="{{ route('password.request') }}">
-                                                Esqueceu sua senha?
+                                                ESQUECEU A SENHA?
                                             </a>
                                         </div>
                                     </div>
@@ -90,14 +89,6 @@
                 </div>
             </div>
         </div>
-
         <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
-
-        <script src="js/vendor/jquery.min.js"></script>
-        <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/pages/tablesDatatables.js"></script>
-        <script>$(function () { TablesDatatables.init();});</script>
     </body>
 </html>

@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Dashboard')
 
 @section('content')
 @auth
@@ -10,7 +11,7 @@
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-tv"></i>Estatísticas por <b>Widgets</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                <i class="fa fa-tv"></i>Estatísticas por <b>Widgets</b>
             </h1>
         </div>
     </div>

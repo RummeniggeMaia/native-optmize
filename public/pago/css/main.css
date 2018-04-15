@@ -452,7 +452,7 @@ header.navbar-inverse.navbar-fixed-bottom {
     font-size: 13px;
     display: block;
     color: #ffffff;
-    background: #17c4bb;
+    background: white;
 }
 
 a.sidebar-brand:hover,
@@ -1411,7 +1411,7 @@ a.widget.widget-hover-effect4:active {
 
 #login-container .login-title {
     padding: 20px 10px;
-    background: #17c4bb;
+    background: white;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
 }
