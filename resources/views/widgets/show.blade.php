@@ -37,10 +37,10 @@
                         <span class="input-group-addon"><i class="fa fa-star"></i></span>
                         <input type="text" class="form-control" id="type"
                                placeholder="{{ [
-                                    '0' => '----------------------',
-                                    '1' => 'Barra Lateral Direita',
-                                    '2' => 'Barra Lateral Esquerda',
-                                    '3' => 'Central'
+                                    '1' => '----------------------',
+                                    '2' => 'Barra Lateral Direita',
+                                    '3' => 'Barra Lateral Esquerda',
+                                    '4' => 'Central'
                                 ][$widget->type] }}" readonly>
                     </div>
                 </div>
