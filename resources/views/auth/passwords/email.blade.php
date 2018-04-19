@@ -51,12 +51,12 @@
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
                                                     <input id="email" name="email" type="text" class="form-control input-lg"  value="{{ old('email') }}" placeholder="Email">
-                                                    @if ($errors->has('email'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('email') }}</strong>
-                                                    </span>
-                                                    @endif
                                                 </div>
+                                                @if ($errors->has('email'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('email') }}</strong>
+                                                </span>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="form-group form-actions text-center">

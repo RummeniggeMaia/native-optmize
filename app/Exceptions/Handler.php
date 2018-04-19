@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Database\QueryException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,11 @@ class Handler extends ExceptionHandler
         if ($exception instanceof TokenMismatchException){
             return back()->with('csrf_error'
                             , 'Sessão anterior expirou.');
+        } else if ($exception instanceof QueryException) {
+            if ($exception->errorInfo[1] == 1062) {
+                return back()->with('duplicate_error'
+                            , 'Já existe um registro no sistema com esses dados.');
+            }
         }
         return parent::render($request, $exception);
     }

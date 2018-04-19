@@ -34,10 +34,18 @@
     </div>
     @endif
     
+    @if ($message = Session::get('duplicate_error'))
+    <div class="alert alert-danger alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>	
+        <strong>{{ $message }}</strong>
+    </div>
+    @endif
+    
     @if ($errors->any())
-    <div class="alert alert-danger">
+    <div class="alert alert-danger alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button>	
         Por favor verifique os erros abaixo no formulário.
     </div>
     @endif
+    
 </div>

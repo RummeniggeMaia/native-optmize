@@ -47,12 +47,12 @@
                                             <div class="input-group">
                                                 <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
                                                 <input id="email" name="email" type="text" class="form-control input-lg"  value="{{ old('email') }}" placeholder="Email">
-                                                @if ($errors->has('email'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('email') }}</strong>
-                                                </span>
-                                                @endif
                                             </div>
+                                            @if ($errors->has('email'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
@@ -60,12 +60,12 @@
                                             <div class="input-group">
                                                 <span class="input-group-addon"><i class="gi gi-asterisk"></i></span>
                                                 <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Senha" required>
-                                                @if ($errors->has('password'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('password') }}</strong>
-                                                </span>
-                                                @endif
                                             </div>
+                                            @if ($errors->has('password'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('password') }}</strong>
+                                            </span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="form-group form-actions"> 

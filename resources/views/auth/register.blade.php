@@ -44,9 +44,11 @@
                                     {{ csrf_field() }}
 
                                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="gi gi-user"></i></span>
-                                            <input id="name" type="text" class="form-control input-lg" name="name" value="{{ old('name') }}" placeholder="Nome" required autofocus>
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                                                <input id="name" type="text" class="form-control input-lg" name="name" value="{{ old('name') }}" placeholder="Nome" required autofocus>
+                                            </div>
                                             @if ($errors->has('name'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('name') }}</strong>
@@ -56,10 +58,11 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                                            <input id="email" type="email" class="form-control input-lg" name="email" value="{{ old('email') }}" placeholder="E-mail" required>
-
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                                <input id="email" type="email" class="form-control input-lg" name="email" value="{{ old('email') }}" placeholder="E-mail" required>
+                                            </div>
                                             @if ($errors->has('email'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('email') }}</strong>
@@ -69,10 +72,11 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('skype') ? ' has-error' : '' }}">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-skype"></i></span>
-                                            <input id="email" type="email" class="form-control" name="skype" placeholder="Skype" required>
-
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-skype"></i></span>
+                                                <input id="email" type="text" class="form-control" name="skype" placeholder="Skype" required>
+                                            </div>
                                             @if ($errors->has('skype'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('skype') }}</strong>
@@ -82,10 +86,11 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-whatsapp"></i></span>
-                                            <input id="phone" type="phone" class="form-control" name="phone"placeholder="Telefone/Whatsapp" required>
-
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-whatsapp"></i></span>
+                                                <input id="phone" type="phone" class="form-control" name="phone"placeholder="Telefone/Whatsapp" required>
+                                            </div>
                                             @if ($errors->has('phone'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('phone') }}</strong>
@@ -95,10 +100,11 @@
                                     </div>
 
                                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                                            <input id="password" type="password" class="form-control" name="password" required>
-
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                                                <input id="password" type="password" class="form-control" name="password" required>
+                                            </div>
                                             @if ($errors->has('password'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('password') }}</strong>
@@ -108,12 +114,14 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                            </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group form-actions text-center">
                                         <a class="btn btn-md btn-default" href="{{ route('login') }}">
                                             VOLTAR
