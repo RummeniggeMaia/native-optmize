@@ -23,7 +23,8 @@
                     <tr class="bg-info">
                         <th class="text-center">NOME</th>
                         <th class="text-center">E-MAIL</th>
-                        <th class="text-center">SKYPE</th>
+                        <th class="text-center">NIVEL</th>
+                        <th class="text-center">STATUS</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
                         <th class="text-center">EXCLUIR</th>
@@ -49,7 +50,8 @@
             columns: [
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
-                {data: 'skype', name: 'skype'},
+                {data: 'roles', name: 'roles'},
+                {data: 'status', name: 'status'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
                 {data: 'delete', name: 'delete', orderable: false, searchable: false},

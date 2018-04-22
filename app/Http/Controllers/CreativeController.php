@@ -66,7 +66,7 @@ class CreativeController extends Controller {
                         ['edit', 'show', 'delete', 'image']
                 )->make(true);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -106,7 +106,7 @@ class CreativeController extends Controller {
                                 'impressions' => $impressions]);
         }
     }
-    
+
     public function clicksDataTable($id) {
         $clickList = Click::where('creative_id', $id)->with(['widget'])->get();
         return Datatables::of($clickList)->make(true);
@@ -159,6 +159,9 @@ class CreativeController extends Controller {
 
                 $post['image'] = "storage/" . $image_path;
             }
+//            if (Auth::user()->hasRole('admin')) {
+            $post['status'] = true;
+//            }
             Creative::create($post);
             return redirect('creatives')
                             ->with('success'

@@ -15,8 +15,10 @@ class CreateCampaingnsTable extends Migration {
         Schema::create('campaingns', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('hashid')->nullable();
-            $table->char('name', 255);
-            $table->char('brand', 255);
+            $table->string('name');
+            $table->string('type');
+            $table->double('ceiling');
+            $table->date('expires_in');
             $table->timestamps();
         });
 

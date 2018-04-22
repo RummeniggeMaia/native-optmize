@@ -15,11 +15,12 @@ class CreateCreativesTable extends Migration {
         Schema::create('creatives', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('hashid')->nullable();
-            $table->char('name', 255);
-            $table->char('brand', 255)->nullable();
-            $table->char('url', 255);
-            $table->char('image', 255);
+            $table->string('name');
+            $table->string('brand')->nullable();
+            $table->string('url');
+            $table->string('image');
             $table->double('revenue')->default(0.0);
+            $table->boolean('status');
             $table->timestamps();
         });
 

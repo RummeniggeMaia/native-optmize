@@ -10,6 +10,7 @@ class Campaingn extends Model {
         'hashid',
         'brand',
         'name',
+        'type',
         'user_id',
     ];
 

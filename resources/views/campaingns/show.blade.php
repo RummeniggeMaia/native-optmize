@@ -25,16 +25,22 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                        <input title="Nome" type="text" class="form-control" id="name" placeholder="{{ $campaingn->name }}" readonly>
+                        <input title="Nome" type="text" class="form-control  input-lg" id="name" placeholder="{{ $campaingn->name }}" readonly>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-tags"></i></span>
-                        <input title="Marca" type="text" class="form-control" id="brand" placeholder="{{ $campaingn->brand }}" readonly>
+                        <input title="Marca" type="text" class="form-control  input-lg" id="brand" placeholder="{{ $campaingn->brand }}" readonly>
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-star"></i></span>
+                        <input title="Tipo da campanha" type="text" class="form-control input-lg" id="brand" placeholder="{{ $campaingn->type }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group input-lg">
                     <div class="input-group" title="Anúncios">
                         <span class="input-group-addon"><i class="fa fa-bullhorn"></i></span>
                         @foreach($campaingn->creatives as $creative)

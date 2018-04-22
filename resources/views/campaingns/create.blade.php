@@ -42,6 +42,27 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('type') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('type', [
+                            'CPA'=>'CPA', 
+                            'CPC'=>'CPC'
+                        ],
+                        Input::old('type'), 
+                        ['placeholder'=>'Selecione um tipo', 
+                            'class'=>'selectpicker form-control input-lg', 
+                            'required', 
+                            'title'=>'Tipo da campanha']) 
+                    }}
+                </div>
+                @if ($errors->has('type'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('type') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('creatives') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-bullhorn"></i></span>

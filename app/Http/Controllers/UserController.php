@@ -29,7 +29,7 @@ class UserController extends Controller {
     }
 
     public function indexDataTable() {
-        $users = DB::table('users')->get();
+        $users = User::all();
         return Datatables::of($users)->addColumn('edit', function($user) {
                     return view('comum.button_edit', [
                         'id' => $user->id,
@@ -45,8 +45,24 @@ class UserController extends Controller {
                         'id' => $user->id,
                         'route' => 'users.destroy'
                     ]);
+                })->editColumn('roles', function($user) {
+                    $roles = "";
+                    if ($user->hasRole('admin')) {
+                        $roles = "Advertiser";
+                    } else if ($user->hasRole('user')) {
+                        $roles = "Publisher";
+                    }
+                    return view('comum.user_roles', [
+                        'roles' => $roles
+                    ]);
+                })->editColumn('status', function($user) {
+                    if ($user->status) {
+                        return view('comum.user_status_on');
+                    } else {
+                        return view('comum.user_status_off');
+                    }
                 })->rawColumns(
-                        ['edit', 'show', 'delete']
+                        ['edit', 'show', 'delete', 'roles', 'status']
                 )->make(true);
     }
 
@@ -73,6 +89,7 @@ class UserController extends Controller {
                             ->withErrors($v)
                             ->withInput();
         } else {
+            $post['taxa'] = $post['taxa'] * 0.01;
             $post['password'] = Hash::make($post['password']);
             $role = Role::where('name', 'user')->first();
             $user = User::create($post);
@@ -120,7 +137,12 @@ class UserController extends Controller {
                             ->withErrors($v)
                             ->withInput();
         } else {
-            $post['password'] = Hash::make($post['password']);
+            $post['taxa'] = $post['taxa'] * 0.01;
+            if ($post['password']) {
+                $post['password'] = Hash::make($post['password']);
+            } else {
+                unset($post['password']);
+            }
             $user = User::find($id);
             $user->update($post);
             return redirect('users');
@@ -138,6 +160,10 @@ class UserController extends Controller {
         return redirect('users');
     }
 
+    public function payment(Request $request, $id) {
+        
+    }
+    
     private function validar($post, $update = false) {
         $mensagens = array(
             'name.required' => 'Insira o nome.',
@@ -147,14 +173,16 @@ class UserController extends Controller {
             'password.required' => 'Insira o password.',
             'password.min' => 'Password deve ter entre 6 e 10 caracters.',
             'password.max' => 'Password deve ter entre 6 e 10 caracters.',
-            'password.regex' => 'Password inválido. Deve conter ao menos uma letra e um número.'
+            'password.regex' => 'Password inválido. Deve conter ao menos uma letra e um número.',
+            'status.in' => 'Status inválido.'
         );
         $rules = array(
             'name' => 'required|min:4',
             'email' => array(
                 'required',
                 'regex:/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
-            )
+            ),
+            'status' => 'in:0,1'
         );
         if (!$update) {
             $rules['password'] = 'required|min:6|max:10|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/';

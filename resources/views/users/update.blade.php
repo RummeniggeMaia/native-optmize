@@ -46,7 +46,7 @@
             <div class="form-group {{ $errors->has('skype') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-skype"></i></span>
-                    {!! Form::text('skype',null,['id'=>'skype', 'class'=>'form-control input-lg', 'placeholder'=>'Skype', 'required']) !!}
+                    {!! Form::text('skype',null,['id'=>'skype', 'class'=>'form-control input-lg', 'placeholder'=>'Skype']) !!}
                 </div>
                 @if ($errors->has('skype'))
                 <span class="help-block">
@@ -65,10 +65,38 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('taxa') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-percent"></i></span>
+                    {!! Form::number('taxa', $user->taxa * 100, ['id'=>'taxa', 'class'=>'form-control input-lg', 'placeholder' => 'Receita em %', 'min' => 0, 'max'=>100, 'title'=>'Receita em %', 'required']) !!}
+                </div>
+                @if ($errors->has('taxa'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('taxa') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('taxa') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-check"></i></span>
+                    {{ 
+                        Form::select(
+                        'status', 
+                        ['0'=>'INATIVO','1'=>'ATIVO'], 
+                        null, 
+                        ['class'=>'selectpicker form-control input-lg', 'placeholder'=>'Selecione o status', 'required']) 
+                    }}
+                </div>
+                @if ($errors->has('taxa'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('taxa') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                    {!! Form::password('password',['id'=>'password', 'class'=>'form-control input-lg', 'placeholder'=>'Senha']) !!}
+                    {!! Form::password('password',['id'=>'password', 'class'=>'form-control input-lg', 'placeholder'=>'Senha', 'required']) !!}
                 </div>
                 @if ($errors->has('password'))
                 <span class="help-block">

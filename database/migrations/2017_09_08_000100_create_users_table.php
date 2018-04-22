@@ -21,6 +21,8 @@ class CreateUsersTable extends Migration {
             $table->string('password');
             $table->double('revenue')->default(0.0);
             $table->string('remember_token')->nullable();
+            $table->double('texa')->default(0.5);
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

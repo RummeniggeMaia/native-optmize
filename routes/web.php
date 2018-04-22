@@ -33,6 +33,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/users/{widget}/edit', 'UserController@edit')->name('users.edit');
     Route::get('users/{page?}', 'UserController@index')->name('users.index');
     Route::get('/usersdata', 'UserController@indexDataTable')->name('users.data');
+    Route::post('/users', 'UserController@payment')->name('users.payment');
     
     Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
     Route::get('/creatives', 'CreativeController@index')->name('creatives');

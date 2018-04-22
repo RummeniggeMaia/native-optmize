@@ -194,12 +194,14 @@ class CampaingnController extends Controller {
             'name.min' => 'Nome muito curto.',
             'brand.min' => 'Nome da marca muito curto.',
             'creatives.required' => 'Selecione ao menos um Creative.',
-            'creatives.min' => 'Selecione ao menos um Creative.'
+            'creatives.min' => 'Selecione ao menos um Creative.',
+            'type.in' => 'Tipo de campanha inválido.',
         );
         $rules = array(
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
-            'creatives' => 'required|array|min:1'
+            'creatives' => 'required|array|min:1',
+            'type' => 'in:"CPA","CPC"',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
