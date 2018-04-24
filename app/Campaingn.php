@@ -14,10 +14,14 @@ class Campaingn extends Model {
         'user_id',
     ];
 
+    public function revenues() {
+        return $this->creatives()->sum('revenue');
+    }
+    
     public function creatives() {
         return $this->belongsToMany('App\Creative')->withTimestamps();
     }
-
+    
     public function widgets() {
         return $this->belongsToMany('App\Widget')->withTimestamps();
     }
@@ -29,4 +33,5 @@ class Campaingn extends Model {
     public function creativeLog() {
         return $this->hasMany('App\CreativeLog');
     }
+
 }

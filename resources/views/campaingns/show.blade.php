@@ -49,9 +49,6 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="form-group form-actions text-center">
-                    <a href="{{ route('campaingns')}}" class="btn btn-md btn-default">Voltar</a>
-                </div>
             </form>
         </div>
     </div>

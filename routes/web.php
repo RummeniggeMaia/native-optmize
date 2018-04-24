@@ -27,13 +27,13 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/users', 'UserController@store')->name('users.store');
     Route::get('/users', 'UserController@index')->name('users');
     Route::get('/users/create', 'UserController@create')->name('users.create');
-    Route::get('/users/{widget}', 'UserController@show')->name('users.show');
-    Route::patch('/users/{widget}', 'UserController@update')->name('users.update');
-    Route::delete('/users/{widget}', 'UserController@destroy')->name('users.destroy');
-    Route::get('/users/{widget}/edit', 'UserController@edit')->name('users.edit');
+    Route::get('/users/{user}', 'UserController@show')->name('users.show');
+    Route::patch('/users/{user}', 'UserController@update')->name('users.update');
+    Route::delete('/users/{user}', 'UserController@destroy')->name('users.destroy');
+    Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit');
     Route::get('users/{page?}', 'UserController@index')->name('users.index');
     Route::get('/usersdata', 'UserController@indexDataTable')->name('users.data');
-    Route::post('/users', 'UserController@payment')->name('users.payment');
+    Route::patch('/users/payment/{user}', 'UserController@payment')->name('users.payment');
     
     Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
     Route::get('/creatives', 'CreativeController@index')->name('creatives');
@@ -59,10 +59,10 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/categories', 'CategoryController@store')->name('categories.store');
     Route::get('/categories', 'CategoryController@index')->name('categories');
     Route::get('/categories/create', 'CategoryController@create')->name('categories.create');
-    Route::get('/categories/{campaingn}', 'CategoryController@show')->name('categories.show');
-    Route::patch('/categories/{campaingn}', 'CategoryController@update')->name('categories.update');
-    Route::delete('/categories/{campaingn}', 'CategoryController@destroy')->name('categories.destroy');
-    Route::get('/categories/{campaingn}/edit', 'CategoryController@edit')->name('categories.edit');
+    Route::get('/categories/{category}', 'CategoryController@show')->name('categories.show');
+    Route::patch('/categories/{category}', 'CategoryController@update')->name('categories.update');
+    Route::delete('/categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
+    Route::get('/categories/{category}/edit', 'CategoryController@edit')->name('categories.edit');
     Route::get('/categories/{page?}', 'CategoryController@index')->name('categories.index');
     Route::get('/categoriesdata', 'CategoryController@indexDataTable')->name('categories.data');
 });

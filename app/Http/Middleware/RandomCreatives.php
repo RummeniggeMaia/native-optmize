@@ -4,11 +4,13 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Creative;
+use App\Campaingn;
 use App\Widget;
 use App\CreativeLog;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class RandomCreatives {
 
@@ -26,8 +28,9 @@ class RandomCreatives {
         }
         $widget = Widget::where('hashid', $query['wg'])->first();
         if ($widget) {
-            $creatives = Creative::all(
-                    'id', 'hashid', 'name', 'brand', 'url', 'image');
+            $cont = isset($query['cont']) ? $query['cont'] : 0;
+            $campaign = $this->getCampaign($cont);
+            $creatives = $campaign->creatives()->get(['id', 'hashid', 'name', 'brand', 'url', 'image']);
             if (count($creatives) > $widget->quantity) {
                 $creatives = $creatives->random($widget->quantity);
             }
@@ -40,8 +43,8 @@ class RandomCreatives {
             );
             foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
-                                . "hashid"
-                                . Carbon::now()->toDateTimeString());
+                        . "hashid"
+                        . Carbon::now()->toDateTimeString());
                 $creative['click_id'] = $cId;
                 $fields = array(
                     $cId,
@@ -78,4 +81,17 @@ class RandomCreatives {
         }
     }
 
+    private function getCampaign($cont) {
+        $campaigns = Campaingn::with('creatives')
+                        ->get()->sortByDesc(function ($p, $k) {
+            return $p->revenues();
+        });
+        if (!$campaigns->isEmpty()) {
+            if ($cont >= 1 && $cont <= 3) {
+                return $campaigns->slice($cont - 1, 1)->first();
+            } else {
+                return $campaigns->random();
+            }
+        }
+    }
 }

@@ -161,9 +161,24 @@ class UserController extends Controller {
     }
 
     public function payment(Request $request, $id) {
-        
+        $post = $request->only('payment');
+        $user = User::find($id);
+        $v = Validator::make($post, ['payment' => 'numeric|min:0|max:2147483647'], [
+                    'payment.numeric' => 'Valor não numérico',
+                    'payment.min' => 'Valor abaixo de zero.',
+                    'payment.max' => 'Valor muito alto.']);
+        if ($user && !$v->fails()) {
+            $payment = doubleval($post['payment']);
+            $user->decrement('revenue', $payment);
+            return redirect()->back()->with('success'
+                                        , 'Pagamento realizado com sucesso.');
+        } else {
+            return redirect()->back()
+                            ->withErrors($v)
+                            ->withInput();
+        }
     }
-    
+
     private function validar($post, $update = false) {
         $mensagens = array(
             'name.required' => 'Insira o nome.',
@@ -174,7 +189,7 @@ class UserController extends Controller {
             'password.min' => 'Password deve ter entre 6 e 10 caracters.',
             'password.max' => 'Password deve ter entre 6 e 10 caracters.',
             'password.regex' => 'Password inválido. Deve conter ao menos uma letra e um número.',
-            'status.in' => 'Status inválido.'
+            'status.in' => 'Status inválido.',
         );
         $rules = array(
             'name' => 'required|min:4',
@@ -182,7 +197,7 @@ class UserController extends Controller {
                 'required',
                 'regex:/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
             ),
-            'status' => 'in:0,1'
+            'status' => 'in:0,1',
         );
         if (!$update) {
             $rules['password'] = 'required|min:6|max:10|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/';
