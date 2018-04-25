@@ -96,7 +96,7 @@
             <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                    {!! Form::password('password',['id'=>'password', 'class'=>'form-control input-lg', 'placeholder'=>'Senha', 'required']) !!}
+                    {!! Form::password('password',['id'=>'password', 'class'=>'form-control input-lg', 'placeholder'=>'Senha']) !!}
                 </div>
                 @if ($errors->has('password'))
                 <span class="help-block">

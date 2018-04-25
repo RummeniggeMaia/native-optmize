@@ -11,6 +11,8 @@ class Campaingn extends Model {
         'brand',
         'name',
         'type',
+        'cpc',
+        'expires_in',
         'user_id',
     ];
 

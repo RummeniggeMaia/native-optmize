@@ -60,10 +60,10 @@ class WidgetController extends Controller {
                     ]);
                 })->editColumn('type', function($widget) {
                     $types = [
-                        '1', '----------------------',
-                        '2', 'Barra Lateral Direita',
-                        '3', 'Barra Lateral Esquerda',
-                        '4', 'Central'
+                        '1' => '----------------------',
+                        '2' => 'Barra Lateral Direita',
+                        '3' => 'Barra Lateral Esquerda',
+                        '4' => 'Central'
                     ];
                     return $types[$widget->type];
                 })->rawColumns(

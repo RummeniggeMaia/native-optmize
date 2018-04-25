@@ -55,6 +55,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/campaingns/{campaingn}/edit', 'CampaingnController@edit')->name('campaingns.edit');
     Route::get('/campaingns/{page?}', 'CampaingnController@index')->name('campaingns');
     Route::get('/campaignsdata', 'CampaingnController@indexDataTable')->name('campaingns.data');
+    Route::get('/campcreasdata/{campaingn}', 'CampaingnController@creativesDataTable')->name('campaingns.creatives');
 
     Route::post('/categories', 'CategoryController@store')->name('categories.store');
     Route::get('/categories', 'CategoryController@index')->name('categories');

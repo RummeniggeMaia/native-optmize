@@ -62,8 +62,14 @@ class CreativeController extends Controller {
                     return view('comum.image', [
                         'image' => $creative->image
                     ]);
+                })->editColumn('status', function($user) {
+                    if ($user->status) {
+                        return view('comum.status_on');
+                    } else {
+                        return view('comum.status_off');
+                    }
                 })->rawColumns(
-                        ['edit', 'show', 'delete', 'image']
+                        ['edit', 'show', 'delete', 'image', 'status']
                 )->make(true);
     }
 

@@ -57,9 +57,9 @@ class UserController extends Controller {
                     ]);
                 })->editColumn('status', function($user) {
                     if ($user->status) {
-                        return view('comum.user_status_on');
+                        return view('comum.status_on');
                     } else {
-                        return view('comum.user_status_off');
+                        return view('comum.status_off');
                     }
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'roles', 'status']
@@ -96,7 +96,8 @@ class UserController extends Controller {
             $user->roles()->sync([$role->id]);
 //            $user->roles()->attach(Role::where('name', 'user')->first());
 
-            return redirect('users');
+            return redirect('users')->with('success'
+                                    , 'Usuário cadastrado com sucesso.');
         }
     }
 
@@ -145,7 +146,8 @@ class UserController extends Controller {
             }
             $user = User::find($id);
             $user->update($post);
-            return redirect('users');
+            return redirect('users')->with('success'
+                                    , 'Usuário atualizado com sucesso.');
         }
     }
 
@@ -157,7 +159,8 @@ class UserController extends Controller {
      */
     public function destroy($id) {
         User::find($id)->delete();
-        return redirect('users');
+        return redirect('users')->with('success'
+                                    , 'Usuário excluído com sucesso.');
     }
 
     public function payment(Request $request, $id) {

@@ -78,7 +78,7 @@ class CampaingnController extends Controller {
             try {
                 $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
-                
+                $post['expires_in'] = date('Y-m-d', strtotime("+30 days"));
                 $campaingn = Campaingn::create($post);
                 $campaingn->creatives()->sync($post['creatives']);
                 DB::commit();
@@ -105,9 +105,27 @@ class CampaingnController extends Controller {
                             , 'Campaingn não registrada no sistema.');
         } else if ($campaingn->user->id != Auth::id()) {
             return back()->with('error'
-                            , 'Não pode exibir os dados desta Campaingn.');
+                            , 'Não pode exibir os dados desta Campanha.');
         } else {
             return view('campaingns.show', compact('campaingn'));
+        }
+    }
+
+    public function creativesDataTable($id) {
+        $campaingn = Campaingn::with(['user', 'creatives'])
+                        ->where('id', $id)->first();
+        if ($campaingn == null) {
+            return null;
+        } else if ($campaingn->user->id != Auth::id()) {
+            return null;
+        } else {
+            return Datatables::of($campaingn->creatives)
+                            ->editColumn('image', function($creative) {
+                                return view('comum.image', [
+                                    'image' => $creative->image
+                                ]);
+                            })->rawColumns(
+                            ['image'])->make(true);
         }
     }
 
@@ -196,12 +214,14 @@ class CampaingnController extends Controller {
             'creatives.required' => 'Selecione ao menos um Creative.',
             'creatives.min' => 'Selecione ao menos um Creative.',
             'type.in' => 'Tipo de campanha inválido.',
+            'cpc.numeric' => 'Valor não numérico.',
         );
         $rules = array(
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
             'type' => 'in:"CPA","CPC"',
+            'cpc' => 'numeric',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

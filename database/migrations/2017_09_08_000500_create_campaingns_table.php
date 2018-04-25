@@ -16,8 +16,10 @@ class CreateCampaingnsTable extends Migration {
             $table->bigIncrements('id')->unsigned();
             $table->string('hashid')->nullable();
             $table->string('name');
-            $table->string('type');
-            $table->double('ceiling');
+            $table->string('brand');
+            $table->string('type')->default('CPC');
+            $table->double('ceiling')->default(0.0);
+            $table->double('cpc')->default(0.0);;
             $table->date('expires_in');
             $table->timestamps();
         });

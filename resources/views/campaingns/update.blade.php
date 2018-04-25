@@ -64,6 +64,17 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('cpc') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo por click', 'required']) !!}
+                </div>
+                @if ($errors->has('cpc'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('cpc') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('creatives') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-bullhorn"></i></span>

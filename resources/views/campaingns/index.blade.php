@@ -25,6 +25,7 @@
                         <th class="text-center">NOME</th>
                         <th class="text-center">MARCA</th>
                         <th class="text-center">TIPO</th>
+                        <th class="text-center">CPC</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
                         <th class="text-center">EXCLUIR</th>
@@ -51,6 +52,7 @@
                 {data: 'brand', name: 'brand'},
                 {data: 'name', name: 'name'},
                 {data: 'type', name: 'type'},
+                {data: 'cpc', name: 'cpc'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
                 {data: 'delete', name: 'delete', orderable: false, searchable: false},
