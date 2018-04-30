@@ -43,6 +43,10 @@ class Postbacks {
                     ]);
                     if ($log) {
                         $log->increment('revenue', $value);
+
+                        $adm_value = $amt * (1 - $click->widget->user->taxa);
+                        $admin = User::where(['name' => 'admin']);
+                        $admin->increment('revenue', $adm_value);
                     } else {
                         response()->json("no register", 400);
                     }

@@ -19,6 +19,7 @@ class CreateCreativesTable extends Migration {
             $table->string('brand')->nullable();
             $table->string('url');
             $table->string('image');
+            $table->int('type_layout');
             $table->double('revenue')->default(0.0);
             $table->boolean('status');
             $table->timestamps();
