@@ -75,39 +75,54 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('creatives') ? ' has-error' : '' }}">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-bullhorn"></i></span>
-                    <select id="creatives"
-                            name="creatives[]"
-                            class="selectpicker form-control"
-                            data-live-search="true"
-                            title="Selecione um Anúncio"
-                            data-actions-box="false"
-                            data-select-all-text="Marcar todos"
-                            data-deselect-all-text="Desmarcar todos"
-                            multiple>
+            <div style="margin-left: 4%">
+                <h5><label>Anúncios:</label></h5>
+            </div>
+            <div class="form-control {{ $errors->has('creatives') ? ' has-error' : '' }}" style="display: table;border: none">
+                <div class="col-xs-5" style="display: table-row;">
+                    <select name="from" id="multiselect" class="form-control" size="8" multiple="multiple">
                         @foreach($creatives as $creative)
                         <option title="{{ $creative->name }}"
                                 value="{{ $creative->id }}"
-                                @if($campaingn->creatives->contains($creative)) selected @endif>
-                                {{ $creative->name}},
-                                {{ $creative->url}}
-                    </option>
-                    @endforeach
-                </select>
+                                {{ (collect(old('creatives'))->contains($creative->id)) ? 'selected':'' }}>
+                            {{ $creative->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-xs-2">
+                    <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="fa fa-forward"></i></button>
+                    <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-chevron-right"></i></button>
+                    <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-chevron-left"></i></button>
+                    <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-backward"></i></button>
+                </div>
+                <div class="col-xs-5">
+                    <select name="creatives[]" id="multiselect_to" class="form-control" size="8" multiple="multiple">
+                        @foreach($campaingn->creatives as $creative)
+                        <option title="{{ $creative->name }}"
+                                value="{{ $creative->id }}">
+                            {{ $creative->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                @if ($errors->has('creatives'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('creatives') }}</strong>
+                </span>
+                @endif
             </div>
-            @if ($errors->has('creatives'))
-            <span class="help-block">
-                <strong>{{ $errors->first('creatives') }}</strong>
-            </span>
-            @endif
+            <div class="form-group form-actions text-center">
+                {!! Form::submit('Atualizar', ['class' => 'btn btn-md btn-default']) !!}
+            </div>
+            {!! Form::close() !!}
         </div>
-        <div class="form-group form-actions text-center">
-            {!! Form::submit('Atualizar', ['class' => 'btn btn-md btn-default']) !!}
-        </div>
-        {!! Form::close() !!}
     </div>
 </div>
-</div>
+<script src="{{ asset('js/multiselect.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+    $('#multiselect').multiselect();
+});
+</script>
 @stop

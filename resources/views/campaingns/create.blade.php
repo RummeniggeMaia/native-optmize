@@ -74,27 +74,29 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('creatives') ? ' has-error' : '' }}">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-bullhorn"></i></span>
-                    <select id='creatives'
-                            name="creatives[]"
-                            class="selectpicker form-control input-lg"
-                            data-live-search="true"
-                            title="Nenhum Creative selecionado"
-                            data-actions-box="false"
-                            data-select-all-text="Marcar todos"
-                            data-deselect-all-text="Desmarcar todos"
-                            multiple
-                            required>
+            <div style="margin-left: 4%">
+                <h5><label>Anúncios:</label></h5>
+            </div>
+            <div class="form-control {{ $errors->has('creatives') ? ' has-error' : '' }}" style="display: table;border: none">
+                <div class="col-xs-5" style="display: table-row;">
+                    <select name="from" id="multiselect" class="form-control" size="8" multiple="multiple">
                         @foreach($creatives as $creative)
                         <option title="{{ $creative->name }}"
                                 value="{{ $creative->id }}"
                                 {{ (collect(old('creatives'))->contains($creative->id)) ? 'selected':'' }}>
-                            {{ $creative->name }},
-                            {{ $creative->url }}
+                            {{ $creative->name }}
                         </option>
                         @endforeach
+                    </select>
+                </div>
+                <div class="col-xs-2">
+                    <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="fa fa-forward"></i></button>
+                    <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-chevron-right"></i></button>
+                    <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-chevron-left"></i></button>
+                    <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-backward"></i></button>
+                </div>
+                <div class="col-xs-5">
+                    <select name="creatives[]" id="multiselect_to" class="form-control" size="8" multiple="multiple">
                     </select>
                 </div>
                 @if ($errors->has('creatives'))
@@ -110,4 +112,10 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('js/multiselect.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+    $('#multiselect').multiselect();
+});
+</script>
 @stop

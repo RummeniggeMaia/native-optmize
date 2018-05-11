@@ -55,6 +55,23 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-check"></i></span>
+                    {{ 
+                        Form::select(
+                        'status', 
+                        ['1'=>'Ativo','0'=>'Inativo'], 
+                        null, 
+                        ['class'=>'selectpicker form-control input-lg', 'required']) 
+                    }}
+                </div>
+                @if ($errors->has('status'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('status') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="row">
                 <div class="form-group col-sm-6 {{ $errors->has('image') ? ' has-error' : '' }}">
                     <div class="input-group">

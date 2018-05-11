@@ -211,8 +211,8 @@ class CampaingnController extends Controller {
             'brand.required' => 'Insira o nome da marca.',
             'name.min' => 'Nome muito curto.',
             'brand.min' => 'Nome da marca muito curto.',
-            'creatives.required' => 'Selecione ao menos um Creative.',
-            'creatives.min' => 'Selecione ao menos um Creative.',
+            'creatives.required' => 'Selecione um Anúncio.',
+            'creatives.min' => 'Selecione um Anúncio..',
             'type.in' => 'Tipo de campanha inválido.',
             'cpc.numeric' => 'Valor não numérico.',
         );

@@ -46,6 +46,12 @@
                         <input title="Custo por click" type="text" class="form-control input-lg" id="cpc" placeholder="{{ $campaingn->cpc }}" readonly>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input title="Campanha expira em:" type="text" class="form-control input-lg" id="expires" placeholder="{{ date('d-m-Y', strtotime($campaingn->expires_in)) }}" readonly>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                         <thead>

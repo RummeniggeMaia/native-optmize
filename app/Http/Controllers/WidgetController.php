@@ -316,4 +316,8 @@ class WidgetController extends Controller {
         }
     }
 
+    public function widgetsStatistics() {
+        return null;
+    }
+
 }
