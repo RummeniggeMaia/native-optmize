@@ -12,6 +12,7 @@ class Widget extends Model {
         'name',
         'url',
         'type',
+        'type_layout',
         'quantity',
         'user_id'
     ];

@@ -12,6 +12,7 @@ class Creative extends Model {
         'name',
         'url',
         'image',
+        'type_layout',
         'status',
         'user_id',
         'category_id'
