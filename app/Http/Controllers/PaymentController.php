@@ -19,6 +19,29 @@ class PaymentController extends Controller
         return view('payments.index', compact('payments'));
     }
 
+    public function indexDataTable() {
+        $payments = DB::table('payments')->get();
+        return Datatables::of($payments)->addColumn('edit', function($payment) {
+                    return view('comum.button_edit', [
+                        'id' => $payment->id,
+                        'route' => 'payments.edit'
+                    ]);
+                })->addColumn('show', function($payment) {
+                    return view('comum.button_show', [
+                        'id' => $payment->id,
+                        'route' => 'payments.show'
+                    ]);
+                })->addColumn('delete', function($payment) {
+                    return view('comum.button_delete', [
+                        'id' => $payment->id,
+                        'route' => 'payments.destroy'
+                    ]);
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
