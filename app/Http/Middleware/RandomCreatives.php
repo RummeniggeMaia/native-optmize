@@ -29,11 +29,8 @@ class RandomCreatives {
         $widget = Widget::where('hashid', $query['wg'])->first();
         if ($widget) {
             $cont = isset($query['cont']) ? $query['cont'] : 0;
-            $campaign = $this->getCampaign($cont);
+            $campaign = $this->getCampaign($cont, $widget->type_layout);
             $creatives = $campaign->creatives()->get(['id', 'hashid', 'name', 'brand', 'url', 'image']);
-            if (count($creatives) > $widget->quantity) {
-                $creatives = $creatives->random($widget->quantity);
-            }
             $params = array(
                 '[click_id]',
                 '[widget_id]',
@@ -55,8 +52,19 @@ class RandomCreatives {
                 );
                 $creative->url = str_replace($params, $fields, $creative->url);
                 $creative->image = url('/') . '/' . $creative->image;
+                $this->setCTR($creative);
                 $this->impressions($widget, $creative);
                 unset($creative['id']);
+            }
+            $creativesCTR = $this->sortCreatives($creatives);
+            if ($widget->type_layout == 1) {
+                if (count($creativesCTR) > $widget->quantity) {
+                    $creatives = array_slice($creativesCTR, 0, $widget->quantity);
+                } else {
+                    $creatives = $creativesCTR;
+                }
+            } else {
+                $creatives = array_slice($creativesCTR, 0, 1);
             }
             $widget->increment('impressions');
             return response()->json($creatives);
@@ -81,9 +89,10 @@ class RandomCreatives {
         }
     }
 
-    private function getCampaign($cont) {
-        $campaigns = Campaingn::with('creatives')
-                        ->get()->sortByDesc(function ($p, $k) {
+    private function getCampaign($cont, $type) {
+        $campaigns = Campaingn::with('creatives')->where([
+            'type_layout' => $type
+        ])->get()->sortByDesc(function ($p, $k) {
             return $p->revenues();
         });
         if (!$campaigns->isEmpty()) {
@@ -92,6 +101,30 @@ class RandomCreatives {
             } else {
                 return $campaigns->random();
             }
+        }
+    }
+
+    private function sortCreatives($creatives) {
+       return $creatives->sort(function($a, $b){
+            if ($a->ctr < $b->ctr) {
+                return 1;
+            } else if ($a->ctr > $b->ctr) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    private function setCTR($creative) {
+        $clicks = CreativeLog::where('creative_id', $creative->id)
+            ->sum('clicks');
+        $impressions = CreativeLog::where('creative_id', $creative->id)
+            ->sum('impressions');
+        if ($clicks > 0) {
+           $creative['ctr'] = $clicks / $impressions * 100;
+        } else {
+            $creative['ctr'] = 0;
         }
     }
 }

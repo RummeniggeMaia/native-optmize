@@ -23,7 +23,7 @@ class CreateWidgetsTable extends Migration {
             $table->char('name', 255);
             $table->char('url', 255);
             $table->char('type', 255);
-            $table->int('type_layout');
+            $table->integer('type_layout')->unique();
             $table->integer('quantity');
             $table->integer('impressions')->nullable();
             $table->timestamps();

@@ -237,14 +237,17 @@ class WidgetController extends Controller {
             'name.min' => 'Nome muito curto.',
             'quantity.in' => 'Quantidade inválida.',
             'url.regex' => 'URL inválido.',
+            'url.unique' => 'Já existe um Wdidget com esta URL.',
             'campaingns.required' => 'Selecione ao menos uma Campaingn.',
-            'type.in' => 'Tipo inválido',
+            'type.in' => 'Tipo inválido.',
+            'type_layout.in' => "Layout inválido."
         );
         $rules = array(
             'name' => 'required|min:4',
             'quantity' => 'in:3,4,5,6',
-            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
+            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/|unique:widgets",
             'type' => 'in:1,2,3,4',
+            'type_layout' => 'in:1,2,3',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
