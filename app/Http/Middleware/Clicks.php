@@ -7,6 +7,8 @@ use App\Creative;
 use App\Click;
 use App\Widget;
 use App\CreativeLog;
+use App\WidgetLog;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class Clicks {
@@ -25,6 +27,16 @@ class Clicks {
             $widget = Widget::where('hashid', $request->input('wg'))
                     ->first(['id']);
             if ($creative && $widget) {
+                $widgetLog = WidgetLog::where('widget_id', $click->widget->id)
+                    ->whereDate('created_at', Carbon::today()->toDateString())->first();
+                if ($widgetLog) {
+                    $widgetLog->increment('clicks');
+                } else {
+                    WidgetLog::create([
+                        'clicks' => 1,
+                        'widget_id' => $widget->id,
+                    ]);
+                }
                 $log = CreativeLog::with(['creative', 'widget'])->where([
                             ['creative_id', $creative->id],
                             ['widget_id', $widget->id]

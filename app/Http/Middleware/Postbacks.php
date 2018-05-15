@@ -10,6 +10,8 @@ use App\Postback;
 use App\Widget;
 use App\User;
 use App\CreativeLog;
+use App\WidgetLog;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class Postbacks {
@@ -43,12 +45,22 @@ class Postbacks {
                     ]);
                     if ($log) {
                         $log->increment('revenue', $value);
-
+                        /* TODO - Caso surja um super usuario, atualizar aqui */
                         $adm_value = $amt * (1 - $click->widget->user->taxa);
                         $admin = User::where(['name' => 'admin']);
                         $admin->increment('revenue', $adm_value);
                     } else {
                         response()->json("no register", 400);
+                    }
+                    $widgetLog = WidgetLog::where('widget_id', $click->widget->id)
+                        ->whereDate('created_at', Carbon::today()->toDateString())->first();
+                    if ($widgetLog) {
+                        $widgetLog->increment('revenue', $value);
+                    } else {
+                        WidgetLog::create([
+                            'revenue' => $value,
+                            'widget_id' => $click->widget->id,
+                        ]);
                     }
                     Postback::create(array(
                         'ip' => $request->ip(),

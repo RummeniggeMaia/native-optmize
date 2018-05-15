@@ -80,6 +80,7 @@ Route::middleware(['user'])->group(function () {
     Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
     Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs');
     
+    Route::get('/widgetlcdata', 'HomeController@widgetsLineChartData')->name('widgets.linechart');
     Route::get('/homedata', 'HomeController@indexDataTable')->name('home.data');
 });
 

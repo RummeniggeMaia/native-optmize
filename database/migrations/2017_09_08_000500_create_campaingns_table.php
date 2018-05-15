@@ -18,7 +18,7 @@ class CreateCampaingnsTable extends Migration {
             $table->string('name');
             $table->string('brand');
             $table->string('type')->default('CPC');
-            $table->int('type_layout');
+            $table->integer('type_layout');
             $table->double('ceiling')->default(0.0);
             $table->double('cpc')->default(0.0);;
             $table->date('expires_in');

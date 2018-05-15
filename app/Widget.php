@@ -5,7 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Widget extends Model {
+class Widget extends Model
+{
 
     protected $fillable = [
         'hashid',
@@ -14,9 +15,9 @@ class Widget extends Model {
         'type',
         'type_layout',
         'quantity',
-        'user_id'
+        'user_id',
     ];
-    
+
     use SoftDeletes;
 
     /**
@@ -26,20 +27,28 @@ class Widget extends Model {
      */
     protected $dates = ['deleted_at'];
 
-    public function campaingns() {
+    public function campaingns()
+    {
         return $this->belongsToMany('App\Campaingn')->withTimestamps();
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
-    public function creativeLogs() {
+    public function creativeLogs()
+    {
         return $this->hasMany('App\CreativeLog');
     }
 
-    public function clicks() {
+    public function clicks()
+    {
         return $this->hasMany('App\Click');
     }
 
+    public function widgetLogs()
+    {
+        return $this->hasMany('App\WidgetLog');
+    }
 }

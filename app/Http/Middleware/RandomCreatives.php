@@ -2,17 +2,16 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use App\Creative;
 use App\Campaingn;
-use App\Widget;
 use App\CreativeLog;
-use Illuminate\Support\Facades\Hash;
+use App\Widget;
+use App\WidgetLog;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use Closure;
+use Illuminate\Support\Facades\Hash;
 
-class RandomCreatives {
+class RandomCreatives
+{
 
     /**
      * Handle an incoming request.
@@ -21,7 +20,8 @@ class RandomCreatives {
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next) {
+    public function handle($request, Closure $next)
+    {
         $query = $request->query();
         if (!isset($query['wg'])) {
             return response()->json("invalid request", 400);
@@ -36,19 +36,19 @@ class RandomCreatives {
                 '[widget_id]',
                 '[creative_id]',
                 '[image]',
-                '[headline]'
+                '[headline]',
             );
             foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
-                        . "hashid"
-                        . Carbon::now()->toDateTimeString());
+                    . "hashid"
+                    . Carbon::now()->toDateTimeString());
                 $creative['click_id'] = $cId;
                 $fields = array(
                     $cId,
                     $widget->id,
                     $creative->id,
                     urlencode(url('/') . '/' . $creative->image),
-                    urlencode($creative->name)
+                    urlencode($creative->name),
                 );
                 $creative->url = str_replace($params, $fields, $creative->url);
                 $creative->image = url('/') . '/' . $creative->image;
@@ -59,39 +59,51 @@ class RandomCreatives {
             $creativesCTR = $this->sortCreatives($creatives);
             if ($widget->type_layout == 1) {
                 if (count($creativesCTR) > $widget->quantity) {
-                    $creatives = array_slice($creativesCTR, 0, $widget->quantity);
+                    $creatives = array_slice($creativesCTR->toArray(), 0, $widget->quantity);
                 } else {
                     $creatives = $creativesCTR;
                 }
             } else {
-                $creatives = array_slice($creativesCTR, 0, 1);
+                $creatives = array_slice($creativesCTR->toArray(), 0, 1);
             }
             $widget->increment('impressions');
+            $widgetLog = WidgetLog::where('widget_id', $widget->id)
+                ->whereDate('created_at', Carbon::today()->toDateString())->first();
+            if ($widgetLog) {
+                $widgetLog->increment('impressions');
+            } else {
+                WidgetLog::create([
+                    'impressions' => 1,
+                    'widget_id' => $widget->id,
+                ]);
+            }
             return response()->json($creatives);
         } else {
             return response()->json("not found", 404);
         }
     }
 
-    private function impressions($widget, $creative) {
+    private function impressions($widget, $creative)
+    {
         $log = CreativeLog::with(['creative', 'widget'])->where([
-                    ['creative_id', $creative->id],
-                    ['widget_id', $widget->id]
-                ])->first();
+            ['creative_id', $creative->id],
+            ['widget_id', $widget->id],
+        ])->first();
         if (!$log) {
             CreativeLog::create(array(
                 'creative_id' => $creative->id,
                 'widget_id' => $widget->id,
-                'impressions' => 1
+                'impressions' => 1,
             ));
         } else {
             $log->increment('impressions');
         }
     }
 
-    private function getCampaign($cont, $type) {
+    private function getCampaign($cont, $type)
+    {
         $campaigns = Campaingn::with('creatives')->where([
-            'type_layout' => $type
+            'type_layout' => $type,
         ])->get()->sortByDesc(function ($p, $k) {
             return $p->revenues();
         });
@@ -104,8 +116,9 @@ class RandomCreatives {
         }
     }
 
-    private function sortCreatives($creatives) {
-       return $creatives->sort(function($a, $b){
+    private function sortCreatives($creatives)
+    {
+        return $creatives->sort(function ($a, $b) {
             if ($a->ctr < $b->ctr) {
                 return 1;
             } else if ($a->ctr > $b->ctr) {
@@ -116,13 +129,14 @@ class RandomCreatives {
         });
     }
 
-    private function setCTR($creative) {
+    private function setCTR($creative)
+    {
         $clicks = CreativeLog::where('creative_id', $creative->id)
             ->sum('clicks');
         $impressions = CreativeLog::where('creative_id', $creative->id)
             ->sum('impressions');
         if ($clicks > 0) {
-           $creative['ctr'] = $clicks / $impressions * 100;
+            $creative['ctr'] = $clicks / $impressions * 100;
         } else {
             $creative['ctr'] = 0;
         }

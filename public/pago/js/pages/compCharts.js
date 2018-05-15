@@ -5,6 +5,53 @@
  */
 
 var CompCharts = function() {
+    var miniChartLineOptions = {
+        type: 'line',
+        width: '80px',
+        height: '50px',
+        tooltipOffsetX: -25,
+        tooltipOffsetY: 20,
+        lineColor: '#c0392b',
+        fillColor: '#e74c3c',
+        spotColor: '#555555',
+        minSpotColor: '#555555',
+        maxSpotColor: '#555555',
+        highlightSpotColor: '#555555',
+        highlightLineColor: '#555555',
+        spotRadius: 3,
+        tooltipPrefix: '',
+        tooltipSuffix: ' Projects',
+        tooltipFormat: '{{prefix}}{{y}}{{suffix}}'
+    };
+    $('#mini-chart-line1').sparkline('html', miniChartLineOptions);
+
+    miniChartLineOptions['lineColor'] = '#16a085';
+    miniChartLineOptions['fillColor'] = '#1abc9c';
+    miniChartLineOptions['tooltipPrefix'] = '$ ';
+    miniChartLineOptions['tooltipSuffix'] = '';
+    $('#mini-chart-line2').sparkline('html', miniChartLineOptions);
+
+    miniChartLineOptions['lineColor'] = '#7f8c8d';
+    miniChartLineOptions['fillColor'] = '#95a5a6';
+    miniChartLineOptions['tooltipPrefix'] = '';
+    miniChartLineOptions['tooltipSuffix'] = ' Updates';
+    $('#mini-chart-line3').sparkline('html', miniChartLineOptions);
+
+    // Array with month labels used in Classic and Stacked chart
+    var chartMonths = [
+        [1, 'Jan'],
+        [2, 'Fev'],
+        [3, 'Mar'],
+        [4, 'Abr'],
+        [5, 'Mai'],
+        [6, 'Jun'],
+        [7, 'Jul'],
+        [8, 'Ago'],
+        [9, 'Set'],
+        [10, 'Out'],
+        [11, 'Nov'],
+        [12, 'Dez']
+    ];
 
     return {
         init: function() {
@@ -32,38 +79,6 @@ var CompCharts = function() {
             miniChartBarOptions['tooltipPrefix'] = '';
             miniChartBarOptions['tooltipSuffix'] = ' Updates';
             $('#mini-chart-bar3').sparkline('html', miniChartBarOptions);
-
-            var miniChartLineOptions = {
-                type: 'line',
-                width: '80px',
-                height: '50px',
-                tooltipOffsetX: -25,
-                tooltipOffsetY: 20,
-                lineColor: '#c0392b',
-                fillColor: '#e74c3c',
-                spotColor: '#555555',
-                minSpotColor: '#555555',
-                maxSpotColor: '#555555',
-                highlightSpotColor: '#555555',
-                highlightLineColor: '#555555',
-                spotRadius: 3,
-                tooltipPrefix: '',
-                tooltipSuffix: ' Projects',
-                tooltipFormat: '{{prefix}}{{y}}{{suffix}}'
-            };
-            $('#mini-chart-line1').sparkline('html', miniChartLineOptions);
-
-            miniChartLineOptions['lineColor'] = '#16a085';
-            miniChartLineOptions['fillColor'] = '#1abc9c';
-            miniChartLineOptions['tooltipPrefix'] = '$ ';
-            miniChartLineOptions['tooltipSuffix'] = '';
-            $('#mini-chart-line2').sparkline('html', miniChartLineOptions);
-
-            miniChartLineOptions['lineColor'] = '#7f8c8d';
-            miniChartLineOptions['fillColor'] = '#95a5a6';
-            miniChartLineOptions['tooltipPrefix'] = '';
-            miniChartLineOptions['tooltipSuffix'] = ' Updates';
-            $('#mini-chart-line3').sparkline('html', miniChartLineOptions);
 
             // Randomize easy pie charts values
             var random;
@@ -96,40 +111,72 @@ var CompCharts = function() {
             var chartPie = $('#chart-pie');
 
             // Random data for the charts
-            var dataEarnings = [[1, 1560], [2, 1650], [3, 1320], [4, 1950], [5, 1800], [6, 2400], [7, 2100], [8, 2550], [9, 3300], [10, 3900], [11, 4200], [12, 4500]];
-            var dataSales = [[1, 500], [2, 420], [3, 480], [4, 350], [5, 600], [6, 850], [7, 1100], [8, 950], [9, 1220], [10, 1300], [11, 1500], [12, 1700]];
-            var dataSales2 = [[1, 150], [3, 200], [5, 250], [7, 300], [9, 420], [11, 350], [13, 450], [15, 600], [17, 580], [19, 810], [21, 1120]];
-
-            // Array with month labels used in Classic and Stacked chart
-            var chartMonths = [[1, 'Jan'], [2, 'Feb'], [3, 'Mar'], [4, 'Apr'], [5, 'May'], [6, 'Jun'], [7, 'Jul'], [8, 'Aug'], [9, 'Sep'], [10, 'Oct'], [11, 'Nov'], [12, 'Dec']];
+            var dataEarnings = [
+                [1, 1560],
+                [2, 1650],
+                [3, 1320],
+                [4, 1950],
+                [5, 1800],
+                [6, 2400],
+                [7, 2100],
+                [8, 2550],
+                [9, 3300],
+                [10, 3900],
+                [11, 4200],
+                [12, 4500]
+            ];
+            var dataSales = [
+                [1, 500],
+                [2, 420],
+                [3, 480],
+                [4, 350],
+                [5, 600],
+                [6, 850],
+                [7, 1100],
+                [8, 950],
+                [9, 1220],
+                [10, 1300],
+                [11, 1500],
+                [12, 1700]
+            ];
+            var dataSales2 = [
+                [1, 150],
+                [3, 200],
+                [5, 250],
+                [7, 300],
+                [9, 420],
+                [11, 350],
+                [13, 450],
+                [15, 600],
+                [17, 580],
+                [19, 810],
+                [21, 1120]
+            ];
 
             // Classic Chart
-            $.plot(chartClassic,
-                [
-                    {
-                        label: 'Earnings',
-                        data: dataEarnings,
-                        lines: {show: true, fill: true, fillColor: {colors: [{opacity: 0.25}, {opacity: 0.25}]}},
-                        points: {show: true, radius: 6}
-                    },
-                    {
-                        label: 'Sales',
-                        data: dataSales,
-                        lines: {show: true, fill: true, fillColor: {colors: [{opacity: 0.15}, {opacity: 0.15}]}},
-                        points: {show: true, radius: 6}
-                    }
-                ],
+            $.plot(chartClassic, [{
+                    label: 'Earnings',
+                    data: dataEarnings,
+                    lines: { show: true, fill: true, fillColor: { colors: [{ opacity: 0.25 }, { opacity: 0.25 }] } },
+                    points: { show: true, radius: 6 }
+                },
                 {
-                    colors: ['#3498db', '#333333'],
-                    legend: {show: true, position: 'nw', margin: [15, 10]},
-                    grid: {borderWidth: 0, hoverable: true, clickable: true},
-                    yaxis: {ticks: 4, tickColor: '#eeeeee'},
-                    xaxis: {ticks: chartMonths, tickColor: '#ffffff'}
+                    label: 'Sales',
+                    data: dataSales,
+                    lines: { show: true, fill: true, fillColor: { colors: [{ opacity: 0.15 }, { opacity: 0.15 }] } },
+                    points: { show: true, radius: 6 }
                 }
-            );
+            ], {
+                colors: ['#3498db', '#333333'],
+                legend: { show: true, position: 'nw', margin: [15, 10] },
+                grid: { borderWidth: 0, hoverable: true, clickable: true },
+                yaxis: { ticks: 4, tickColor: '#eeeeee' },
+                xaxis: { ticks: chartMonths, tickColor: '#ffffff' }
+            });
 
             // Creating and attaching a tooltip to the classic chart
-            var previousPoint = null, ttlabel = null;
+            var previousPoint = null,
+                ttlabel = null;
             chartClassic.bind('plothover', function(event, pos, item) {
 
                 if (item) {
@@ -137,7 +184,8 @@ var CompCharts = function() {
                         previousPoint = item.dataIndex;
 
                         $('#chart-tooltip').remove();
-                        var x = item.datapoint[0], y = item.datapoint[1];
+                        var x = item.datapoint[0],
+                            y = item.datapoint[1];
 
                         if (item.seriesIndex === 1) {
                             ttlabel = '<strong>' + y + '</strong> sales';
@@ -146,32 +194,26 @@ var CompCharts = function() {
                         }
 
                         $('<div id="chart-tooltip" class="chart-tooltip">' + ttlabel + '</div>')
-                            .css({top: item.pageY - 45, left: item.pageX + 5}).appendTo("body").show();
+                            .css({ top: item.pageY - 45, left: item.pageX + 5 }).appendTo("body").show();
                     }
-                }
-                else {
+                } else {
                     $('#chart-tooltip').remove();
                     previousPoint = null;
                 }
             });
 
             // Bars Chart
-            $.plot(chartBars,
-                [
-                    {
-                        label: 'Sales',
-                        data: dataSales2,
-                        bars: {show: true, lineWidth: 0, fillColor: {colors: [{opacity: 0.5}, {opacity: 0.5}]}}
-                    }
-                ],
-                {
-                    colors: ['#9b59b6'],
-                    legend: {show: true, position: 'nw', margin: [15, 10]},
-                    grid: {borderWidth: 0},
-                    yaxis: {ticks: 4, tickColor: '#eeeeee'},
-                    xaxis: {ticks: 10, tickColor: '#ffffff'}
-                }
-            );
+            $.plot(chartBars, [{
+                label: 'Sales',
+                data: dataSales2,
+                bars: { show: true, lineWidth: 0, fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.5 }] } }
+            }], {
+                colors: ['#9b59b6'],
+                legend: { show: true, position: 'nw', margin: [15, 10] },
+                grid: { borderWidth: 0 },
+                yaxis: { ticks: 4, tickColor: '#eeeeee' },
+                xaxis: { ticks: 10, tickColor: '#ffffff' }
+            });
 
             // Live Chart
             var dataLive = [];
@@ -210,61 +252,108 @@ var CompCharts = function() {
             }
 
             // Initialize live chart
-            var chartLive = $.plot(chartLive,
-                [{data: getRandomData()}],
-            {
-                series: {shadowSize: 0},
-                lines: {show: true, lineWidth: 1, fill: true, fillColor: {colors: [{opacity: 0.2}, {opacity: 0.2}]}},
+            var chartLive = $.plot(chartLive, [{ data: getRandomData() }], {
+                series: { shadowSize: 0 },
+                lines: { show: true, lineWidth: 1, fill: true, fillColor: { colors: [{ opacity: 0.2 }, { opacity: 0.2 }] } },
                 colors: ['#34495e'],
-                grid: {borderWidth: 0, color: '#aaaaaa'},
-                yaxis: {show: true, min: 0, max: 110},
-                xaxis: {show: false}
-            }
-            );
+                grid: { borderWidth: 0, color: '#aaaaaa' },
+                yaxis: { show: true, min: 0, max: 110 },
+                xaxis: { show: false }
+            });
 
             // Start getting new data
             updateChartLive();
 
             // Pie Chart
-            $.plot(chartPie,
-                [
-                    {label: 'Support', data: 20},
-                    {label: 'Earnings', data: 45},
-                    {label: 'Sales', data: 35}
-                ],
-                {
-                    colors: ['#333333', '#1abc9c', '#16a085'],
-                    legend: {show: false},
-                    series: {
-                        pie: {
+            $.plot(chartPie, [
+                { label: 'Support', data: 20 },
+                { label: 'Earnings', data: 45 },
+                { label: 'Sales', data: 35 }
+            ], {
+                colors: ['#333333', '#1abc9c', '#16a085'],
+                legend: { show: false },
+                series: {
+                    pie: {
+                        show: true,
+                        radius: 1,
+                        label: {
                             show: true,
-                            radius: 1,
-                            label: {
-                                show: true,
-                                radius: 3 / 4,
-                                formatter: function(label, pieSeries) {
-                                    return '<div class="chart-pie-label">' + label + '<br>' + Math.round(pieSeries.percent) + '%</div>';
-                                },
-                                background: {opacity: 0.75, color: '#000000'}
-                            }
+                            radius: 3 / 4,
+                            formatter: function(label, pieSeries) {
+                                return '<div class="chart-pie-label">' + label + '<br>' + Math.round(pieSeries.percent) + '%</div>';
+                            },
+                            background: { opacity: 0.75, color: '#000000' }
                         }
                     }
                 }
-            );
+            });
 
             // Stacked Chart
-            $.plot(chartStacked,
-                [{label: 'Sales', data: dataSales}, {label: 'Earnings', data: dataEarnings}],
+            $.plot(chartStacked, [{ label: 'Sales', data: dataSales }, { label: 'Earnings', data: dataEarnings }], {
+                colors: ['#f1c40f', '#f39c12'],
+                series: { stack: true, lines: { show: true, fill: true } },
+                lines: { show: true, lineWidth: 0, fill: true, fillColor: { colors: [{ opacity: 0.75 }, { opacity: 0.75 }] } },
+                legend: { show: true, position: 'nw', margin: [15, 10], sorted: true },
+                grid: { borderWidth: 0 },
+                yaxis: { ticks: 4, tickColor: '#eeeeee' },
+                xaxis: { ticks: chartMonths, tickColor: '#ffffff' }
+            });
+        },
+        widgetsChartLine: function(clicks, impressions, revenues) {
+            var wChartLine = $('#widgetsChartLine');
+            $.plot(wChartLine, [{
+                    label: 'Clicks',
+                    data: clicks,
+                    lines: { show: true, fill: true, fillColor: { colors: [{ opacity: 0.25 }, { opacity: 0.25 }] } },
+                    points: { show: true, radius: 6 }
+                },
                 {
-                    colors: ['#f1c40f', '#f39c12'],
-                    series: {stack: true, lines: {show: true, fill: true}},
-                    lines: {show: true, lineWidth: 0, fill: true, fillColor: {colors: [{opacity: 0.75}, {opacity: 0.75}]}},
-                    legend: {show: true, position: 'nw', margin: [15, 10], sorted: true},
-                    grid: {borderWidth: 0},
-                    yaxis: {ticks: 4, tickColor: '#eeeeee'},
-                    xaxis: {ticks: chartMonths, tickColor: '#ffffff'}
+                    label: 'Impressions',
+                    data: impressions,
+                    lines: { show: true, fill: true, fillColor: { colors: [{ opacity: 0.15 }, { opacity: 0.15 }] } },
+                    points: { show: true, radius: 6 }
+                },
+                {
+                    label: 'Revenues',
+                    data: revenues,
+                    lines: { show: true, fill: true, fillColor: { colors: [{ opacity: 0.15 }, { opacity: 0.15 }] } },
+                    points: { show: true, radius: 6 }
                 }
-            );
+            ], {
+                colors: ['#3498db', '#333333', '#FF0000'],
+                legend: { show: true, position: 'nw', margin: [15, 10] },
+                grid: { borderWidth: 0, hoverable: true, clickable: true },
+                yaxis: { ticks: 4, tickColor: '#eeeeee' },
+                xaxis: { ticks: chartMonths, tickColor: '#ffffff' }
+            });
+            var previousPoint = null,
+                ttlabel = null;
+            chartClassic.bind('plothover', function(event, pos, item) {
+
+                if (item) {
+                    if (previousPoint !== item.dataIndex) {
+                        previousPoint = item.dataIndex;
+
+                        $('#chart-tooltip').remove();
+                        var x = item.datapoint[0],
+                            y = item.datapoint[1];
+
+                        if (item.seriesIndex === 1) {
+                            ttlabel = '<strong>' + y + '</strong> clicks';
+                        } else if (item.seriesIndex === 2) {
+                            ttlabel = '<strong>' + y + '</strong> vizualizações';
+                        } else if (item.seriesIndex === 3) {
+                            ttlabel = 'R$ <strong>' + y + '</strong>';
+                        }
+
+                        $('<div id="chart-tooltip" class="chart-tooltip">' + ttlabel + '</div>')
+                            .css({ top: item.pageY - 45, left: item.pageX + 5 }).appendTo("body").show();
+                    }
+                } else {
+                    $('#chart-tooltip').remove();
+                    previousPoint = null;
+                }
+            });
         }
     };
 }();

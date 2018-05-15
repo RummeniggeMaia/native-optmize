@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\CreativeLog;
 use App\Click;
 use App\Postback;
+use App\WidgetLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -317,10 +318,6 @@ class WidgetController extends Controller {
         foreach ($widgets as $widget) {
             $this->create_widget($widget->id);
         }
-    }
-
-    public function widgetsStatistics() {
-        return null;
     }
 
 }

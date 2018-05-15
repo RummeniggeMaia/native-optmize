@@ -25,6 +25,12 @@ class CreatePaymentsTable extends Migration
             $table->string('info');
             $table->timestamps();
         });
+
+        Schema::table('payments', function(Blueprint $table) {
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')
+                    ->onDelete('cascade');
+        });
     }
 
     /**
