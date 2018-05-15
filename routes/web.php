@@ -66,6 +66,15 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/categories/{category}/edit', 'CategoryController@edit')->name('categories.edit');
     Route::get('/categories/{page?}', 'CategoryController@index')->name('categories.index');
     Route::get('/categoriesdata', 'CategoryController@indexDataTable')->name('categories.data');
+
+    Route::post('/payments', 'PaymentController@store')->name('payments.store');
+    Route::get('/payments', 'PaymentController@index')->name('payments');
+    Route::get('/payments/create', 'PaymentController@create')->name('payments.create');
+    Route::get('/payments/{payment}', 'PaymentController@show')->name('payments.show');
+    Route::patch('/payments/{payment}', 'PaymentController@update')->name('payments.update');
+    Route::delete('/payments/{payment}', 'PaymentController@destroy')->name('payments.destroy');
+    Route::get('/payments/{payment}/edit', 'PaymentController@edit')->name('payments.edit');
+    Route::get('/paymentsdata','PaymentController@indexDataTable')->name('payments.data');
 });
 
 Route::middleware(['user'])->group(function () {
@@ -79,7 +88,10 @@ Route::middleware(['user'])->group(function () {
     Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
     Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
     Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs');
-    
+
+    Route::get('/payments/create', 'PaymentController@create')->name('payments.create');
+    Route::get('/paymentsdata','PaymentController@indexDataTable')->name('payments.data');
+
     Route::get('/homedata', 'HomeController@indexDataTable')->name('home.data');
 });
 
