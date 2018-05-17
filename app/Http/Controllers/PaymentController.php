@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Payment;
 use Illuminate\Http\Request;
 
 
 class PaymentController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +26,16 @@ class PaymentController extends Controller
     }
 
     public function indexDataTable() {
-        $payments = DB::table('payments')->get();
+        $user = Auth::user();
+        $role = $user->hasRole();
+        if ($role === "Publisher")
+        {
+            $payments = DB::table('payments')->where('user_id', Auth::id())->get();
+        }
+        else if ($role === "Advertiser")
+        {
+            $payments = DB::table('payments')->get();
+        }
         return Datatables::of($payments)->addColumn('edit', function($payment) {
                     return view('comum.button_edit', [
                         'id' => $payment->id,

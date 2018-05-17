@@ -24,3 +24,4 @@ Route::resource('widgets','WidgetController');
 //Route::resource('creatives','CreativeController');
 Route::resource('categories','CategoryController');
 Route::resource('users', 'UserController');
+Route::resource('payments', 'PaymentController');
