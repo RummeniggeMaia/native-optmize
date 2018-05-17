@@ -320,7 +320,7 @@ var CompCharts = function() {
                     points: { show: true, radius: 6 }
                 }
             ], {
-                colors: ['#3498db', '#333333', '#FF0000'],
+                colors: ['#A1CF8F', '#A8DCA8', '#979797'],
                 legend: { show: true, position: 'nw', margin: [15, 10] },
                 grid: { borderWidth: 0, hoverable: true, clickable: true },
                 yaxis: { ticks: 4, tickColor: '#eeeeee' },
@@ -328,7 +328,7 @@ var CompCharts = function() {
             });
             var previousPoint = null,
                 ttlabel = null;
-            chartClassic.bind('plothover', function(event, pos, item) {
+            wChartLine.bind('plothover', function(event, pos, item) {
 
                 if (item) {
                     if (previousPoint !== item.dataIndex) {

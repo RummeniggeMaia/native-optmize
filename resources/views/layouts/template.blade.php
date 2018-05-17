@@ -100,6 +100,19 @@
                                     </ul>
                                 </li>
                                 @endif
+                                <li>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pagamentos</span></a>
+                                    <ul>
+                                        @If (Auth::user()->hasRole('user'))
+                                        <li>
+                                            <a href="{{ route('categories.create') }}">Solicitar Pagamento</a>
+                                        </li>
+                                        @endif
+                                        <li>
+                                            <a href="{{ route('categories') }}">Listar Pagamentos</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                             @endauth
                         </div>
@@ -120,14 +133,14 @@
                             @auth
                             <li class="dropdown">
                                 <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="{{ asset('pago/img/avatar.png') }}" style="border:1px solid #eaeaea;" alt="avatar"> <i class="fa fa-angle-down"></i> 
+                                    <img src="{{ asset('pago/img/avatar.png') }}" style="border:1px solid #eaeaea;" alt="avatar"> <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
                                     <li>
                                         <a href="{{ route('auth.account') }}">
                                             <i class="fa fa-user pull-right"></i>  &nbsp; Minha Conta
                                         </a>
-                                        <a href="{{ route('logout') }}" 
+                                        <a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                             <i class="gi gi-exit pull-right"></i>  &nbsp; Sair
                                         </a>

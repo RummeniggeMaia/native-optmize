@@ -70,41 +70,47 @@
         </a>
     </div>
 </div>
-<div class="col-md-12">
-    <div class="row">
-        <div class="col-sm-12">
-           <div class="block full">
+<div class="row">
+    <div class="col-sm-8">
+        <div class="block">
             <div class="block-title">
-            <h2>Geral</h2>
+                <h2>Geral</h2>
+            </div>    
+            <div id="widgetsChartLine" class="chart" style="padding: 0px; position: relative;"><canvas class="flot-base" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 22px; text-align: center;">Fev</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 172px; text-align: center;">Mar</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 325px; text-align: center;">Abr</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 477px; text-align: center;">Mai</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 383px; left: 19px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 257px; left: 6px; text-align: right;">500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 132px; left: 0px; text-align: right;">1000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 7px; left: 0px; text-align: right;">1500</div></div></div><canvas class="flot-overlay" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas><div class="legend"><div style="position: absolute; width: 112px; height: 56px; top: 24px; left: 45px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:24px;left:45px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(52,152,219);overflow:hidden"></div></div></td><td class="legendLabel">Conversões</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(51,51,51);overflow:hidden"></div></div></td><td class="legendLabel">Desistências</td></tr></tbody></table></div></div>
         </div>
-        <div id="widgetsChartLine" class="chart" style="padding: 0px; position: relative;"><canvas class="flot-base" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 22px; text-align: center;">Fev</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 172px; text-align: center;">Mar</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 325px; text-align: center;">Abr</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 477px; text-align: center;">Mai</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 383px; left: 19px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 257px; left: 6px; text-align: right;">500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 132px; left: 0px; text-align: right;">1000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 7px; left: 0px; text-align: right;">1500</div></div></div><canvas class="flot-overlay" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas><div class="legend"><div style="position: absolute; width: 112px; height: 56px; top: 24px; left: 45px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:24px;left:45px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(52,152,219);overflow:hidden"></div></div></td><td class="legendLabel">Conversões</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(51,51,51);overflow:hidden"></div></div></td><td class="legendLabel">Desistências</td></tr></tbody></table></div></div>Conver
+    </div>
+    <div class="col-sm-4">
+        <div class="block">
+            <div class="block-title">
+                <h2>Lucros diários</h2>
+            </div>
         </div>
     </div>
 </div>
-<script src="{{ asset('pago/js/pages/compCharts.js?v7') }}"></script>
+<!-- TODO Mudar versao do javascript -->
+<script src="{{ asset('pago/js/pages/compCharts.js?v8') }}"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $.ajax({
-            dataType: "json",
-            accepts: "application/json",
-            method: 'GET',
-            url: '{!! route("widgets.linechart") !!}',
-            beforeSend: function (request) {
-                request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
-            }
-        }).done(function (data) {
-            var clicks = []; 
-            var impressions = [];
-            var revenues = [];
-            console.log(data);
-            $.each(data, function(index, value) {
-                clicks.push([value.month, value.clicks]);
-                impressions.push([value.month, value.impressions]);
-                revenues.push([value.month, value.revenues]);
-            });
-            CompCharts.widgetsChartLine(clicks, impressions, revenues);
+$(document).ready(function () {
+    $.ajax({
+        dataType: "json",
+        accepts: "application/json",
+        method: 'GET',
+        url: '{!! route("widgets.linechart") !!}',
+        beforeSend: function (request) {
+            request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+        }
+    }).done(function (data) {
+        var clicks = [];
+        var impressions = [];
+        var revenues = [];
+        $.each(data, function (index, value) {
+            clicks.push([value.month, value.clicks]);
+            impressions.push([value.month, value.impressions]);
+            revenues.push([value.month, value.revenues]);
         });
+        CompCharts.widgetsChartLine(clicks, impressions, revenues);
     });
+});
 </script>
 @elseif (Auth::user()->hasRole('admin'))
 
