@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Click;
 use App\Widget;
+use App\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -59,4 +60,64 @@ class HomeController extends Controller
                 DB::raw('MONTH(widget_logs.created_at) as month')]);
     }
 
+    public function paymentsDataTable() {
+        $payments = Payment::all();
+        return Datatables::of($payments)//->make(true);
+            ->editColumn('created_at', function($payment){
+                return date('d-m-Y H:i', strtotime($payment->created_at));
+            })
+            ->editColumn('name', function($payment){
+                return $payment->user->name;
+            })
+            ->editColumn('payment_form', function($payment){
+                return $payment->payment_form == 1 
+                    ? "Cartão de créditos" 
+                    : "Boleto";
+            })
+            ->editColumn('brute_value', function($payment){
+                return "R$ " . number_format($payment->brute_value, 2);
+            })
+            ->editColumn('paid_value', function($payment){
+                return "R$ " . number_format($payment->paid_value, 2);
+            })
+            ->editColumn('taxa', function($payment){
+                return "R$ " . number_format($payment->brute_value * $payment->user->taxa, 2);
+            })
+            ->editColumn('liquid_value', function($payment){
+                $taxa = $payment->brute_value * $payment->user->taxa;
+                if ($payment->status == Payment::STATUS_REVERSED) {
+                    return "R$ <s>" . number_format($payment->brute_value - $taxa, 2) . "</s> / R$ 0,00";
+                } else {
+                    return "R$ " . number_format($payment->brute_value - $taxa, 2);
+                }
+            })
+            ->editColumn('status', function($payment){
+                if ($payment->status == Payment::STATUS_PAID) {
+                    return view('comum.status_paid');
+                } else if ($payment->status == Payment::STATUS_WAITING) {
+                    return view('comum.status_waiting');
+                } else if ($payment->status == Payment::STATUS_REVERSED) {
+                    return view('comum.status_reversed');
+                }
+            })
+            ->addColumn('show', function($user) {
+                return view('comum.button_show', [
+                    'id' => $user->id,
+                    'route' => 'payments.show'
+                ]);
+            })
+            ->setRowAttr([
+                'style' => function($payment) {
+                    if ($payment->status == Payment::STATUS_PAID) {
+                        return "background: rgba(39, 174, 96, 0.2);border:2px solid #fff !important";
+                    } else if ($payment->status == Payment::STATUS_WAITING) {
+                        return "background: rgba(230, 126, 34, 0.2);border:2px solid #fff !important";
+                    } else if ($payment->status == Payment::STATUS_REVERSED) {
+                        return "background: rgba(255, 75, 75, 0.5);border:2px solid #fff !important";
+                    }
+                },
+            ])
+            ->rawColumns(['status', 'liquid_value', 'show'])
+            ->make(true);
+    }
 }

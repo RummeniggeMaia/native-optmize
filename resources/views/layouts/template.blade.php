@@ -88,7 +88,7 @@
                                     </ul>
                                 </li>
                                 @else
-                                <li class="active">
+                                <li>
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-power-switch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Widgets</span></a>
                                     <ul>
                                         <li>
@@ -99,20 +99,18 @@
                                         </li>
                                     </ul>
                                 </li>
-                                @endif
                                 <li>
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pagamentos</span></a>
                                     <ul>
-                                        @If (Auth::user()->hasRole('user'))
                                         <li>
-                                            <a href="{{ route('categories.create') }}">Solicitar Pagamento</a>
+                                            <a href="{{ route('payments.create') }}">Solicitar Pagamento</a>
                                         </li>
-                                        @endif
                                         <li>
-                                            <a href="{{ route('categories') }}">Listar Pagamentos</a>
+                                            <a href="{{ route('payments') }}">Listar Pagamentos</a>
                                         </li>
                                     </ul>
                                 </li>
+                                @endif
                             </ul>
                             @endauth
                         </div>

@@ -43,6 +43,7 @@ class RandomCreatives
                     . "hashid"
                     . Carbon::now()->toDateTimeString());
                 $creative['click_id'] = $cId;
+                $creative['campaign_id'] = $campaign->id;
                 $fields = array(
                     $cId,
                     $widget->id,

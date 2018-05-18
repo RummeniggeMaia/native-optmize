@@ -15,14 +15,11 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('name');
             $table->string('payment_form');
             $table->double('brute_value')->default(0.0);
             $table->double('paid_value')->default(0.0);
-            $table->double('tax')->default(0.0);
-            $table->double('liquid_value')->default(0.0);
-            $table->boolean('status')->default(false);
-            $table->string('info');
+            $table->boolean('status');
+            $table->string('info')->nullable();
             $table->timestamps();
         });
 

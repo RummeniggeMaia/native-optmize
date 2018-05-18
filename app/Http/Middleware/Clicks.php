@@ -2,16 +2,18 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use App\Creative;
+use App\Campaingn;
 use App\Click;
-use App\Widget;
+use App\Creative;
 use App\CreativeLog;
+use App\User;
+use App\Widget;
 use App\WidgetLog;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Closure;
 
-class Clicks {
+class Clicks
+{
 
     /**
      * Handle an incoming request.
@@ -20,13 +22,29 @@ class Clicks {
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next) {
+    public function handle($request, Closure $next)
+    {
         if ($request->has(['ct', 'wg', 'click_id'])) {
-            $creative = Creative::where('hashid', $request->input('ct'))
-                    ->first(['id']);
-            $widget = Widget::where('hashid', $request->input('wg'))
-                    ->first(['id']);
+            $creative = Creative::with('user')->where('hashid', $request->input('ct'))
+                ->first(['id']);
+            $widget = Widget::with('user')->where('hashid', $request->input('wg'))
+                ->first(['id']);
+            $campaign = null;
+
+            if ($request->has('cp')) {
+                $campaign = Campaingn::where('hashid', $request->input('cp'))->first();
+            }
             if ($creative && $widget) {
+                /** TODO campanha deve ser obrigatoria na proxima atualizacao.
+                 * Codigo do site nao tem campanha ainda */
+                if ($campaign && $campaign->cpc > 0) {
+                    $widget->user->increment(
+                        'revenue',
+                        $campaign->cpc * $widget->user->taxa);
+                    $creative->user->increment(
+                        'revenue',
+                        $campaign->cpc * (1 - $widget->user->taxa));
+                }
                 $widgetLog = WidgetLog::where('widget_id', $click->widget->id)
                     ->whereDate('created_at', Carbon::today()->toDateString())->first();
                 if ($widgetLog) {
@@ -38,16 +56,16 @@ class Clicks {
                     ]);
                 }
                 $log = CreativeLog::with(['creative', 'widget'])->where([
-                            ['creative_id', $creative->id],
-                            ['widget_id', $widget->id]
-                        ])->first();
+                    ['creative_id', $creative->id],
+                    ['widget_id', $widget->id],
+                ])->first();
                 if ($log) {
                     if (!Click::where('click_id', $request->input('click_id'))
-                                    ->exists()) {
+                        ->exists()) {
                         Click::create(array(
                             'click_id' => $request->input('click_id'),
                             'creative_id' => $creative->id,
-                            'widget_id' => $widget->id
+                            'widget_id' => $widget->id,
                         ));
                         $log->increment('clicks');
                     } else {

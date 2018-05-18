@@ -57,22 +57,6 @@
                     <input title="Revenue"  style="background-color: white" type="text" class="form-control input-lg" id="revenue" placeholder="{{ number_format(($user->revenue), 2) }}" readonly>
                 </div>
             </div>
-            {!! Form::model($user,['class'=>'form-bordered', 'method' => 'patch','route'=>['users.payment',$user->id]]) !!}
-            <div class="form-group {{ $errors->has('payment') ? ' has-error' : '' }}">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
-                    {!! Form::text('payment',null,['id'=>'payment', 'class'=>'form-control input-lg', 'placeholder' => 'Efetuar pagamento']) !!}
-                </div>
-                @if ($errors->has('payment'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('payment') }}</strong>
-                </span>
-                @endif
-                <div class="form-group form-actions text-center">
-                    {!! Form::submit('PAGAR', ['class' => 'btn btn-md btn-default']) !!}
-                </div>
-            </div>
-            {!! Form::close() !!}
         </div>
     </div>
 </div>

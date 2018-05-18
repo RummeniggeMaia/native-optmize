@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use App\Payment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
-
 
 class PaymentController extends Controller
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -21,41 +23,51 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::all();
+        $payments = array();
         return view('payments.index', compact('payments'));
     }
 
-    public function indexDataTable() {
-        $user = Auth::user();
-        $role = $user->hasRole();
-        if ($role === "Publisher")
-        {
-            $payments = DB::table('payments')->where('user_id', Auth::id())->get();
-        }
-        else if ($role === "Advertiser")
-        {
-            $payments = DB::table('payments')->get();
-        }
-        return Datatables::of($payments)->addColumn('edit', function($payment) {
-                    return view('comum.button_edit', [
-                        'id' => $payment->id,
-                        'route' => 'payments.edit'
-                    ]);
-                })->addColumn('show', function($payment) {
-                    return view('comum.button_show', [
-                        'id' => $payment->id,
-                        'route' => 'payments.show'
-                    ]);
-                })->addColumn('delete', function($payment) {
-                    return view('comum.button_delete', [
-                        'id' => $payment->id,
-                        'route' => 'payments.destroy'
-                    ]);
-                })->rawColumns(
-                        ['edit', 'show', 'delete']
-                )->make(true);
+    public function indexDataTable()
+    {
+        $payments = DB::table('payments')->where('user_id', Auth::id())->get();
+        return Datatables::of($payments)//->make(true);
+            ->editColumn('created_at', function($payment){
+                return date('d-m-Y H:i', strtotime($payment->created_at));
+            })
+            ->editColumn('payment_form', function($payment){
+                return $payment->payment_form == 1 
+                    ? "Cartão de créditos" 
+                    : "Boleto";
+            })
+            ->editColumn('brute_value', function($payment){
+                return "R$ " . number_format($payment->brute_value, 2);
+            })
+            ->editColumn('paid_value', function($payment){
+                return "R$ " . number_format($payment->paid_value, 2);
+            })
+            ->editColumn('status', function($payment){
+                if ($payment->status == Payment::STATUS_PAID) {
+                    return view('comum.status_paid');
+                } else if ($payment->status == Payment::STATUS_WAITING) {
+                    return view('comum.status_waiting');
+                } else if ($payment->status == Payment::STATUS_REVERSED) {
+                    return view('comum.status_reversed');
+                }
+            })
+            ->setRowAttr([
+                'style' => function($payment) {
+                    if ($payment->status == Payment::STATUS_PAID) {
+                        return "background: rgba(39, 174, 96, 0.2);border:2px solid #fff !important";
+                    } else if ($payment->status == Payment::STATUS_WAITING) {
+                        return "background: rgba(230, 126, 34, 0.2);border:2px solid #fff !important";
+                    } else if ($payment->status == Payment::STATUS_REVERSED) {
+                        return "background: rgba(255, 75, 75, 0.5);border:2px solid #fff !important";
+                    }
+                },
+            ])
+            ->rawColumns(['status'])
+            ->make(true);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -76,9 +88,10 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $post = $request->all();
-        $post['status'] = false;
+        $post['status'] = Payment::STATUS_WAITING;
+        $post['user_id'] = Auth::id();
         $payment = Payment::create($post);
-        return redirect('payments')->with('success', 'Pagamento cadastrado com sucesso.');
+        return redirect('payments')->with('success', 'Pagamento solicitado com sucesso.');
     }
 
     /**

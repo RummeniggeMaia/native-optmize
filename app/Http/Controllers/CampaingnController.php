@@ -112,20 +112,19 @@ class CampaingnController extends Controller {
     }
 
     public function creativesDataTable($id) {
-        $campaingn = Campaingn::with(['user', 'creatives'])
-                        ->where('id', $id)->first();
+        $campaingn = Campaingn::with(['user', 'creatives'])->find($id);
         if ($campaingn == null) {
             return null;
         } else if ($campaingn->user->id != Auth::id()) {
             return null;
         } else {
             return Datatables::of($campaingn->creatives)
-                            ->editColumn('image', function($creative) {
-                                return view('comum.image', [
-                                    'image' => $creative->image
-                                ]);
-                            })->rawColumns(
-                            ['image'])->make(true);
+                ->editColumn('image', function($creative) {
+                    return view('comum.image', [
+                        'image' => $creative->image
+                    ]);
+                })->rawColumns(
+                ['image'])->make(true);
         }
     }
 

@@ -1,14 +1,14 @@
 <?php
 
 /*
-  |--------------------------------------------------------------------------
-  | Web Routes
-  |--------------------------------------------------------------------------
-  |
-  | Here is where you can register web routes for your application. These
-  | routes are loaded by the RouteServiceProvider within a group which
-  | contains the "web" middleware group. Now create something great!
-  |
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
  */
 
 Route::get('/', function () {
@@ -33,8 +33,8 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit');
     Route::get('users/{page?}', 'UserController@index')->name('users.index');
     Route::get('/usersdata', 'UserController@indexDataTable')->name('users.data');
-    Route::patch('/users/payment/{user}', 'UserController@payment')->name('users.payment');
-    
+    Route::patch('/users/payment/{payment}', 'UserController@payment')->name('users.payment');
+
     Route::post('/creatives', 'CreativeController@store')->name('creatives.store');
     Route::get('/creatives', 'CreativeController@index')->name('creatives');
     Route::get('/creatives/create', 'CreativeController@create')->name('creatives.create');
@@ -67,14 +67,12 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/categories/{page?}', 'CategoryController@index')->name('categories.index');
     Route::get('/categoriesdata', 'CategoryController@indexDataTable')->name('categories.data');
 
-    Route::post('/payments', 'PaymentController@store')->name('payments.store');
-    Route::get('/payments', 'PaymentController@index')->name('payments');
-    Route::get('/payments/create', 'PaymentController@create')->name('payments.create');
     Route::get('/payments/{payment}', 'PaymentController@show')->name('payments.show');
     Route::patch('/payments/{payment}', 'PaymentController@update')->name('payments.update');
     Route::delete('/payments/{payment}', 'PaymentController@destroy')->name('payments.destroy');
     Route::get('/payments/{payment}/edit', 'PaymentController@edit')->name('payments.edit');
-    Route::get('/paymentsdata','PaymentController@indexDataTable')->name('payments.data');
+
+    Route::get('/homepayments', 'HomeController@paymentsDataTable')->name('home.payments');
 });
 
 Route::middleware(['user'])->group(function () {
@@ -88,23 +86,20 @@ Route::middleware(['user'])->group(function () {
     Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
     Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
     Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs');
-<<<<<<< HEAD
-    
-    Route::get('/widgetlcdata', 'HomeController@widgetsLineChartData')->name('widgets.linechart');
-=======
 
+    Route::get('/payments', 'PaymentController@index')->name('payments');
+    Route::get('/paymentsdata', 'PaymentController@indexDataTable')->name('payments.data');
+    Route::post('/payments', 'PaymentController@store')->name('payments.store');
     Route::get('/payments/create', 'PaymentController@create')->name('payments.create');
-    Route::get('/paymentsdata','PaymentController@indexDataTable')->name('payments.data');
 
->>>>>>> 4d726bdad8ea20def3354eb67c7d25738b61d924
-    Route::get('/homedata', 'HomeController@indexDataTable')->name('home.data');
+    Route::get('/homewidgetslc', 'HomeController@widgetsLineChartData')->name('home.widgetslc');
 });
 
 Route::get('/auth/account', 'Auth\AuthController@edit')->name('auth.account');
 Route::get('/auth/change', 'Auth\AuthController@changePassword')->name('auth.changePassword');
 Route::patch('/auth/update', 'Auth\AuthController@update')->name('auth.update');
 Route::patch('/auth/updatePassword', 'Auth\AuthController@updatePassword')
-        ->name('auth.updatePassword');
+    ->name('auth.updatePassword');
 
 Route::post('/clicks')->middleware('clicks');
 Route::post('/impressions')->middleware('impressions');

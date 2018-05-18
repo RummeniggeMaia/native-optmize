@@ -3,73 +3,20 @@
 
 @section('content')
 @auth
-@If (Auth::user()->hasRole('user'))
 <ul class="breadcrumb breadcrumb-top">
-    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="{{ route('home') }}">Dashboard</a></li>
 </ul>
+@If (Auth::user()->hasRole('user'))
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-tv"></i>Estatísticas por <b>Widgets</b>
+                <i class="fa fa-tv"></i>Estatísticas dos <b>Widgets</b>
             </h1>
         </div>
     </div>
 </div>
-<div class="row animation-fadeInQuick">
-    <div class="col-sm-6 col-lg-3">
-        <a href="#" class="widget widget-hover-effect1">
-            <div class="widget-simple">
-                <div class="widget-icon pull-left themed-background-default animation-fadeIn">
-                    <i class="gi gi-wallet"></i>
-                </div>
-                <h3 class="widget-content text-right animation-pullDown">
-                    <strong>R$ -1,20</strong>
-                    <small>Disponível</small>
-                </h3>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
-            <div class="widget-simple">
-                <div class="widget-icon pull-left themed-background-default animation-fadeIn">
-                    <i class="gi gi-undo"></i>
-                </div>
-                <h3 class="widget-content text-right animation-pullDown">
-                    <strong>R$ 875,85</strong>
-                    <small>Transferido</small>
-                </h3>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
-            <div class="widget-simple">
-                <div class="widget-icon pull-left themed-background-default animation-fadeIn">
-                    <i class="gi gi-clock"></i>
-                </div>
-                <h3 class="widget-content text-right animation-pullDown">
-                    <strong>R$ 0,00</strong>
-                    <small>Aguardando</small>
-                </h3>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
-            <div class="widget-simple">
-                <div class="widget-icon pull-left themed-background-default animation-fadeIn">
-                    <i class="gi gi-money"></i>
-                </div>
-                <h3 class="widget-content text-right animation-pullDown">
-                    <strong>R$ -1,20</strong>
-                    <small>Total</small>
-                </h3>
-            </div>
-        </a>
-    </div>
-</div>
+@include('comum.transactions')
 <div class="row">
     <div class="col-sm-8">
         <div class="block">
@@ -95,7 +42,7 @@ $(document).ready(function () {
         dataType: "json",
         accepts: "application/json",
         method: 'GET',
-        url: '{!! route("widgets.linechart") !!}',
+        url: '{!! route("home.widgetslc") !!}',
         beforeSend: function (request) {
             request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
         }
@@ -113,7 +60,66 @@ $(document).ready(function () {
 });
 </script>
 @elseif (Auth::user()->hasRole('admin'))
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-charts"></i>Transações do <b>Sistema</b>
+            </h1>
+        </div>
+    </div>
+</div>
+@include('comum.transactions')
+<div class="row"> 
+    <div class="col-md-12">             
+        <div class="table-responsive">
+            <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
+                <thead>
+                    <tr class="block-title">
+                        <th class="text-center">DATA</th>
+                        <th class="text-center">NOME</th>
+                        <th class="text-center">FORMA</th>
+                        <th class="text-center">VALOR BRUTO</th>
+                        <th class="text-center">VALOR PAGO</th>
+                        <th class="text-center">TAXA</th>
+                        <th class="text-center">VALOR LÍQUIDO</th>
+                        <th class="text-center">STATUS</th>
+                        <th class="text-center">INFO</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        App.datatables();
+        $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{!! route("home.payments") !!}',
+                type: 'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                }
+            },
+            columns: [
+                {data: 'created_at', name: 'created_at'},
+                {data: 'name', name: 'user.name'},
+                {data: 'payment_form', name: 'payment_form'},
+                {data: 'brute_value', name: 'brute_value'},
+                {data: 'paid_value', name: 'paid_value'},
+                {data: 'taxa', name: 'user.taxa'},
+                {data: 'liquid_value', name: 'liquid_value'},
+                {data: 'status', name: 'status'},
+                {data: 'show', name: 'show', orderable: false, searchable: false},
+            ],
 
+        });
+        $('.dataTables_filter input').attr('placeholder', 'Buscar');
+    });
+</script>
 @endif
 @endauth
 @endsection

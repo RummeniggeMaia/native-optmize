@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Role;
+use App\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller {
 
@@ -164,15 +166,33 @@ class UserController extends Controller {
     }
 
     public function payment(Request $request, $id) {
-        $post = $request->only('payment');
-        $user = User::find($id);
-        $v = Validator::make($post, ['payment' => 'numeric|min:0|max:2147483647'], [
-                    'payment.numeric' => 'Valor não numérico',
-                    'payment.min' => 'Valor abaixo de zero.',
-                    'payment.max' => 'Valor muito alto.']);
-        if ($user && !$v->fails()) {
-            $payment = doubleval($post['payment']);
-            $user->decrement('revenue', $payment);
+        $post = $request->only(['paid_value', 'info']);
+        $payment = Payment::with('user')->find($id);
+        $v = Validator::make($post, 
+            [
+                'paid_value' => 'numeric|min:0|max:2147483647',
+                'info' => 'max:190'
+            ], 
+            [
+                'paid_value.numeric' => 'Valor não numérico',
+                'paid_value.min' => 'Valor abaixo de zero.',
+                'paid_value.max' => 'Valor muito alto.',
+                'info.max' => 'No máximo 190 caracteres.'
+            ]
+        );
+        if ($payment->status != Payment::STATUS_WAITING) {
+            return redirect()->back()->with('error'
+                                        , 'Pagamento já realizado ou estornado.');
+        }
+        if ($payment && !$v->fails()) {
+            DB::transaction(function() use ($post, $payment) {
+                $paid_value = doubleval($post['paid_value']);
+                $payment->paid_value = $paid_value;
+                $payment->status = Payment::STATUS_PAID;
+                $payment->info = $post['info'];
+                $payment->save();
+                $payment->user->decrement('revenue', $paid_value);
+            });
             return redirect()->back()->with('success'
                                         , 'Pagamento realizado com sucesso.');
         } else {

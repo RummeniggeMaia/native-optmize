@@ -42,7 +42,6 @@ class WidgetController extends Controller {
     }
 
     public function indexDataTable() {
-//        $widgets = DB::table('widgets')->where('user_id', Auth::id());
         $widgets = Widget::where('user_id', Auth::id());
         return Datatables::of($widgets)->addColumn('edit', function($widget) {
                     return view('comum.button_edit', [

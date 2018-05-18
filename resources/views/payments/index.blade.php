@@ -1,16 +1,16 @@
 @extends('layouts/template')
-@section('title', 'Widgets')
+@section('title', 'Pagamentos')
 
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('home') }}">Home</a></li>
-    <li><a href="">Lista de Widgets</a></li>
+    <li><a href="">Lista de Pagamentos</a></li>
 </ul>
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-power-switch"></i>Lista de <b>Widgets</b>
+                <i class="fa fa-money"></i>Lista de <b>Pagamentos</b>
             </h1>
         </div>
     </div>
@@ -21,13 +21,12 @@
             <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                 <thead>
                     <tr class="block-title">
-                        <th class="text-center">NOME</th>
-                        <th class="text-center">URL</th>
-                        <th class="text-center">TIPO</th>
-                        <th class="text-center">QUANTIDADE</th>
-                        <th class="text-center">EDITAR</th>
-                        <th class="text-center">EXIBIR</th>
-                        <th class="text-center">EXCLUIR</th>
+                        <th class="text-center">DATA</th>
+                        <th class="text-center">FORMA</th>
+                        <th class="text-center">VALOR</th>
+                        <th class="text-center">PAGO</th>
+                        <th class="text-center">STATUS</th>
+                        <th class="text-center">INFO</th>
                     </tr>
                 </thead>
             </table>
@@ -41,20 +40,19 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{!! route("widgets.data") !!}',
+                url: '{!! route("payments.data") !!}',
                 type: 'GET',
                 'beforeSend': function (request) {
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
                 }
             },
             columns: [
-                {data: 'name', name: 'name'},
-                {data: 'url', name: 'url'},
-                {data: 'type', name: 'type'},
-                {data: 'quantity', name: 'quantity'},
-                {data: 'edit', name: 'edit', orderable: false, searchable: false},
-                {data: 'show', name: 'show', orderable: false, searchable: false},
-                {data: 'delete', name: 'delete', orderable: false, searchable: false},
+                {data: 'created_at', name: 'created_at'},
+                {data: 'payment_form', name: 'payment_form'},
+                {data: 'brute_value', name: 'brute_value'},
+                {data: 'paid_value', name: 'paid_value'},
+                {data: 'status', name: 'status'},
+                {data: 'info', name: 'info', orderable: false, searchable: false},
             ],
 
         });

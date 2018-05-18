@@ -35,6 +35,7 @@ class Postbacks {
                     if ($click->postback) {
                         return response()->json('conflict', 409);
                     }
+                    /** TODO Adiocionar HALF_UP caso seja necessrio nas proximas atts */
 //                    $value = round(($amt / 2), 2, PHP_ROUND_HALF_UP);
                     $value = $amt * $click->widget->user->taxa;
                     $click->creative->increment('revenue', $value);
@@ -47,7 +48,7 @@ class Postbacks {
                         $log->increment('revenue', $value);
                         /* TODO - Caso surja um super usuario, atualizar aqui */
                         $adm_value = $amt * (1 - $click->widget->user->taxa);
-                        $admin = User::where(['name' => 'admin']);
+                        $admin = User::where(['email' => 'admin@admin.in']);
                         $admin->increment('revenue', $adm_value);
                     } else {
                         response()->json("no register", 400);
