@@ -57,9 +57,9 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function create() {
-        $creatives = Creative::where('user_id', Auth::id())
-                        ->orderBy('name', 'asc')->get();
-        return view('campaingns.create')->with(['creatives' => $creatives]);
+        // $creatives = Creative::where('user_id', Auth::id())
+        //                 ->orderBy('name', 'asc')->get();
+        return view('campaingns.create')->with(['creatives' => array()]);
     }
 
     /** Store a newly created resource in storage.
@@ -70,9 +70,15 @@ class CampaingnController extends Controller {
         $post = $request->all();
         $validacao = $this->validar($post);
         if ($validacao->fails()) {
-            return redirect()->back()
-                            ->withInput()
-                            ->withErrors($validacao);
+            $creatives = Creative::where(
+                [
+                    'user_id' => Auth::id(),
+                    'type_layout' => $post['type_layout']
+                ]
+            )->orderBy('name', 'asc')->get();
+            return view('campaingns.create')
+                ->with(['creatives' => $creatives])
+                ->withErrors($validacao);
         } else {
             DB::beginTransaction();
             try {
@@ -214,6 +220,7 @@ class CampaingnController extends Controller {
             'creatives.min' => 'Selecione um Anúncio..',
             'type.in' => 'Tipo de campanha inválido.',
             'cpc.numeric' => 'Valor não numérico.',
+            'type_layout.in' => 'Layout inválido.',
         );
         $rules = array(
             'name' => 'required|min:4',
@@ -221,6 +228,7 @@ class CampaingnController extends Controller {
             'creatives' => 'required|array|min:1',
             'type' => 'in:"CPA","CPC"',
             'cpc' => 'numeric',
+            'type_layout' => 'in:1,2,3',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

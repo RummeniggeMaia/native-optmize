@@ -36,7 +36,8 @@ class Clicks
             }
             if ($creative && $widget) {
                 /** TODO campanha deve ser obrigatoria na proxima atualizacao.
-                 * Codigo do site nao tem campanha ainda */
+                 * - Codigo do site nao tem campanha ainda 
+                 * - Verificar se revenue do cpc é com base na taxa */
                 if ($campaign && $campaign->cpc > 0) {
                     $widget->user->increment(
                         'revenue',

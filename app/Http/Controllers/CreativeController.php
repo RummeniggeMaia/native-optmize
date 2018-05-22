@@ -68,6 +68,13 @@ class CreativeController extends Controller {
                     } else {
                         return view('comum.status_off');
                     }
+                })->addColumn('type_layout', function($widget) {
+                    return array(
+                            '0' => '-',
+                            '1' =>'Native',
+                            '2' =>'Banner',
+                            '3' =>'Smart Link',
+                        )[$widget->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'image', 'status']
                 )->make(true);
@@ -243,7 +250,8 @@ class CreativeController extends Controller {
             //'url.regex' => 'URL inválido.',
             'category_id.required' => 'Selecione uma Category',
             'image.required' => 'Selecione uma imagem.',
-            'status.in' => 'Status inválido.'
+            'status.in' => 'Status inválido.',
+            'type_layout.in' => 'Layout inválido.',
         );
         $rules = array(
             'brand' => 'required|min:4',
@@ -251,7 +259,8 @@ class CreativeController extends Controller {
             //'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'category_id' => 'required',
             'image' => $edit ? '' : 'required',
-            'status' => 'in:0,1'
+            'status' => 'in:0,1',
+            'type_layout' => 'in:1,2,3',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

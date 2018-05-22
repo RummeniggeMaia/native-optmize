@@ -1,22 +1,24 @@
-@extends('layouts/template')
-@section('title', 'Pagamentos')
-
-@section('content')
+@extends('layouts/template') @section('title', 'Pagamentos') @section('content')
 <ul class="breadcrumb breadcrumb-top">
-    <li><a href="{{ route('home') }}">Home</a></li>
-    <li><a href="">Lista de Pagamentos</a></li>
+    <li>
+        <a href="{{ route('home') }}">Home</a>
+    </li>
+    <li>
+        <a href="">Lista de Pagamentos</a>
+    </li>
 </ul>
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-money"></i>Lista de <b>Pagamentos</b>
+                <i class="fa fa-money"></i>Lista de
+                <b>Pagamentos</b>
             </h1>
         </div>
     </div>
 </div>
-<div class="row"> 
-    <div class="col-md-12">             
+<div class="row">
+    <div class="col-md-12">
         <div class="table-responsive">
             <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                 <thead>
@@ -33,6 +35,25 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Informações do pagamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <div id="modal-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         App.datatables();
@@ -46,17 +67,39 @@
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
                 }
             },
-            columns: [
-                {data: 'created_at', name: 'created_at'},
-                {data: 'payment_form', name: 'payment_form'},
-                {data: 'brute_value', name: 'brute_value'},
-                {data: 'paid_value', name: 'paid_value'},
-                {data: 'status', name: 'status'},
-                {data: 'info', name: 'info', orderable: false, searchable: false},
+            columns: [{
+                    data: 'created_at',
+                    name: 'created_at'
+                },
+                {
+                    data: 'payment_form',
+                    name: 'payment_form'
+                },
+                {
+                    data: 'brute_value',
+                    name: 'brute_value'
+                },
+                {
+                    data: 'paid_value',
+                    name: 'paid_value'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'info',
+                    name: 'info',
+                    orderable: false,
+                    searchable: false
+                },
             ],
 
         });
         $('.dataTables_filter input').attr('placeholder', 'Buscar');
+        $('#exampleModal').on('shown.bs.modal', function(e) {
+            $('.modal-body #modal-content').append($(e.relatedTarget).data('info'));
+        });
     });
 </script>
 @endsection

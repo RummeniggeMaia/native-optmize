@@ -186,7 +186,7 @@ var CompCharts = function() {
                         $('#chart-tooltip').remove();
                         var x = item.datapoint[0],
                             y = item.datapoint[1];
-
+                        
                         if (item.seriesIndex === 1) {
                             ttlabel = '<strong>' + y + '</strong> sales';
                         } else {
@@ -337,12 +337,11 @@ var CompCharts = function() {
                         $('#chart-tooltip').remove();
                         var x = item.datapoint[0],
                             y = item.datapoint[1];
-
-                        if (item.seriesIndex === 1) {
+                        if (item.seriesIndex === 0) {
                             ttlabel = '<strong>' + y + '</strong> clicks';
+                        } else if (item.seriesIndex === 1) {
+                            ttlabel = '<strong>' + y + '</strong> visualizações';
                         } else if (item.seriesIndex === 2) {
-                            ttlabel = '<strong>' + y + '</strong> vizualizações';
-                        } else if (item.seriesIndex === 3) {
                             ttlabel = 'R$ <strong>' + y + '</strong>';
                         }
 

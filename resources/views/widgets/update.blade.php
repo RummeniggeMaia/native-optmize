@@ -32,6 +32,25 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('type_layout') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('type_layout', [
+                            '1'=>'Native', 
+                            '2'=>'Banner', 
+                            '3'=>'Smart Link'
+                        ],
+                        Input::old('type_layout'), 
+                        ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Widget.']) 
+                    }}
+                </div>
+                @if ($errors->has('type_layout'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('type_layout') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-globe"></i></span>
@@ -43,7 +62,7 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('quantity') ? ' has-error' : '' }}">
+            <div id="quantity_fg" class="form-group {{ $errors->has('quantity') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
@@ -51,7 +70,7 @@
                         'quantity', 
                         ['3'=>3,'4'=>4,'5'=>5,'6'=>6], 
                         null, 
-                        ['class'=>'selectpicker form-control input-lg', 'placeholder'=>'Selecione uma quantidade']) 
+                        ['class'=>'selectpicker form-control input-lg']) 
                     }}
                 </div>
                 @if ($errors->has('quantity'))
@@ -60,7 +79,7 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('type') ? ' has-error' : '' }}">
+            <div id="type_fg" class="form-group {{ $errors->has('type') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
@@ -87,4 +106,22 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    // function toggleFields() {
+    //     if (this.value == 2 || this.value == 3) {
+    //         $("#quantity_fg").hide();
+    //         $("#input_quantity").prop('selectedIndex', 0);
+    //         $("#type_fg").hide();
+    //         $("#input_type").prop('selectedIndex', 0);
+    //     } else {
+    //         $("#quantity_fg").show();
+    //         $("#type_fg").show();
+    //     }
+    // }
+    // $(document).ready(function () {
+    //     $('#drop_layout').change(toggleFields);
+
+    //     toggleFields();
+    // });
+</script>
 @stop

@@ -7,9 +7,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Validator;
 
 class PaymentController extends Controller
 {
+
+    const DISK = "public";
 
     public function __construct()
     {
@@ -54,6 +59,9 @@ class PaymentController extends Controller
                     return view('comum.status_reversed');
                 }
             })
+            ->editColumn('info', function($payment){
+                return view('comum.info', ['payment' => $payment]);
+            })
             ->setRowAttr([
                 'style' => function($payment) {
                     if ($payment->status == Payment::STATUS_PAID) {
@@ -65,15 +73,10 @@ class PaymentController extends Controller
                     }
                 },
             ])
-            ->rawColumns(['status'])
+            ->rawColumns(['status', 'info'])
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('payments.create');
@@ -144,5 +147,37 @@ class PaymentController extends Controller
         $payment = Payment::find($id);
         $payment->delete();
         return redirect('payments');
+    }
+
+    public function voucher($id) {
+        $payment = Payment::find($id);
+        return view('payments.voucher', compact('payment'));
+    }
+
+    public function sendVoucher(Request $request, $id) {
+        $post = $request->all();
+        $payment = Payment::find($id);
+        $validator = Validator::make($post,
+            [
+                'file_uploaded' => 'required|max:10240|mimes:pdf'
+            ],
+            [
+                'file_uploaded.required' => 'Arquivo inexistente.',
+                'file_uploaded.max' => 'Tamanho máximo: 10MB',
+                'file_uploaded.mimes' => 'Arquivo não é do tipo .pdf',
+            ]
+        );
+        if ($payment && !$validator->fails() && $request->hasFile('file_uploaded')) {
+            $file = $request->file('file_uploaded');
+            $fileName = $file->store('pdf/', self::DISK);
+            $payment->pdf = $fileName;
+            $payment->save();
+            return redirect('home')
+                ->with('success', 'Comprovante enviado com sucesso.');
+        } else {
+            return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+        }
     }
 }

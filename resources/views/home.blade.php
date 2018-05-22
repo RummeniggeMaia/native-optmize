@@ -1,17 +1,16 @@
-@extends('layouts.template')
-@section('title', 'Dashboard')
-
-@section('content')
-@auth
+@extends('layouts.template') @section('title', 'Dashboard') @section('content') @auth
 <ul class="breadcrumb breadcrumb-top">
-    <li><a href="{{ route('home') }}">Dashboard</a></li>
+    <li>
+        <a href="{{ route('home') }}">Dashboard</a>
+    </li>
 </ul>
 @If (Auth::user()->hasRole('user'))
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-tv"></i>Estatísticas dos <b>Widgets</b>
+                <i class="fa fa-tv"></i>Estatísticas dos
+                <b>Widgets</b>
             </h1>
         </div>
     </div>
@@ -22,8 +21,49 @@
         <div class="block">
             <div class="block-title">
                 <h2>Geral</h2>
-            </div>    
-            <div id="widgetsChartLine" class="chart" style="padding: 0px; position: relative;"><canvas class="flot-base" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 22px; text-align: center;">Fev</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 172px; text-align: center;">Mar</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 325px; text-align: center;">Abr</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 477px; text-align: center;">Mai</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 383px; left: 19px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 257px; left: 6px; text-align: right;">500</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 132px; left: 0px; text-align: right;">1000</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 7px; left: 0px; text-align: right;">1500</div></div></div><canvas class="flot-overlay" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas><div class="legend"><div style="position: absolute; width: 112px; height: 56px; top: 24px; left: 45px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:24px;left:45px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(52,152,219);overflow:hidden"></div></div></td><td class="legendLabel">Conversões</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(51,51,51);overflow:hidden"></div></div></td><td class="legendLabel">Desistências</td></tr></tbody></table></div></div>
+            </div>
+            <div id="widgetsChartLine" class="chart" style="padding: 0px; position: relative;">
+                <canvas class="flot-base" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas>
+                <div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);">
+                    <div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;">
+                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 22px; text-align: center;">Fev</div>
+                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 172px; text-align: center;">Mar</div>
+                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 325px; text-align: center;">Abr</div>
+                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 477px; text-align: center;">Mai</div>
+                    </div>
+                    <div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;">
+                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 383px; left: 19px; text-align: right;">0</div>
+                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 257px; left: 6px; text-align: right;">500</div>
+                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 132px; left: 0px; text-align: right;">1000</div>
+                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 7px; left: 0px; text-align: right;">1500</div>
+                    </div>
+                </div>
+                <canvas class="flot-overlay" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas>
+                <div class="legend">
+                    <div style="position: absolute; width: 112px; height: 56px; top: 24px; left: 45px; background-color: rgb(255, 255, 255); opacity: 0.85;">
+                    </div>
+                    <table style="position:absolute;top:24px;left:45px;;font-size:smaller;color:#545454">
+                        <tbody>
+                            <tr>
+                                <td class="legendColorBox">
+                                    <div style="border:1px solid #ccc;padding:1px">
+                                        <div style="width:4px;height:0;border:5px solid rgb(52,152,219);overflow:hidden"></div>
+                                    </div>
+                                </td>
+                                <td class="legendLabel">Conversões</td>
+                            </tr>
+                            <tr>
+                                <td class="legendColorBox">
+                                    <div style="border:1px solid #ccc;padding:1px">
+                                        <div style="width:4px;height:0;border:5px solid rgb(51,51,51);overflow:hidden"></div>
+                                    </div>
+                                </td>
+                                <td class="legendLabel">Desistências</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-sm-4">
@@ -31,47 +71,74 @@
             <div class="block-title">
                 <h2>Lucros diários</h2>
             </div>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['today'], 2) }}</span>
+                    Hoje
+                </li>
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['yesterday'], 2) }}</span>
+                    Ontem
+                </li>
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['thisWeek'], 2) }}</span>
+                    Esta semana
+                </li>
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['lastWeek'], 2) }}</span>
+                    Semana passada
+                </li>
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['thisMonth'], 2) }}</span>
+                    Este mês
+                </li>
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['lastMonth'], 2) }}</span>
+                    Mês passado
+                </li>
+            </ul>
         </div>
     </div>
 </div>
 <!-- TODO Mudar versao do javascript -->
-<script src="{{ asset('pago/js/pages/compCharts.js?v8') }}"></script>
+<script src="{{ asset('pago/js/pages/compCharts.js?v12') }}"></script>
 <script type="text/javascript">
-$(document).ready(function () {
-    $.ajax({
-        dataType: "json",
-        accepts: "application/json",
-        method: 'GET',
-        url: '{!! route("home.widgetslc") !!}',
-        beforeSend: function (request) {
-            request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
-        }
-    }).done(function (data) {
-        var clicks = [];
-        var impressions = [];
-        var revenues = [];
-        $.each(data, function (index, value) {
-            clicks.push([value.month, value.clicks]);
-            impressions.push([value.month, value.impressions]);
-            revenues.push([value.month, value.revenues]);
+    $(document).ready(function () {
+        $.ajax({
+            dataType: "json",
+            accepts: "application/json",
+            method: 'GET',
+            url: '{!! route("home.widgetslc") !!}',
+            beforeSend: function (request) {
+                request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+            }
+        }).done(function (data) {
+            var clicks = [];
+            var impressions = [];
+            var revenues = [];
+            $.each(data, function (index, value) {
+                clicks.push([value.month, value.clicks]);
+                impressions.push([value.month, value.impressions]);
+                revenues.push([value.month, value.revenues]);
+            });
+            CompCharts.widgetsChartLine(clicks, impressions, revenues);
         });
-        CompCharts.widgetsChartLine(clicks, impressions, revenues);
     });
-});
 </script>
 @elseif (Auth::user()->hasRole('admin'))
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-charts"></i>Transações do <b>Sistema</b>
+                <i class="fa fa-charts"></i>Transações do
+                <b>Sistema</b>
             </h1>
         </div>
     </div>
 </div>
 @include('comum.transactions')
-<div class="row"> 
-    <div class="col-md-12">             
+<div class="row">
+    <div class="col-md-12">
         <div class="table-responsive">
             <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                 <thead>
@@ -104,22 +171,48 @@ $(document).ready(function () {
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
                 }
             },
-            columns: [
-                {data: 'created_at', name: 'created_at'},
-                {data: 'name', name: 'user.name'},
-                {data: 'payment_form', name: 'payment_form'},
-                {data: 'brute_value', name: 'brute_value'},
-                {data: 'paid_value', name: 'paid_value'},
-                {data: 'taxa', name: 'user.taxa'},
-                {data: 'liquid_value', name: 'liquid_value'},
-                {data: 'status', name: 'status'},
-                {data: 'show', name: 'show', orderable: false, searchable: false},
+            columns: [{
+                    data: 'created_at',
+                    name: 'created_at'
+                },
+                {
+                    data: 'name',
+                    name: 'user.name'
+                },
+                {
+                    data: 'payment_form',
+                    name: 'payment_form'
+                },
+                {
+                    data: 'brute_value',
+                    name: 'brute_value'
+                },
+                {
+                    data: 'paid_value',
+                    name: 'paid_value'
+                },
+                {
+                    data: 'taxa',
+                    name: 'user.taxa'
+                },
+                {
+                    data: 'liquid_value',
+                    name: 'liquid_value'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'show',
+                    name: 'show',
+                    orderable: false,
+                    searchable: false
+                },
             ],
 
         });
         $('.dataTables_filter input').attr('placeholder', 'Buscar');
     });
 </script>
-@endif
-@endauth
-@endsection
+@endif @endauth @endsection

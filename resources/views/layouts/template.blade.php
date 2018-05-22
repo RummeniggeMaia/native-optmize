@@ -103,7 +103,7 @@
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pagamentos</span></a>
                                     <ul>
                                         <li>
-                                            <a href="{{ route('payments.create') }}">Solicitar Pagamento</a>
+                                            <a href="{{ route('payments.create') }}">Solicitar pagamento</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('payments') }}">Listar Pagamentos</a>

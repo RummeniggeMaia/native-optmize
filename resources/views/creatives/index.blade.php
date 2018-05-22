@@ -26,6 +26,7 @@
                         <th class="text-center">MARCA</th>
                         <th class="text-center">NOME</th>
                         <th class="text-center">URL</th>
+                        <th class="text-center">LAYOUT</th>
                         <th class="text-center">STATUS</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
@@ -54,6 +55,7 @@
                 {data: 'brand', name: 'brand'},
                 {data: 'name', name: 'name'},
                 {data: 'url', name: 'url'},
+                {data: 'type_layout', name: 'type_layout'},
                 {data: 'status', name: 'status'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},

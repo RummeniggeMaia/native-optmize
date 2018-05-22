@@ -23,6 +23,26 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::middleware(['user'])->group(function () {
+    Route::post('/widgets', 'WidgetController@store')->name('widgets.store');
+    Route::get('/widgets', 'WidgetController@index')->name('widgets');
+    Route::get('/widgets/create', 'WidgetController@create')->name('widgets.create');
+    Route::get('/widgets/{widget}', 'WidgetController@show')->name('widgets.show');
+    Route::patch('/widgets/{widget}', 'WidgetController@update')->name('widgets.update');
+    Route::delete('/widgets/{widget}', 'WidgetController@destroy')->name('widgets.destroy');
+    Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
+    Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
+    Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
+    Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs');
+
+    Route::post('/payments', 'PaymentController@store')->name('payments.store');
+    Route::get('/payments', 'PaymentController@index')->name('payments');
+    Route::get('/payments/create', 'PaymentController@create')->name('payments.create');
+    Route::get('/paymentsdata', 'PaymentController@indexDataTable')->name('payments.data');
+
+    Route::get('/homewidgetslc', 'HomeController@widgetsLineChartData')->name('home.widgetslc');
+});
+
 Route::middleware(['admin'])->group(function () {
     Route::post('/users', 'UserController@store')->name('users.store');
     Route::get('/users', 'UserController@index')->name('users');
@@ -71,28 +91,10 @@ Route::middleware(['admin'])->group(function () {
     Route::patch('/payments/{payment}', 'PaymentController@update')->name('payments.update');
     Route::delete('/payments/{payment}', 'PaymentController@destroy')->name('payments.destroy');
     Route::get('/payments/{payment}/edit', 'PaymentController@edit')->name('payments.edit');
+    Route::get('/payments/{payment}/voucher', 'PaymentController@voucher')->name('payments.voucher');
+    Route::patch('/payments/vouchers/{payment}', 'PaymentController@sendVoucher')->name('payments.send_voucher');
 
     Route::get('/homepayments', 'HomeController@paymentsDataTable')->name('home.payments');
-});
-
-Route::middleware(['user'])->group(function () {
-    Route::post('/widgets', 'WidgetController@store')->name('widgets.store');
-    Route::get('/widgets', 'WidgetController@index')->name('widgets');
-    Route::get('/widgets/create', 'WidgetController@create')->name('widgets.create');
-    Route::get('/widgets/{widget}', 'WidgetController@show')->name('widgets.show');
-    Route::patch('/widgets/{widget}', 'WidgetController@update')->name('widgets.update');
-    Route::delete('/widgets/{widget}', 'WidgetController@destroy')->name('widgets.destroy');
-    Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edit');
-    Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index');
-    Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data');
-    Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs');
-
-    Route::get('/payments', 'PaymentController@index')->name('payments');
-    Route::get('/paymentsdata', 'PaymentController@indexDataTable')->name('payments.data');
-    Route::post('/payments', 'PaymentController@store')->name('payments.store');
-    Route::get('/payments/create', 'PaymentController@create')->name('payments.create');
-
-    Route::get('/homewidgetslc', 'HomeController@widgetsLineChartData')->name('home.widgetslc');
 });
 
 Route::get('/auth/account', 'Auth\AuthController@edit')->name('auth.account');

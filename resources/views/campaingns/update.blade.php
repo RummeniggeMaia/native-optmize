@@ -32,6 +32,32 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('type_layout') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-star"></i></span>
+                    {{ 
+                        Form::select(
+                            'type_layout', 
+                            [
+                                '1'=>'Native', 
+                                '2'=>'Banner',
+                                '3'=>'Smart Link'
+                            ],
+                            Input::old('type_layout'), 
+                            [
+                                'id' => 'type_layout',
+                                'class'=>'selectpicker form-control input-lg',
+                                'title'=>'Layout da campanha'
+                            ]
+                        ) 
+                    }}
+                </div>
+                @if ($errors->has('type_layout'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('type_layout') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tags"></i></span>

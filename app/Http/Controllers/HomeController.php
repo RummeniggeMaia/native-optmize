@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -30,7 +31,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('home')->with('earnings', $this->dailyEarnings());
     }
 
     public function indexDataTable()
@@ -58,6 +59,43 @@ class HomeController extends Controller
                 DB::raw('SUM(widget_logs.clicks) as clicks'),
                 DB::raw('SUM(widget_logs.revenues) as revenues'),
                 DB::raw('MONTH(widget_logs.created_at) as month')]);
+    }
+
+    public function dailyEarnings() {
+        $earnings = array();
+        $earnings['today'] = $this->dateRevenues(
+            Carbon::today()->startOfDaY(), 
+            Carbon::today()->endOfDay()
+        );
+        $earnings['yesterday'] = $this->dateRevenues(
+            Carbon::today()->startOfDaY()->subDay(), 
+            Carbon::today()->endOfDay()->subDay()
+        );
+        $earnings['thisWeek'] = $this->dateRevenues(
+            Carbon::today()->startOfWeek(),
+            Carbon::today()->endOfWeek()
+        );
+        $earnings['lastWeek'] = $this->dateRevenues(
+            Carbon::today()->startOfWeek()->subWeek(),
+            Carbon::today()->endOfWeek()->subWeek()
+        );
+        $earnings['thisMonth'] = $this->dateRevenues(
+            Carbon::today()->startOfMonth(),
+            Carbon::today()->endOfMonth()
+        );
+        $earnings['lastMonth'] = $this->dateRevenues(
+            Carbon::today()->startOfWeek()->subMonth(),
+            Carbon::today()->endOfWeek()->subMonth()
+        );
+        return $earnings;
+    }
+
+    public function dateRevenues($start, $end) {
+        return DB::table('widget_logs')
+            ->join('widgets', 'widget_logs.widget_id', '=', 'widgets.id')
+            ->where('user_id', Auth::id())
+            ->whereBetween('widget_logs.created_at', [$start, $end])
+            ->sum('widget_logs.revenues');
     }
 
     public function paymentsDataTable() {

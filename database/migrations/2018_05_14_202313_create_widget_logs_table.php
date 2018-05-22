@@ -18,7 +18,7 @@ class CreateWidgetLogsTable extends Migration
             $table->timestamps();
             $table->integer('clicks')->default(0);
             $table->integer('impressions')->default(0);
-            $table->integer('revenues')->default(0);
+            $table->double('revenues')->default(0);
         });
 
         Schema::table('widget_logs', function(Blueprint $table) {

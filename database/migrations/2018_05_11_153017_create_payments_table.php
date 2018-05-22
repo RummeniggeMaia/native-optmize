@@ -18,6 +18,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_form');
             $table->double('brute_value')->default(0.0);
             $table->double('paid_value')->default(0.0);
+            $table->string('pdf')->nullable();
             $table->boolean('status');
             $table->string('info')->nullable();
             $table->timestamps();

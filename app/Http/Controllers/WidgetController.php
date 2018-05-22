@@ -58,6 +58,13 @@ class WidgetController extends Controller {
                         'id' => $widget->id,
                         'route' => 'widgets.destroy'
                     ]);
+                })->addColumn('type_layout', function($widget) {
+                    return array(
+                            '0' => '-',
+                            '1' =>'Native',
+                            '2' =>'Banner',
+                            '3' =>'Smart Link',
+                        )[$widget->type_layout];
                 })->editColumn('type', function($widget) {
                     $types = [
                         '1' => '----------------------',
@@ -93,6 +100,7 @@ class WidgetController extends Controller {
                             ->withErrors($validacao)
                             ->withInput();
         } else {
+            $this->typeLayoutsProperties($request->has('type_layout'), $post);
             DB::beginTransaction();
             try {
                 $post['user_id'] = Auth::id();
@@ -180,12 +188,14 @@ class WidgetController extends Controller {
      */
     public function update(Request $request, $id) {
         $post = $request->all();
+        $post['id'] =$id;
         $validacao = $this->validar($post);
         if ($validacao->fails()) {
             return redirect()->back()
                             ->withErrors($validacao)
                             ->withInput();
         } else {
+            $this->typeLayoutsProperties($request->has('type_layout'), $post);
             $widget = Widget::find($id);
             if ($widget == null) {
                 return back()->with('error'
@@ -240,12 +250,13 @@ class WidgetController extends Controller {
             'url.unique' => 'Já existe um Wdidget com esta URL.',
             'campaingns.required' => 'Selecione ao menos uma Campaingn.',
             'type.in' => 'Tipo inválido.',
-            'type_layout.in' => "Layout inválido."
+            'type_layout.in' => "Layout inválido.",
         );
         $rules = array(
             'name' => 'required|min:4',
             'quantity' => 'in:3,4,5,6',
-            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/|unique:widgets",
+            'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
+            'url' => 'unique:widgets,url,' .$post['id'],
             'type' => 'in:1,2,3,4',
             'type_layout' => 'in:1,2,3',
         );
@@ -316,6 +327,18 @@ class WidgetController extends Controller {
 
         foreach ($widgets as $widget) {
             $this->create_widget($widget->id);
+        }
+    }
+
+    private function typeLayoutsProperties($hasLayout, &$post) {
+        if ($hasLayout) {
+            if ($post['type_layout'] == 2) {
+                $post['quantity'] = 1;
+                $post['type'] = 1;
+            } else if ($post['type_layout'] == 3) {
+                $post['quantity'] = 0;
+                $post['type'] = 1;
+            }
         }
     }
 

@@ -13,7 +13,7 @@
         </a>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1">
             <div class="widget-simple">
                 <div class="widget-icon pull-left themed-background-default animation-fadeIn">
                     <i class="gi gi-undo"></i>
@@ -27,7 +27,7 @@
     </div>
     @php $waiting = Auth::user()->payments()->where('status', 2)->sum('brute_value') @endphp
     <div class="col-sm-6 col-lg-3">
-        <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1">
             <div class="widget-simple">
                 <div class="widget-icon pull-left themed-background-default animation-fadeIn">
                     <i class="gi gi-clock"></i>
@@ -40,7 +40,7 @@
         </a>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <a href="page_ready_inbox.html" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1">
             <div class="widget-simple">
                 <div class="widget-icon pull-left themed-background-default animation-fadeIn">
                     <i class="gi gi-money"></i>

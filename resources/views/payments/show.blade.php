@@ -76,9 +76,20 @@
                     <strong>{{ $errors->first('paid_value') }}</strong>
                 </span>
                 @endif
-                <div class="form-group form-actions text-center">
-                    {!! Form::submit('PAGAR', ['class' => 'btn btn-md btn-default']) !!}
-                </div>
+                @if ($payment->status == 1)
+                    
+                    <div class="form-group form-actions text-center">
+                        <a class="btn btn-md btn-danger"
+                            href="{{ route('payments.voucher', $payment->id) }}">
+                            <i class="fa fa-file-pdf-o"></i>
+                            ENVIAR COMPROVANTE
+                        </a>
+                    </div>
+                @else
+                    <div class="form-group form-actions text-center">
+                        {!! Form::submit('PAGAR', ['class' => 'btn btn-md btn-default']) !!}
+                    </div>
+                @endif
             </div>
             {!! Form::close() !!}
         </div>

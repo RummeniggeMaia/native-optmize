@@ -66,10 +66,16 @@
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
                         Form::select(
-                        'quantity', 
-                        ['3'=>3,'4'=>4,'5'=>5,'6'=>6], 
-                        null, 
-                        ['class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Quantidade de anúncios no Widget.']) 
+                            'quantity', 
+                            ['3'=>3,'4'=>4,'5'=>5,'6'=>6], 
+                            null, 
+                            [
+                                'id' => 'input_quantity',
+                                'class'=>'selectpicker form-control input-lg', 
+                                'required', 
+                                'title' => 'Quantidade de anúncios no Widget.'
+                            ]
+                        ) 
                     }}
                 </div>
                 @if ($errors->has('quantity'))
@@ -82,14 +88,21 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
-                        Form::select('type', [
-                            '1'=>'----------------------', 
-                            '2'=>'Barra Lateral Direita', 
-                            '3'=>'Barra Lateral Esquerda', 
-                            '4'=>'Central'
-                        ],
-                        Input::old('type'), 
-                        ['class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo normal do Widget.']) 
+                        Form::select('type',
+                            [
+                                '1'=>'----------------------', 
+                                '2'=>'Barra Lateral Direita', 
+                                '3'=>'Barra Lateral Esquerda', 
+                                '4'=>'Central'
+                            ],
+                            Input::old('type'), 
+                            [
+                                'id' => 'input_type',
+                                'class'=>'selectpicker form-control input-lg', 
+                                'required', 
+                                'title' => 'Tipo normal do Widget.'
+                            ]
+                        )
                     }}
                 </div>
                 @if ($errors->has('type'))
@@ -106,16 +119,21 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#drop_layout').change(function(e) {
-            if (this.value != 1) {
-                $("#quantity_fg").hide();
-                $("#type_fg").hide();
-            } else {
-                $("#quantity_fg").show();
-                $("#type_fg").show();
-            }
-        });
-    });
+    // function toggleFields() {
+    //     if (this.value == 2 || this.value == 3) {
+    //         $("#quantity_fg").hide();
+    //         $("#input_quantity").prop('selectedIndex', 0);
+    //         $("#type_fg").hide();
+    //         $("#input_type").prop('selectedIndex', 0);
+    //     } else {
+    //         $("#quantity_fg").show();
+    //         $("#type_fg").show();
+    //     }
+    // }
+    // $(document).ready(function () {
+    //     $('#drop_layout').change(toggleFields);
+
+    //     toggleFields();
+    // });
 </script>
 @stop

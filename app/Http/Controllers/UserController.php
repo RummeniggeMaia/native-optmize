@@ -165,25 +165,25 @@ class UserController extends Controller {
                                     , 'Usuário excluído com sucesso.');
     }
 
+    /**
+     * TODO Mudar essa funcao para o PaymentController
+     */
     public function payment(Request $request, $id) {
         $post = $request->only(['paid_value', 'info']);
         $payment = Payment::with('user')->find($id);
         $v = Validator::make($post, 
             [
                 'paid_value' => 'numeric|min:0|max:2147483647',
-                'info' => 'max:190'
+                'info' => 'max:190',
+                'upload_file' => 'mimes:pdf'
             ], 
             [
                 'paid_value.numeric' => 'Valor não numérico',
                 'paid_value.min' => 'Valor abaixo de zero.',
                 'paid_value.max' => 'Valor muito alto.',
-                'info.max' => 'No máximo 190 caracteres.'
+                'info.max' => 'No máximo 190 caracteres.',
             ]
         );
-        if ($payment->status != Payment::STATUS_WAITING) {
-            return redirect()->back()->with('error'
-                                        , 'Pagamento já realizado ou estornado.');
-        }
         if ($payment && !$v->fails()) {
             DB::transaction(function() use ($post, $payment) {
                 $paid_value = doubleval($post['paid_value']);
@@ -228,5 +228,4 @@ class UserController extends Controller {
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
-
 }

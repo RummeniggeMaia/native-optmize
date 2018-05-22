@@ -23,7 +23,7 @@
             <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-user"></i></span>
-                    {!! Form::text('name',null,['id'=>'name','class'=>'form-control input-lg', 'placeholder' => 'Nome', 'required']) !!}
+                    {!! Form::text('name',null,['id'=>'name','class'=>'form-control input-lg', 'placeholder' => 'Nome']) !!}
                 </div>
                 @if ($errors->has('name'))
                 <span class="help-block">
@@ -31,10 +31,36 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('type_layout') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-star"></i></span>
+                    {{ 
+                        Form::select(
+                            'type_layout', 
+                            [
+                                '1'=>'Native', 
+                                '2'=>'Banner',
+                                '3'=>'Smart Link'
+                            ],
+                            Input::old('type_layout'), 
+                            [
+                                'id' => 'type_layout',
+                                'class'=>'selectpicker form-control input-lg',
+                                'title'=>'Layout da campanha'
+                            ]
+                        ) 
+                    }}
+                </div>
+                @if ($errors->has('type_layout'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('type_layout') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('brand') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-tags"></i></span>
-                    {!! Form::text('brand',null,['id'=>'brand','class'=>'form-control input-lg', 'placeholder' => 'Brand', 'required']) !!}
+                    {!! Form::text('brand',null,['id'=>'brand','class'=>'form-control input-lg', 'placeholder' => 'Brand']) !!}
                 </div>
                 @if ($errors->has('brand'))
                 <span class="help-block">
@@ -53,7 +79,6 @@
                         Input::old('type'), 
                         ['placeholder'=>'Selecione um tipo', 
                             'class'=>'selectpicker form-control input-lg', 
-                            'required', 
                             'title'=>'Tipo da campanha']) 
                     }}
                 </div>
@@ -66,7 +91,7 @@
             <div class="form-group {{ $errors->has('cpc') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo por click', 'required']) !!}
+                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo por click']) !!}
                 </div>
                 @if ($errors->has('cpc'))
                 <span class="help-block">
@@ -116,6 +141,9 @@
 <script type="text/javascript">
 $(document).ready(function () {
     $('#multiselect').multiselect();
+    $('#type_layout').change(function() {
+        this.form.submit();
+    });
 });
 </script>
 @stop
