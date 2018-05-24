@@ -19,7 +19,7 @@ class CreateClicksTable extends Migration {
         });
 
         Schema::table('clicks', function(Blueprint $table) {
-            $table->bigInteger('creative_id')->unsigned();
+            $table->bigInteger('creative_id')->unsigned()->nullable();
             $table->foreign('creative_id')->references('id')->on('creatives')
                     ->onDelete('cascade');
             $table->bigInteger('widget_id')->unsigned()->nullable();

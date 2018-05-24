@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Widget extends Model
 {
 
+    const LAYOUT_NATIVE = 1;
+    const LAYOUT_BANNER = 2;
+    const LAYOUT_S_LINK = 3;
+
     protected $fillable = [
         'hashid',
         'name',

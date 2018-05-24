@@ -132,14 +132,49 @@ class WidgetController extends Controller {
             return back()->with('error'
                             , 'Não pode exibir os dados deste Widget.');
         } else {
-            $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
-            $json = json_decode($jsonFile);
-            $json->js = str_replace(
-                    ['[url]', '[version]'], [addslashes(url('/')), md5(time())], $json->js
-            );
-            $json->html = str_replace(
-                    '[widget_hashid]', addslashes($widget->hashid), $json->html);
-            $code = $json->js . "\n" . $json->html;
+            $json = null;
+            if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
+                $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
+                $json = json_decode($jsonFile);
+                $json->js = str_replace(
+                    ['[url]', '[version]'], 
+                    [addslashes(url('/')), md5(time())], 
+                    $json->js
+                );
+                $json->html = str_replace(
+                    '[widget_hashid]', 
+                    addslashes($widget->hashid), 
+                    $json->html
+                );
+            } else if ($widget->type_layout == Widget::LAYOUT_BANNER) {
+                $jsonFile = Storage::disk(self::DISK)->get("data/banner.json");
+                $json = json_decode($jsonFile);
+                $json->js = str_replace(
+                    ['[url]', '[version]'], 
+                    [addslashes(url('/')), md5(time())], 
+                    $json->js
+                );
+                $json->html = str_replace(
+                    '[widget_hashid]', 
+                    addslashes($widget->hashid), 
+                    $json->html
+                );
+            } else if ($widget->type_layout == Widget::LAYOUT_S_LINK) {
+                $jsonFile = Storage::disk(self::DISK)->get("data/smart_link.json");
+                $json = json_decode($jsonFile);
+                $json->link = str_replace(
+                    ['[url]', '[widget_hashid]', '[source]'], 
+                    [
+                        addslashes(url('/')),
+                        $widget->hashid,
+                        $widget->url
+                    ], 
+                    $json->link
+                );
+            }
+            $code = $json->link . "\n" 
+                . $json->js . "\n" 
+                . $json->html;
 
             return view('widgets.show', compact('widget'))
                             ->with('code', $code);
@@ -256,7 +291,7 @@ class WidgetController extends Controller {
             'name' => 'required|min:4',
             'quantity' => 'in:3,4,5,6',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
-            'url' => 'unique:widgets,url,' .$post['id'],
+            //'url' => 'unique:widgets,url,' .$post['id'],
             'type' => 'in:1,2,3,4',
             'type_layout' => 'in:1,2,3',
         );
