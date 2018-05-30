@@ -9,6 +9,7 @@ use App\WidgetLog;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class RandomCreatives
 {
@@ -30,7 +31,11 @@ class RandomCreatives
         if ($widget) {
             $cont = isset($query['cont']) ? $query['cont'] : 0;
             $campaign = $this->getCampaign($cont, $widget->type_layout);
-            $creatives = $campaign->creatives()->get(['id', 'hashid', 'name', 'brand', 'url', 'image']);
+            if (!$campaign) {
+                return response()->json("not found", 404);
+            }
+            $creatives = $campaign->creatives()->get([
+                'id', 'hashid', 'name', 'brand', 'url', 'image']);
             $params = array(
                 '[click_id]',
                 '[widget_id]',
@@ -43,7 +48,7 @@ class RandomCreatives
                     . "hashid"
                     . Carbon::now()->toDateTimeString());
                 $creative['click_id'] = $cId;
-                $creative['campaign_id'] = $campaign->id;
+                $creative['campaign_id'] = $campaign->hashid;
                 $fields = array(
                     $cId,
                     $widget->id,
@@ -78,6 +83,7 @@ class RandomCreatives
                     'widget_id' => $widget->id,
                 ]);
             }
+            Log::info($creatives);
             return response()->json($creatives);
         } else {
             return response()->json("not found", 404);
@@ -110,7 +116,14 @@ class RandomCreatives
         });
         if (!$campaigns->isEmpty()) {
             if ($cont >= 1 && $cont <= 3) {
-                return $campaigns->slice($cont - 1, 1)->first();
+                if ($campaigns->count() == 1) {
+                    $cont = 1;
+                } else if ($campaigns->count() == 2) {
+                    if ($cont > 2) {
+                        $cont = 2;
+                    }
+                }
+                return $campaigns->get($cont - 1);
             } else {
                 return $campaigns->random();
             }

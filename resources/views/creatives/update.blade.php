@@ -39,8 +39,7 @@
                     {{ 
                         Form::select('type_layout', [
                             '1'=>'Native', 
-                            '2'=>'Banner', 
-                            '3'=>'Smart Link'
+                            '2'=>'Banner',
                         ],
                         Input::old('type_layout'), 
                         ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Anúncio.']) 

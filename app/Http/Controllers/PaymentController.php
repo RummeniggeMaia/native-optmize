@@ -41,8 +41,8 @@ class PaymentController extends Controller
             })
             ->editColumn('payment_form', function($payment){
                 return $payment->payment_form == 1 
-                    ? "Cartão de créditos" 
-                    : "Boleto";
+                    ? Payment::TYPE_1
+                    : Payment::TYPE_2;
             })
             ->editColumn('brute_value', function($payment){
                 return "R$ " . number_format($payment->brute_value, 2);

@@ -46,6 +46,13 @@ class CampaingnController extends Controller {
                         'id' => $campaingn->id,
                         'route' => 'campaingns.destroy'
                     ]);
+                })->addColumn('type_layout', function($campaingn) {
+                    return array(
+                            '0' => '-',
+                            '1' =>'Native',
+                            '2' =>'Banner',
+                            '3' =>'Smart Link',
+                        )[$campaingn->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete']
                 )->make(true);
@@ -57,9 +64,9 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function create() {
-        // $creatives = Creative::where('user_id', Auth::id())
-        //                 ->orderBy('name', 'asc')->get();
-        return view('campaingns.create')->with(['creatives' => array()]);
+        $creatives = Creative::where('user_id', Auth::id())
+                        ->orderBy('name', 'asc')->get();
+        return view('campaingns.create')->with(['creatives' => $creatives]);
     }
 
     /** Store a newly created resource in storage.
@@ -129,8 +136,7 @@ class CampaingnController extends Controller {
                     return view('comum.image', [
                         'image' => $creative->image
                     ]);
-                })->rawColumns(
-                ['image'])->make(true);
+                })->rawColumns(['image'])->make(true);
         }
     }
 

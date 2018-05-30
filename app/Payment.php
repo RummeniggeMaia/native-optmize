@@ -9,6 +9,9 @@ class Payment extends Model
     const STATUS_PAID = 1;
     const STATUS_WAITING = 2;
     const STATUS_REVERSED = 3;
+
+    const TYPE_1 = "Transferência Bancária";
+    const TYPE_2 = "Paypal";
     /**
      * The attributes that are mass assignable.
      *

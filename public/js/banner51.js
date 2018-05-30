@@ -13,7 +13,7 @@
 			}));
 			$('head').append($('<script>', {
 				type:'text/javascript',
-				src: url + '/js/nativeop51.min.js?v=' + version
+				src: url + '/js/banner51.min.js?v=' + version
 			}));
 		};
 		document.getElementsByTagName("head")[0].appendChild(script);

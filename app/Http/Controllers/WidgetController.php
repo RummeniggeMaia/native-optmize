@@ -133,48 +133,58 @@ class WidgetController extends Controller {
                             , 'Não pode exibir os dados deste Widget.');
         } else {
             $json = null;
+            $version = md5(time());
             if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
                 $json = json_decode($jsonFile);
-                $json->js = str_replace(
-                    ['[url]', '[version]'], 
-                    [addslashes(url('/')), md5(time())], 
-                    $json->js
-                );
-                $json->html = str_replace(
-                    '[widget_hashid]', 
-                    addslashes($widget->hashid), 
-                    $json->html
-                );
+                if ($json) {
+                    $json->js = str_replace(
+                        ['[url]', '[version]'], 
+                        [addslashes(url('/')), $version], 
+                        $json->js
+                    );
+                    $json->html = str_replace(
+                        '[widget_hashid]', 
+                        addslashes($widget->hashid), 
+                        $json->html
+                    );
+                }
             } else if ($widget->type_layout == Widget::LAYOUT_BANNER) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/banner.json");
                 $json = json_decode($jsonFile);
-                $json->js = str_replace(
-                    ['[url]', '[version]'], 
-                    [addslashes(url('/')), md5(time())], 
-                    $json->js
-                );
-                $json->html = str_replace(
-                    '[widget_hashid]', 
-                    addslashes($widget->hashid), 
-                    $json->html
-                );
+                if ($json) {
+                    $json->js = str_replace(
+                        ['[url]', '[version]'], 
+                        [addslashes(url('/')), $version], 
+                        $json->js
+                    );
+                    $json->html = str_replace(
+                        '[widget_hashid]', 
+                        addslashes($widget->hashid), 
+                        $json->html
+                    );
+                }
             } else if ($widget->type_layout == Widget::LAYOUT_S_LINK) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/smart_link.json");
                 $json = json_decode($jsonFile);
-                $json->link = str_replace(
-                    ['[url]', '[widget_hashid]', '[source]'], 
-                    [
-                        addslashes(url('/')),
-                        $widget->hashid,
-                        $widget->url
-                    ], 
-                    $json->link
-                );
+                if ($json) {
+                    $json->link = str_replace(
+                        ['[url]', '[widget_hashid]', '[source]'], 
+                        [
+                            addslashes(url('/')),
+                            $widget->hashid,
+                            $widget->url
+                        ], 
+                        $json->link
+                    );
+                }
             }
-            $code = $json->link . "\n" 
-                . $json->js . "\n" 
-                . $json->html;
+            $code = "";
+            if ($json) {
+                $code = $json->link . "\n" 
+                    .  $json->js . "\n" 
+                    . $json->html;
+            }
 
             return view('widgets.show', compact('widget'))
                             ->with('code', $code);

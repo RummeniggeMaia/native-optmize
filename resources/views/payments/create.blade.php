@@ -30,7 +30,7 @@
                     <span class="input-group-addon">
                         <i class="fa fa-credit-card"></i>
                     </span>
-                    {{ Form::select('payment_form', [ '1'=>'Cartão de créditos', '2'=>'Boleto'], Input::old('payment_form'), ['id'=>'payment_form',
+                    {{ Form::select('payment_form', [ '1'=>Payment::TYPE_1, '2'=>Payment::TYPE_2], Input::old('payment_form'), ['id'=>'payment_form',
                     'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Forma de pagamento.']) }}
                 </div>
                 @if ($errors->has('payment_form'))

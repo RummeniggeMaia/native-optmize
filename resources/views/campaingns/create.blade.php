@@ -40,7 +40,6 @@
                             [
                                 '1'=>'Native', 
                                 '2'=>'Banner',
-                                '3'=>'Smart Link'
                             ],
                             Input::old('type_layout'), 
                             [
