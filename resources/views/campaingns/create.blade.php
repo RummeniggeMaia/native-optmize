@@ -73,7 +73,8 @@
                     {{ 
                         Form::select('type', [
                             'CPA'=>'CPA', 
-                            'CPC'=>'CPC'
+                            'CPC'=>'CPC',
+                            'CPM'=>'CPM', 
                         ],
                         Input::old('type'), 
                         ['placeholder'=>'Selecione um tipo', 
@@ -90,11 +91,22 @@
             <div class="form-group {{ $errors->has('cpc') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo por click']) !!}
+                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo Por CLICK', 'title'=>'Custo por CLICK']) !!}
                 </div>
                 @if ($errors->has('cpc'))
                 <span class="help-block">
                     <strong>{{ $errors->first('cpc') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('cpm') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                    {!! Form::text('cpm',null,['id'=>'cpm','class'=>'form-control input-lg', 'placeholder' => 'Custo por MIL', 'title'=>'Custo por MIL']) !!}
+                </div>
+                @if ($errors->has('cpm'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('cpm') }}</strong>
                 </span>
                 @endif
             </div>

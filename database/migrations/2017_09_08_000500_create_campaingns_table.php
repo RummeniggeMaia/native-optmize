@@ -20,7 +20,8 @@ class CreateCampaingnsTable extends Migration {
             $table->string('type')->default('CPC');
             $table->integer('type_layout')->default(0);
             $table->double('ceiling')->default(0.0);
-            $table->double('cpc')->default(0.0);;
+            $table->double('cpc')->default(0.0);
+            $table->double('cpm')->default(0.0);
             $table->date('expires_in');
             $table->timestamps();
         });

@@ -33,7 +33,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
-                    <input title="Forma de pagamento"  type="text" class="form-control input-lg" id="payment_form" placeholder="{{ $payment->payment_form == 1 ? 'Cartão de créditos' : 'Boleto' }}" readonly>
+                    <input title="Forma de pagamento"  type="text" class="form-control input-lg" id="payment_form" placeholder="{{ $payment->payment_form == 1 ? 'Transferência Bancária' : 'Paypal' }}" readonly>
                 </div>
             </div>
             <div class="form-group">
@@ -54,6 +54,57 @@
                     <input title="Valor líquido"  type="text" class="form-control input-lg" id="liquid_value" placeholder="R$ {{ number_format($payment->brute_value - $payment->user->taxa * $payment->brute_value, 2) }}" readonly>
                 </div>
             </div>
+            @if($payment->payment_form == 1)
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <input title="Titular"  type="text" class="form-control input-lg" id="holder" placeholder="{{ $payment->user->paymentData->holder }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                    <input title="Número da conta"  type="text" class="form-control input-lg" id="number" placeholder="{{ $payment->user->paymentData->number }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-id-card"></i></span>
+                    <input title="CPF"  type="text" class="form-control input-lg" id="cpf" placeholder="{{ $payment->user->paymentData->cpf }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-bank"></i></span>
+                    <input title="Agência"  type="text" class="form-control input-lg" id="agency" placeholder="{{ $payment->user->paymentData->agency }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-star"></i></span>
+                    <input title="Tipo de conta"  type="text" class="form-control input-lg" id="type" placeholder="{{ $payment->user->paymentData->type == 1 ? "Conta Corrente" : "Conta Poupança" }}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-bank"></i></span>
+                    <input title="Banco"  type="text" class="form-control input-lg" id="banco" placeholder="{{ $payment->user->paymentData->bank}}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-bank"></i></span>
+                    <input title="Número do banco"  type="text" class="form-control input-lg" id="bank_number" placeholder="{{ $payment->user->paymentData->bank_number}}" readonly>
+                    </div>
+                </div>
+            @elseif($payment->payment_form == 2)
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paypal"></i></span>
+                    <input title="Paypal"  type="text" class="form-control input-lg" id="paypal" placeholder="{{ $payment->user->paymentData->paypal }}" readonly>
+                    </div>
+                </div>
+            @endif
             {!! Form::model($payment->user,['class'=>'form-bordered', 'method' => 'patch','route'=>['users.payment',$payment->id]]) !!}
             <div class="form-group {{ $errors->has('info') ? ' has-error' : ''}} ">
                 <div class="input-group">

@@ -124,9 +124,7 @@
                                     <i class="fa fa-bars fa-fw side-togle"></i>
                                 </a>
                             </li>
-
                         </ul>
-
                         <ul class="nav navbar-nav-custom pull-right">
                             @auth
                             <li class="dropdown">
@@ -137,6 +135,9 @@
                                     <li>
                                         <a href="{{ route('auth.account') }}">
                                             <i class="fa fa-user pull-right"></i>  &nbsp; Minha Conta
+                                        </a>
+                                        <a href="{{ route('auth.paymentData') }}">
+                                            <i class="fa fa-credit-card pull-right"></i>  &nbsp; Dados Bancários
                                         </a>
                                         <a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">

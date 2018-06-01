@@ -10,7 +10,7 @@
         <a href="#">Solicitar Pagamentos</a>
     </li>
 </ul>
-
+@include('comum.transactions')
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
@@ -30,7 +30,14 @@
                     <span class="input-group-addon">
                         <i class="fa fa-credit-card"></i>
                     </span>
-                    {{ Form::select('payment_form', [ '1'=>Payment::TYPE_1, '2'=>Payment::TYPE_2], Input::old('payment_form'), ['id'=>'payment_form',
+                    {{ 
+                        Form::select('payment_form', 
+                        [ 
+                            '1'=>"Transferência Bancária", 
+                            '2'=>"Paypal",
+                            '3'=>"Pagseguro"
+                        ], 
+                        Input::old('payment_form'), ['id'=>'payment_form',
                     'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Forma de pagamento.']) }}
                 </div>
                 @if ($errors->has('payment_form'))
@@ -54,7 +61,7 @@
                 @endif
             </div>
             <div class="form-group form-actions text-center">
-                {!! Form::submit('Solicitar', ['class' => 'btn btn-md btn-default']) !!}
+                {!! Form::submit('SOLICITAR', ['class' => 'btn btn-md btn-default']) !!}
             </div>
             {!! Form::close() !!}
         </div>

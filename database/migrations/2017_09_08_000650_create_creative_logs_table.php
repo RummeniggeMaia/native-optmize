@@ -17,6 +17,7 @@ class CreateCreativeLogsTable extends Migration {
             $table->integer('clicks')->default(0);
             $table->bigInteger('impressions')->unsigned()->default(0);
             $table->double('revenue')->default(0.0);
+            $table->integer('counter')->default(0);
             $table->timestamps();
         });
         Schema::table('creative_logs', function(Blueprint $table) {

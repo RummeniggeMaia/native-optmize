@@ -13,6 +13,7 @@ class Campaingn extends Model {
         'type',
         'type_layout',
         'cpc',
+        'cpm',
         'expires_in',
         'user_id',
     ];

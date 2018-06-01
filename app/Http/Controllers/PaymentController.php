@@ -40,9 +40,13 @@ class PaymentController extends Controller
                 return date('d-m-Y H:i', strtotime($payment->created_at));
             })
             ->editColumn('payment_form', function($payment){
-                return $payment->payment_form == 1 
-                    ? Payment::TYPE_1
-                    : Payment::TYPE_2;
+                if ($payment->payment_form == 1) {
+                    return "Transferência Bancária";
+                } else if ($payment->payment_form == 2) {
+                    return "Paypal";
+                } else if ($payment->payment_form == 3) {
+                    return "Pagseguro";
+                }
             })
             ->editColumn('brute_value', function($payment){
                 return "R$ " . number_format($payment->brute_value, 2);
@@ -91,10 +95,20 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $post = $request->all();
-        $post['status'] = Payment::STATUS_WAITING;
-        $post['user_id'] = Auth::id();
-        $payment = Payment::create($post);
-        return redirect('payments')->with('success', 'Pagamento solicitado com sucesso.');
+        // $validator = 
+        $validator = $this->validatePayment($post);
+        if (!$validator->fails()) {
+            $post['status'] = Payment::STATUS_WAITING;
+            $post['user_id'] = Auth::id();
+            $payment = Payment::create($post);
+            return redirect()->back()
+                ->with('success', 'Pagamento solicitado com sucesso.');
+        } else {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
     }
 
     /**
@@ -130,9 +144,9 @@ class PaymentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = $request->all();
-        $payment = Payment::find($id);
-        $payment->update($post);
+        // $post = $request->all();
+        // $payment = Payment::find($id);
+        // $payment->update($post);
         return redirect('payments');
     }
 
@@ -179,5 +193,25 @@ class PaymentController extends Controller
                             ->withErrors($validator)
                             ->withInput();
         }
+    }
+
+    public function validatePayment($post)
+    {
+        $mensagens = array(
+            'brute_value.required' => 'Insira um valor.',
+            'brute_value.number' => 'Não é um número.',
+            'brute_value.min' => 'Pagamento mínimo de R$ 100,00',
+            'brute_value.max' => 'Pagamento acima do valor disponível.',
+        );
+        $rules = array(
+            'brute_value' => [
+                'required',
+                'numeric',
+                'min:100',
+                'max:' . Auth::user()->revenue
+            ],
+        );
+        $validator = Validator::make($post, $rules, $mensagens);
+        return $validator;
     }
 }

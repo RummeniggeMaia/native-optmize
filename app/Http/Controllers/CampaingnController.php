@@ -232,7 +232,7 @@ class CampaingnController extends Controller {
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
-            'type' => 'in:"CPA","CPC"',
+            'type' => 'in:"CPA","CPC","CPM"',
             'cpc' => 'numeric',
             'type_layout' => 'in:1,2,3',
         );

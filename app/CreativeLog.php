@@ -10,6 +10,7 @@ class CreativeLog extends Model
         'clicks',
         'impressions',
         'revenue',
+        'counter',
         'creative_id',
         'widget_id',
         'campaingn_id',

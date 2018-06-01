@@ -99,9 +99,13 @@ Route::middleware(['admin'])->group(function () {
 
 Route::get('/auth/account', 'Auth\AuthController@edit')->name('auth.account');
 Route::get('/auth/change', 'Auth\AuthController@changePassword')->name('auth.changePassword');
+Route::get('/auth/paymentData', 'Auth\AuthController@paymentData')->name('auth.paymentData');
+
 Route::patch('/auth/update', 'Auth\AuthController@update')->name('auth.update');
 Route::patch('/auth/updatePassword', 'Auth\AuthController@updatePassword')
     ->name('auth.updatePassword');
+Route::patch('/auth/updatePaymentData', 'Auth\AuthController@updatePaymentData')
+    ->name('auth.updatePaymentData');
 
 Route::post('/clicks')->middleware('clicks');
 Route::post('/impressions')->middleware('impressions');

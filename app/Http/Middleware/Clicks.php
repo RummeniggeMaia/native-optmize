@@ -38,11 +38,11 @@ class Clicks
                 /** TODO campanha deve ser obrigatoria na proxima atualizacao.
                  * - Codigo do site nao tem campanha ainda 
                  * - Verificar se revenue do cpc é com base na taxa */
-                if ($campaign && $campaign->cpc > 0) {
+                if ($campaign && $campaign->type == "CPC" && $campaign->cpc > 0) {
                     $widget->user->increment(
                         'revenue',
                         $campaign->cpc * $widget->user->taxa);
-                    $creative->user->increment(
+                    $creative->increment(
                         'revenue',
                         $campaign->cpc * (1 - $widget->user->taxa));
                 }

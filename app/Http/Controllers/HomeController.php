@@ -108,9 +108,13 @@ class HomeController extends Controller
                 return $payment->user->name;
             })
             ->editColumn('payment_form', function($payment){
-                return $payment->payment_form == 1 
-                    ? "Cartão de créditos" 
-                    : "Boleto";
+                if ($payment->payment_form == 1) {
+                    return "Transferência Bancária";
+                } else if ($payment->payment_form == 2) {
+                    return "Paypal";
+                } else if ($payment->payment_form == 3) {
+                    return "Pagseguro";
+                }
             })
             ->editColumn('brute_value', function($payment){
                 return "R$ " . number_format($payment->brute_value, 2);

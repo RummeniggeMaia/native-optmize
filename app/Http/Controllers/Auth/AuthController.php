@@ -2,71 +2,79 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\PaymentData;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
-    public function edit() {
+    public function edit()
+    {
         return view('auth.account');
     }
 
-    public function changePassword() {
+    public function changePassword()
+    {
         return view('auth.passwords.change');
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $post = $request->only(['name', 'skype', 'phone']);
         $validacao = $this->validar($post);
         if ($validacao->fails()) {
             return redirect()->back()
-                            ->withErrors($validacao)
-                            ->withInput();
+                ->withErrors($validacao)
+                ->withInput();
         } else {
             Auth::user()->update($post);
             return back()->with(
-                            'success', 'Dados do usuário atualizados com sucesso.');
+                'success', 'Dados do usuário atualizados com sucesso.');
         }
     }
 
-    public function updatePassword(Request $request) {
+    public function updatePassword(Request $request)
+    {
         $post = $request->all();
         $validacao = $this->validarPassword($post);
         if ($validacao->fails()) {
             return redirect()->back()
-                            ->withErrors($validacao)
-                            ->withInput();
+                ->withErrors($validacao)
+                ->withInput();
         } else if (!Hash::check($post['password'], Auth::user()->password)) {
             return redirect()->back()
-                            ->withErrors(['password' => 'Password incorreto.'])
-                            ->withInput();
+                ->withErrors(['password' => 'Password incorreto.'])
+                ->withInput();
         } else {
             $post['password'] = Hash::make($post['new_password']);
             Auth::user()->update($post);
             return redirect('home')
-                            ->with('success'
-                                    , 'Senha alterada com sucesso.');
+                ->with('success'
+                    , 'Senha alterada com sucesso.');
         }
     }
 
-    public function validar(array $post) {
+    public function validar(array $post)
+    {
         $mensagens = array(
             'name.required' => 'Insira um nome.',
             'name.min' => 'Nome muito curto.',
             'name.min' => 'Nome muito curto.',
             'name.string' => 'Não é do tipo string.',
 //            'email.required' => 'Insira um e-mail.',
-//            'email.email' => 'E-mail inválido.',
-//            'email.max' => 'E-mail muito longo.',
-//            'email.unique' => 'Já existe uma conta com este e-mail.',
-//            'email.string' => 'Não é do tipo string.',
+            //            'email.email' => 'E-mail inválido.',
+            //            'email.max' => 'E-mail muito longo.',
+            //            'email.unique' => 'Já existe uma conta com este e-mail.',
+            //            'email.string' => 'Não é do tipo string.',
         );
         $rules = array(
             'name' => 'required|string|min:4|max:255',
@@ -76,7 +84,8 @@ class AuthController extends Controller {
         return $validator;
     }
 
-    public function validarPassword($post) {
+    public function validarPassword($post)
+    {
         $mensagens = array(
             'new_password.confirmed' => 'Senhas não coincidem.',
             'new_password.min' => 'Senha muito curta.',
@@ -89,4 +98,40 @@ class AuthController extends Controller {
         return $validator;
     }
 
+    public function paymentData()
+    {
+        return view('auth.paymentData');
+    }
+
+    public function updatePaymentData(Request $request)
+    {
+        $post = $request->except(['_method', '_token']);
+        $validator = $this->validatePaymentData($post);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            if (Auth::user()->paymentData()->exists()) {
+                Auth::user()->paymentData()->update($post);
+            } else {
+                Auth::user()->paymentData()->create($post);
+            }
+            return redirect()->back()
+                ->with('success', 'Dados Bancários atualizados com sucesso.');
+        }
+    }
+
+    public function validatePaymentData($post)
+    {
+        $mensagens = array(
+            'holder.required' => 'Nome do titular necessário.',
+            'holder.min' => 'Nome do titular muito curto.',
+        );
+        $rules = array(
+            'holder' => 'required|min:4',
+        );
+        $validator = Validator::make($post, $rules, $mensagens);
+        return $validator;
+    }
 }

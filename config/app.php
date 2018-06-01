@@ -204,6 +204,5 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Input' => Illuminate\Support\Facades\Input::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'Payment' => App\Payment::class,
     ],
 ];

@@ -26,6 +26,7 @@
                         <th class="text-center">MARCA</th>
                         <th class="text-center">TIPO</th>
                         <th class="text-center">CPC</th>
+                        <th class="text-center">CPM</th>
                         <th class="text-center">LAYOUT</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
@@ -54,6 +55,7 @@
                 {data: 'name', name: 'name'},
                 {data: 'type', name: 'type'},
                 {data: 'cpc', name: 'cpc'},
+                {data: 'cpm', name: 'cpm'},
                 {data: 'type_layout', name: 'type_layout'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
