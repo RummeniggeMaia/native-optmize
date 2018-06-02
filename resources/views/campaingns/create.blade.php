@@ -71,15 +71,20 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
-                        Form::select('type', [
-                            'CPA'=>'CPA', 
-                            'CPC'=>'CPC',
-                            'CPM'=>'CPM', 
-                        ],
-                        Input::old('type'), 
-                        ['placeholder'=>'Selecione um tipo', 
-                            'class'=>'selectpicker form-control input-lg', 
-                            'title'=>'Tipo da campanha']) 
+                        Form::select('type', 
+                            [
+                                'CPA'=>'CPA', 
+                                'CPC'=>'CPC',
+                                'CPM'=>'CPM', 
+                            ],
+                            Input::old('type'), 
+                            [
+                                'placeholder'=>'Selecione um tipo', 
+                                'class'=>'selectpicker form-control input-lg', 
+                                'required', 
+                                'title'=>'Tipo da campanha'
+                            ]
+                        ) 
                     }}
                 </div>
                 @if ($errors->has('type'))

@@ -8,6 +8,7 @@ use App\Widget;
 use App\WidgetLog;
 use Carbon\Carbon;
 use Closure;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -35,14 +36,7 @@ class RandomCreatives
                 return response()->json("not found", 404);
             }
             $creatives = $campaign->creatives()->get([
-                'id', 'hashid', 'name', 'brand', 'url', 'image']);
-            $params = array(
-                '[click_id]',
-                '[widget_id]',
-                '[creative_id]',
-                '[image]',
-                '[headline]',
-            );
+                'id', 'hashid', 'name', 'brand', 'url', 'image', 'revenue']);
             foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
                     . "hashid"
@@ -56,25 +50,32 @@ class RandomCreatives
                     urlencode(url('/') . '/' . $creative->image),
                     urlencode($creative->name),
                 );
-                $creative->url = str_replace($params, $fields, $creative->url);
+                $creative->url = str_replace([
+                    '[click_id]',
+                    '[widget_id]',
+                    '[creative_id]',
+                    '[image]',
+                    '[headline]',
+                ], $fields, $creative->url);
                 $creative->image = url('/') . '/' . $creative->image;
                 $this->setCTR($creative);
-                /** 
+                /**
                  * TODO Caso mude o type para um valor numerico, mudar aqui
-                */
+                 */
                 $this->impressions($widget, $creative, $campaign);
-                unset($creative['id']);
             }
-            $creativesCTR = $this->sortCreatives($creatives);
+            $creatives = $creatives->sortBy('ctr')->reverse()->toArray();
             if ($widget->type_layout == 1) {
-                if (count($creativesCTR) > $widget->quantity) {
-                    $creatives = array_slice($creativesCTR->toArray(), 0, $widget->quantity);
-                } else {
-                    $creatives = $creativesCTR;
+                if (count($creatives) > $widget->quantity) {
+                    $creatives = array_slice($creatives->toArray(), 0, $widget->quantity);
                 }
             } else {
-                $creatives = array_slice($creativesCTR->toArray(), 0, 1);
+                $creatives = array_slice($creatives->toArray(), 0, 1);
             }
+            /**
+             * TODO remover esse increment futuramente,
+             * ja que o log contabiliza as views do widget
+             */
             $widget->increment('impressions');
             $widgetLog = WidgetLog::where('widget_id', $widget->id)
                 ->whereDate('created_at', Carbon::today()->toDateString())->first();
@@ -86,7 +87,7 @@ class RandomCreatives
                     'widget_id' => $widget->id,
                 ]);
             }
-            return response()->json($creatives);
+            return response()->json(array_values($creatives));
         } else {
             return response()->json("not found", 404);
         }
@@ -103,32 +104,34 @@ class RandomCreatives
             CreativeLog::create(array(
                 'creative_id' => $creative->id,
                 'widget_id' => $widget->id,
-                'campaing_id' => $campaign->id,
+                'campaingn_id' => $campaign->id,
                 'impressions' => 1,
             ));
         } else {
-            if ($campaign->type == "CPM" && $campaign->cpm > 0.0) {
-                if ($creativeLog->counter == 1000) {
-                    $revenueP = $campaign->cpm * $widget->user->taxa;
-                    $revenueA = $campaign->cpm * (1 - $widget->user->taxa);
-                    $widget->user->increment('revenue', $revenueP);
-                    $creative->increment('revenue', $revenueA);
-                    $creativeLog->increment('revenues', $revenueA);
-                    $widgetLog = WidgetLog::where('widget_id', $widget->id)
-                        ->whereDate('created_at', Carbon::today()->toDateString())->first();
-                    if ($widgetLog) {
-                        $widgetLog->increment('revenues', $revenueP);
-                    } else {
-                        WidgetLog::create([
-                            'revenues' => $revenueP,
-                            'widget_id' => $widget->id,
-                        ]);
+            DB::transaction(function () use ($widget, $creative, $campaign, $creativeLog) {
+                if ($campaign->type == "CPM" && $campaign->cpm > 0.0) {
+                    if ($creativeLog->counter == 1000) {
+                        $revenueP = $campaign->cpm * $widget->user->taxa;
+                        $revenueA = $campaign->cpm * (1 - $widget->user->taxa);
+                        $widget->user->increment('revenue', $revenueP);
+                        $creative->increment('revenue', $revenueA);
+                        $creativeLog->increment('revenue', $revenueA);
+                        $widgetLog = WidgetLog::where('widget_id', $widget->id)
+                            ->whereDate('created_at', Carbon::today()->toDateString())->first();
+                        if ($widgetLog) {
+                            $widgetLog->increment('revenues', $revenueP);
+                        } else {
+                            WidgetLog::create([
+                                'revenues' => $revenueP,
+                                'widget_id' => $widget->id,
+                            ]);
+                        }
+                        $creativeLog->decrement('counter', 1000);
                     }
-                    $creativeLog->decrement('counter', 1000);
+                    $creativeLog->increment('counter');
                 }
-                $creativeLog->increment('counter');
-            }
-            $creativeLog->increment('impressions');
+                $creativeLog->increment('impressions');
+            });
         }
     }
 
@@ -153,19 +156,6 @@ class RandomCreatives
                 return $campaigns->random();
             }
         }
-    }
-
-    private function sortCreatives($creatives)
-    {
-        return $creatives->sort(function ($a, $b) {
-            if ($a->ctr < $b->ctr) {
-                return 1;
-            } else if ($a->ctr > $b->ctr) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
     }
 
     private function setCTR($creative)

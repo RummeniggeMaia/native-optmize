@@ -35,7 +35,6 @@
                         [ 
                             '1'=>"Transferência Bancária", 
                             '2'=>"Paypal",
-                            '3'=>"Pagseguro"
                         ], 
                         Input::old('payment_form'), ['id'=>'payment_form',
                     'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Forma de pagamento.']) }}

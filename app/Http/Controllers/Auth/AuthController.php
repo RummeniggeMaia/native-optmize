@@ -100,7 +100,7 @@ class AuthController extends Controller
 
     public function paymentData()
     {
-        return view('auth.paymentData');
+        return view('auth.paymentdata');
     }
 
     public function updatePaymentData(Request $request)
@@ -125,11 +125,22 @@ class AuthController extends Controller
     public function validatePaymentData($post)
     {
         $mensagens = array(
-            'holder.required' => 'Nome do titular necessário.',
             'holder.min' => 'Nome do titular muito curto.',
+            'agency.min' => 'Nome da agencia muito curto.' ,
+            'number.required' => 'Número da conta necessário.',
+            'type.in' => 'Tipo inválido de conta.',
+            'bank.min' => 'Nome do banco muito curto.',
+            'bak_number.required' => 'Número do banco necessário.',
+            'cpf.regex' => 'CPF fora do padrão: 999.999.999-99'
         );
         $rules = array(
-            'holder' => 'required|min:4',
+            'holder' => 'min:4',
+            'agency' => 'min:4',
+            'number' => 'required',
+            'type' => 'in:1,2',
+            'bank' => 'min:4',
+            'bank_number' => 'required',
+            'cpf' => 'regex:/^\d{3}\.\d{3}.\d{3}\-\d{2}$/'
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
