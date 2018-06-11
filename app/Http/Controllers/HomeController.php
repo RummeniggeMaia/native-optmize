@@ -99,13 +99,10 @@ class HomeController extends Controller
     }
 
     public function paymentsDataTable() {
-        $payments = Payment::all();
+        $payments = Payment::with(['user'])->get();
         return Datatables::of($payments)//->make(true);
             ->editColumn('created_at', function($payment){
                 return date('d-m-Y H:i', strtotime($payment->created_at));
-            })
-            ->editColumn('name', function($payment){
-                return $payment->user->name;
             })
             ->editColumn('payment_form', function($payment){
                 if ($payment->payment_form == 1) {

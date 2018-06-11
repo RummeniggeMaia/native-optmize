@@ -176,7 +176,7 @@
                     name: 'created_at'
                 },
                 {
-                    data: 'name',
+                    data: 'user.name',
                     name: 'user.name'
                 },
                 {
@@ -193,11 +193,15 @@
                 },
                 {
                     data: 'taxa',
-                    name: 'user.taxa'
+                    name: 'user.taxa',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'liquid_value',
-                    name: 'liquid_value'
+                    name: 'liquid_value',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'status',

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Creative extends Model {
 
-    protected $hidden = ['pivot', 'id', 'revenue', 'ctr'];
+    protected $hidden = ['pivot', 'revenue', 'ctr'];
 
     protected $fillable = [
         'hashid',

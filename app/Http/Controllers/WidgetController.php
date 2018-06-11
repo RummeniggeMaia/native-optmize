@@ -61,18 +61,12 @@ class WidgetController extends Controller {
                 })->addColumn('type_layout', function($widget) {
                     return array(
                             '0' => '-',
-                            '1' =>'Native',
-                            '2' =>'Banner',
-                            '3' =>'Smart Link',
+                            '1'=>'Native',
+                            '2'=> 'Smart Link',
+                            '3'=>'Banner Square (300x250)',
+                            '4'=>'Banner Mobile (300x100)',
+                            '5'=>'Banner Footer (928x244)',
                         )[$widget->type_layout];
-                })->editColumn('type', function($widget) {
-                    $types = [
-                        '1' => '----------------------',
-                        '2' => 'Barra Lateral Direita',
-                        '3' => 'Barra Lateral Esquerda',
-                        '4' => 'Central'
-                    ];
-                    return $types[$widget->type];
                 })->rawColumns(
                         ['edit', 'show', 'delete']
                 )->make(true);
@@ -134,7 +128,7 @@ class WidgetController extends Controller {
         } else {
             $json = null;
             $version = md5(time());
-            if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
+            if ($widget->type_layout == 1) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
                 $json = json_decode($jsonFile);
                 if ($json) {
@@ -149,7 +143,21 @@ class WidgetController extends Controller {
                         $json->html
                     );
                 }
-            } else if ($widget->type_layout == Widget::LAYOUT_BANNER) {
+            } else if ($widget->type_layout == 2) {
+                $jsonFile = Storage::disk(self::DISK)->get("data/smart_link.json");
+                $json = json_decode($jsonFile);
+                if ($json) {
+                    $json->link = str_replace(
+                        ['[url]', '[widget_hashid]', '[source]'], 
+                        [
+                            addslashes(url('/')),
+                            $widget->hashid,
+                            $widget->url
+                        ], 
+                        $json->link
+                    );
+                }
+            } else if (in_array($widget->type_layout, [3,4,5])) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/banner.json");
                 $json = json_decode($jsonFile);
                 if ($json) {
@@ -162,20 +170,6 @@ class WidgetController extends Controller {
                         '[widget_hashid]', 
                         addslashes($widget->hashid), 
                         $json->html
-                    );
-                }
-            } else if ($widget->type_layout == Widget::LAYOUT_S_LINK) {
-                $jsonFile = Storage::disk(self::DISK)->get("data/smart_link.json");
-                $json = json_decode($jsonFile);
-                if ($json) {
-                    $json->link = str_replace(
-                        ['[url]', '[widget_hashid]', '[source]'], 
-                        [
-                            addslashes(url('/')),
-                            $widget->hashid,
-                            $widget->url
-                        ], 
-                        $json->link
                     );
                 }
             }
@@ -294,7 +288,7 @@ class WidgetController extends Controller {
             'url.regex' => 'URL inválido.',
             'url.unique' => 'Já existe um Wdidget com esta URL.',
             'campaingns.required' => 'Selecione ao menos uma Campaingn.',
-            'type.in' => 'Tipo inválido.',
+            // 'type.in' => 'Tipo inválido.',
             'type_layout.in' => "Layout inválido.",
         );
         $rules = array(
@@ -302,8 +296,8 @@ class WidgetController extends Controller {
             'quantity' => 'in:3,4,5,6',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             //'url' => 'unique:widgets,url,' .$post['id'],
-            'type' => 'in:1,2,3,4',
-            'type_layout' => 'in:1,2,3',
+            // 'type' => 'in:1,2,3,4',
+            'type_layout' => 'in:1,2,3,4,5',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
@@ -377,10 +371,10 @@ class WidgetController extends Controller {
 
     private function typeLayoutsProperties($hasLayout, &$post) {
         if ($hasLayout) {
-            if ($post['type_layout'] == 2) {
+            if (in_array($post['type_layout'], [3,4,5])) {
                 $post['quantity'] = 1;
                 $post['type'] = 1;
-            } else if ($post['type_layout'] == 3) {
+            } else if ($post['type_layout'] == 2) {
                 $post['quantity'] = 0;
                 $post['type'] = 1;
             }

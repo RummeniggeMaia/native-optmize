@@ -35,19 +35,6 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-star"></i></span>
-                        <input type="text" class="form-control" id="type"
-                               placeholder="{{ [
-                                    '1' => '----------------------',
-                                    '2' => 'Barra Lateral Direita',
-                                    '3' => 'Barra Lateral Esquerda',
-                                    '4' => 'Central'
-                                ][$widget->type] }}" readonly>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-star"></i></span>
                         <input type="text" class="form-control" id="quantity"
                                placeholder="{{ $widget->quantity }}" readonly>
                     </div>

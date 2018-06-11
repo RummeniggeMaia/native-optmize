@@ -66,7 +66,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="lnr lnr-chart-bars"></i></span>
-                        <input title="CTR" type="text" class="form-control" id="ctr" value="@If($clicks > 0){{ number_format(($clicks / $impressions * 100), 2) }}@else 0.00 @endif" readonly>
+                        <input title="CTR" type="text" class="form-control" id="ctr" value="@If($impressions > 0){{ number_format(($clicks / $impressions * 100), 2) }}@else 0.00 @endif" readonly>
                     </div>
                 </div>
                 <div class="form-group">

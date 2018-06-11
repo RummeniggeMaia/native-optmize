@@ -18,9 +18,9 @@ class Campaingn extends Model {
         'user_id',
     ];
 
-    public function revenues() {
-        return $this->creatives()->sum('revenue');
-    }
+    // public function revenues() {
+    //     return $this->creatives()->sum('revenue');
+    // }
     
     public function creatives() {
         return $this->belongsToMany('App\Creative')->withTimestamps();

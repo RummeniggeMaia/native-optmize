@@ -71,9 +71,11 @@ class CreativeController extends Controller {
                 })->addColumn('type_layout', function($widget) {
                     return array(
                             '0' => '-',
-                            '1' =>'Native',
-                            '2' =>'Banner',
-                            '3' =>'Smart Link',
+                            '1'=>'Native',
+                            '2'=>'Smart Link',
+                            '3'=>'Banner Square (300x250)',
+                            '4'=>'Banner Mobile (300x100)',
+                            '5'=>'Banner Footer (928x244)',
                         )[$widget->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'image', 'status']
@@ -250,17 +252,26 @@ class CreativeController extends Controller {
             //'url.regex' => 'URL inválido.',
             'category_id.required' => 'Selecione uma Category',
             'image.required' => 'Selecione uma imagem.',
+            'image.dimensions' => 'Dimensões da imagem não coincidem com o layout escolhido.',
             'status.in' => 'Status inválido.',
             'type_layout.in' => 'Layout inválido.',
         );
+        $dimensions = "";
+        if ($post['type_layout'] == '3') {
+            $dimensions = "width=300,height=250";
+        } else if ($post['type_layout'] == '4') {
+            $dimensions = "width=300,height=100";
+        } else if ($post['type_layout'] == '5') {
+            $dimensions = "width=928,height=244";
+        }
         $rules = array(
             'brand' => 'required|min:4',
             'name' => 'required|min:4',
             //'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'category_id' => 'required',
-            'image' => $edit ? '' : 'required',
+            'image' => "dimensions:$dimensions". ($edit ? '' : '|required'),
             'status' => 'in:0,1',
-            'type_layout' => 'in:1,2,3',
+            'type_layout' => 'in:1,3,4,5',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

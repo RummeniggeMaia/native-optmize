@@ -101,6 +101,9 @@ class PaymentController extends Controller
             $post['status'] = Payment::STATUS_WAITING;
             $post['user_id'] = Auth::id();
             $payment = Payment::create($post);
+            if ($payment) {
+                Auth::user()->decrement('revenue', $post['brute_value']);
+            }
             return redirect()->back()
                 ->with('success', 'Pagamento solicitado com sucesso.');
         } else {

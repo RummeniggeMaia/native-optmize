@@ -117,6 +117,30 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('status', [
+                                '1'=>'PAGAR', 
+                                '3'=>'ESTORNAR',
+                            ],
+                            Input::old('type_layout'), 
+                            [
+                                'id'=>'drop_layout', 
+                                'class'=>'selectpicker form-control input-lg', 
+                                'required', 
+                                'title' => 'Pagar ou estornar.'
+                            ]
+                        ) 
+                    }}
+                </div>
+                @if ($errors->has('status'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('status') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group {{ $errors->has('paid_value') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>

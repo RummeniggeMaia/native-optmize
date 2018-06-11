@@ -36,8 +36,10 @@
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
                         Form::select('type_layout', [
-                            '1'=>'Native', 
-                            '2'=>'Banner',
+                            '1'=>'Native',
+                            '3'=>'Banner Square (300x250)',
+                            '4'=>'Banner Mobile (300x100)',
+                            '5'=>'Banner Footer (928x244)',
                         ],
                         Input::old('type_layout'), 
                         ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Anúncio.']) 

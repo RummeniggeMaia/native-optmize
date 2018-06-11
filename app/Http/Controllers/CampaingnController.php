@@ -48,10 +48,12 @@ class CampaingnController extends Controller {
                     ]);
                 })->addColumn('type_layout', function($campaingn) {
                     return array(
-                            '0' => '-',
-                            '1' =>'Native',
-                            '2' =>'Banner',
-                            '3' =>'Smart Link',
+                            '0' =>  '-',
+                            '1' => 'Native',
+                            '2' => 'Smart Link',
+                            '3' => 'Banner Square (300x250)',
+                            '4' => 'Banner Mobile (300x100)',
+                            '5' => 'Banner Footer (928x244)',
                         )[$campaingn->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete']
@@ -92,6 +94,14 @@ class CampaingnController extends Controller {
                 $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 $post['expires_in'] = date('Y-m-d', strtotime("+30 days"));
+                if ($post['type'] == "CPC") {
+                    $post['cpm'] = 0.0;
+                } else if ($post['type'] == "CPM") {
+                    $post['cpc'] = 0.0;
+                } else {
+                    $post['cpc'] = 0.0;
+                    $post['cpm'] = 0.0;
+                }
                 $campaingn = Campaingn::create($post);
                 $campaingn->creatives()->sync($post['creatives']);
                 DB::commit();
@@ -155,7 +165,10 @@ class CampaingnController extends Controller {
             return back()->with('error'
                             , 'Não pode editar os dados desta Campaingn.');
         } else {
-            $creatives = Creative::all()->where('user_id', Auth::id());
+            $creatives = Creative::where([
+                ['user_id', Auth::id()],
+                ['type_layout', $campaingn->type_layout]
+            ])->get();
             return view('campaingns.update', compact('campaingn'))
                             ->with('creatives', $creatives);
         }
@@ -185,6 +198,14 @@ class CampaingnController extends Controller {
             } else {
                 DB::beginTransaction();
                 try {
+                    if ($post['type'] == "CPC") {
+                        $post['cpm'] = 0.0;
+                    } else if ($post['type'] == "CPM") {
+                        $post['cpc'] = 0.0;
+                    } else {
+                        $post['cpc'] = 0.0;
+                        $post['cpm'] = 0.0;
+                    }
                     $campaingn->update($post);
                     $campaingn->creatives()->sync($post['creatives']);
                     DB::commit();
@@ -225,7 +246,6 @@ class CampaingnController extends Controller {
             'creatives.required' => 'Selecione um Anúncio.',
             'creatives.min' => 'Selecione um Anúncio..',
             'type.in' => 'Tipo de campanha inválido.',
-            'cpc.numeric' => 'Valor não numérico.',
             'type_layout.in' => 'Layout inválido.',
         );
         $rules = array(
@@ -233,9 +253,15 @@ class CampaingnController extends Controller {
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
             'type' => 'in:"CPA","CPC","CPM"',
-            'cpc' => 'numeric',
-            'type_layout' => 'in:1,2,3',
+            'type_layout' => 'in:1,3,4,5',
         );
+        if (isset($post['type']) && $post['type'] == "CPC") {
+            $mensagens['cpc.numeric'] = 'CPC deve ser numérico.';
+            $rules['cpc'] = 'numeric';
+        } else if (isset($post['type']) && $post['type'] == "CPM") {
+            $mensagens['cpm.numeric'] = 'CPM deve ser numérico.';
+            $rules['cpm'] = 'numeric';
+        }
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }

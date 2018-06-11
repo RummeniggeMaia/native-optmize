@@ -23,7 +23,6 @@
                     <tr class="block-title">
                         <th class="text-center">NOME</th>
                         <th class="text-center">URL</th>
-                        <th class="text-center">TIPO</th>
                         <th class="text-center">QUANTIDADE</th>
                         <th class="text-center">LAYOUT</th>
                         <th class="text-center">EDITAR</th>
@@ -51,7 +50,6 @@
             columns: [
                 {data: 'name', name: 'name'},
                 {data: 'url', name: 'url'},
-                {data: 'type', name: 'type'},
                 {data: 'quantity', name: 'quantity'},
                 {data: 'type_layout', name: 'type_layout'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},

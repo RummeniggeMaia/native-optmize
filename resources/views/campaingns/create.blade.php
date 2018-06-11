@@ -38,8 +38,10 @@
                         Form::select(
                             'type_layout', 
                             [
-                                '1'=>'Native', 
-                                '2'=>'Banner',
+                                '1'=>'Native',
+                                '3'=>'Banner Square (300x250)',
+                                '4'=>'Banner Mobile (300x100)',
+                                '5'=>'Banner Footer (928x244)',
                             ],
                             Input::old('type_layout'), 
                             [
@@ -79,6 +81,7 @@
                             ],
                             Input::old('type'), 
                             [
+                                'id'=>'drop_type',
                                 'placeholder'=>'Selecione um tipo', 
                                 'class'=>'selectpicker form-control input-lg', 
                                 'required', 
@@ -93,7 +96,7 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('cpc') ? ' has-error' : '' }}">
+            <div id="cpc_fg" class="form-group {{ $errors->has('cpc') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
                     {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo Por CLICK', 'title'=>'Custo por CLICK']) !!}
@@ -104,7 +107,7 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('cpm') ? ' has-error' : '' }}">
+            <div id="cpm_fg" class="form-group {{ $errors->has('cpm') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
                     {!! Form::text('cpm',null,['id'=>'cpm','class'=>'form-control input-lg', 'placeholder' => 'Custo por MIL', 'title'=>'Custo por MIL']) !!}
@@ -155,11 +158,26 @@
 </div>
 <script src="{{ asset('js/multiselect.min.js') }}"></script>
 <script type="text/javascript">
-$(document).ready(function () {
-    $('#multiselect').multiselect();
-    $('#type_layout').change(function() {
-        this.form.submit();
+    function toggleFields() {
+        if (this.value == "CPC") {
+            $("#cpm_fg").hide();
+            $("#cpc_fg").show();
+        }  else if (this.value == "CPM") {
+            $("#cpc_fg").hide();
+            $("#cpm_fg").show();
+        } else {
+            $("#cpc_fg").hide();
+            $("#cpm_fg").hide();
+        }
+    }
+    $(document).ready(function () {
+        $('#multiselect').multiselect();
+        $('#type_layout').change(function() {
+            this.form.submit();
+        });
+        
+        $('#drop_type').change(toggleFields);
+        $('#drop_type').trigger('change');
     });
-});
 </script>
 @stop

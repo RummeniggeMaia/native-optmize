@@ -4,13 +4,19 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\WidgetLog;
+use Carbon\Carbon;
 
 class Widget extends Model
 {
 
     const LAYOUT_NATIVE = 1;
-    const LAYOUT_BANNER = 2;
-    const LAYOUT_S_LINK = 3;
+    const LAYOUT_S_LINK = 2;
+    const LAYOUT_BANNER = 3;
+    
+    const LOG_IMP = 'impressions';
+    const LOG_CLI = 'clicks';
+    const LOG_REV = 'revenues';
 
     protected $fillable = [
         'hashid',
@@ -54,5 +60,22 @@ class Widget extends Model
     public function widgetLogs()
     {
         return $this->hasMany('App\WidgetLog');
+    }
+
+    public function createLog($property, $value)
+    {
+        $widgetLog = $this->widgetLogs()
+            ->whereDate(
+                'created_at',
+                Carbon::today()->toDateString()
+            )->first();
+        if ($widgetLog) {
+            $widgetLog->increment($property, $value);
+        } else {
+            WidgetLog::create([
+                $property => $value,
+                'widget_id' => $this->id,
+            ]);
+        }
     }
 }

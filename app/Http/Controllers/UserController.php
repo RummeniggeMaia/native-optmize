@@ -169,32 +169,41 @@ class UserController extends Controller {
      * TODO Mudar essa funcao para o PaymentController
      */
     public function payment(Request $request, $id) {
-        $post = $request->only(['paid_value', 'info']);
+        $post = $request->only(['paid_value', 'info', 'status']);
         $payment = Payment::with('user')->find($id);
         $v = Validator::make($post, 
             [
                 'paid_value' => 'numeric|min:0|max:2147483647',
                 'info' => 'max:190',
-                'upload_file' => 'mimes:pdf'
+                'upload_file' => 'mimes:pdf',
+                'status' => 'in:1,3',
             ], 
             [
                 'paid_value.numeric' => 'Valor não numérico',
                 'paid_value.min' => 'Valor abaixo de zero.',
                 'paid_value.max' => 'Valor muito alto.',
                 'info.max' => 'No máximo 190 caracteres.',
+                'status.in' => 'Método de pagamento inválido.',
             ]
         );
         if ($payment && !$v->fails()) {
+            if ($payment->status == Payment::STATUS_REVERSED) {
+                return redirect()->back()->with('error'
+                                        , 'Pagamento já foi estornado.');
+            }
             DB::transaction(function() use ($post, $payment) {
-                $paid_value = doubleval($post['paid_value']);
-                $payment->paid_value = $paid_value;
-                $payment->status = Payment::STATUS_PAID;
+                $status = intval($post['status']);
+                $payment->paid_value = doubleval($post['paid_value']);
+                if ($status == Payment::STATUS_REVERSED) {
+                    $payment->user->increment('revenue', $payment->brute_value);
+                    $payment->paid_value = 0.0;
+                }
+                $payment->status = $status;
                 $payment->info = $post['info'];
                 $payment->save();
-                $payment->user->decrement('revenue', $paid_value);
             });
-            return redirect()->back()->with('success'
-                                        , 'Pagamento realizado com sucesso.');
+            return redirect()->back()->with('success', 
+                'Pagamento ' . (Payment::STATUS_REVERSED ? 'estornado' : 'realizado') .' com sucesso.');
         } else {
             return redirect()->back()
                             ->withErrors($v)

@@ -38,8 +38,10 @@
                     {{ 
                         Form::select('type_layout', [
                             '1'=>'Native', 
-                            '2'=>'Banner', 
-                            '3'=>'Smart Link'
+                            '2'=>'Smart Link',
+                            '3'=>'Banner Square (300x250)',
+                            '4'=>'Banner Mobile (300x100)',
+                            '5'=>'Banner Footer (928x244)',
                         ],
                         Input::old('type_layout'), 
                         ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Widget.']) 
@@ -79,26 +81,6 @@
                 </span>
                 @endif
             </div>
-            <div id="type_fg" class="form-group {{ $errors->has('type') ? ' has-error' : '' }}">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
-                    {{ 
-                        Form::select('type', [
-                            '1'=>'----------------------', 
-                            '2'=>'Barra Lateral Direita', 
-                            '3'=>'Barra Lateral Esquerda', 
-                            '4'=>'Central'
-                        ],
-                        Input::old('type'), 
-                        ['placeholder'=>'Selecione um tipo', 'class'=>'selectpicker form-control input-lg']) 
-                    }}
-                </div>
-                @if ($errors->has('type'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('type') }}</strong>
-                </span>
-                @endif
-            </div>
             <div class="form-group form-actions text-center">
                 {!! Form::submit('Atualizar', ['class' => 'btn btn-md btn-default']) !!}
             </div>
@@ -107,21 +89,16 @@
     </div>
 </div>
 <script type="text/javascript">
-    // function toggleFields() {
-    //     if (this.value == 2 || this.value == 3) {
-    //         $("#quantity_fg").hide();
-    //         $("#input_quantity").prop('selectedIndex', 0);
-    //         $("#type_fg").hide();
-    //         $("#input_type").prop('selectedIndex', 0);
-    //     } else {
-    //         $("#quantity_fg").show();
-    //         $("#type_fg").show();
-    //     }
-    // }
-    // $(document).ready(function () {
-    //     $('#drop_layout').change(toggleFields);
-
-    //     toggleFields();
-    // });
+     function toggleFields() {
+        if (this.value != 1) {
+            $("#quantity_fg").hide();
+            $("#input_quantity").prop('selectedIndex', 0);
+        } else {
+            $("#quantity_fg").show();
+        }
+    }
+    $(document).ready(function () {
+        $('#drop_layout').change(toggleFields);
+    });
 </script>
 @stop
