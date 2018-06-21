@@ -29,15 +29,15 @@ class RandomCreatives
             return response()->json("invalid request", 400);
         }
         $widget = Widget::where('hashid', $query['wg'])->first();
+        // Log::info($query['wg']);
         if ($widget) {
             $cont = isset($query['cont']) ? $query['cont'] : 0;
             $campaign = $this->getCampaign($cont, $widget->type_layout);
             if (!$campaign) {
-                return response()->json("not found", 404);
+                return response()->json("not found campaign", 404);
             }
-            // $creatives = $campaign->creatives()->get([
-            //     'id', 'hashid', 'name', 'brand', 'url', 'image', 'revenue']);
-            foreach ($campaign->creatives as $creative) {
+            $creatives = $campaign->creatives()->get();
+            foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
                     . "hashid"
                     . Carbon::now()->toDateTimeString());
@@ -61,23 +61,25 @@ class RandomCreatives
                 $this->setCTR($creative);
                 // $this->impressions($widget, $creative, $campaign);
             }
-            $campaign->creatives = $campaign->creatives->sortBy('ctr')->reverse()->toArray();
+            $creatives = $creatives->sortBy('ctr')->reverse();
             /** 
              * TODO
              * Os valores no array sao os tipos de banners
              * Caso mude o type para um valor numerico, mudar aqui
              */
-            if (count($campaign->creatives) > 0) {
+            // $creatives = array();
+            if (count($creatives) > 0) {
                 if (in_array($widget->type_layout, [3,4,5])) {
-                    $campaign->creatives = array_slice($campaign->creatives, 0, 1);
+                    $creatives = $creatives->slice(0, 1);
                 } else {
-                    if (count($campaign->creatives) > $widget->quantity) {
-                        $campaign->creatives = array_slice($campaign->creatives, 0, $widget->quantity);
+                    if (count($creatives) > $widget->quantity) {
+                        $creatives = $creatives->slice(0, $widget->quantity);
                     }
                 }
-                foreach ($campaign->creatives as $creative) {
-                    $this->impressions($widget->id, $creative['id'], $campaign->id);
-                }
+                $creatives->each(function ($i, $k) use ($widget, $campaign) {
+                    $this->impressions($widget->id, $i->id, $campaign->id);
+                    // array_push($creatives, $i);
+                });
                 /**
                  * TODO remover esse increment futuramente,
                  * ja que o log contabiliza as views do widget
@@ -85,9 +87,9 @@ class RandomCreatives
                 $widget->increment('impressions');
                 $widget->createLog(Widget::LOG_IMP, 1);
             }
-            return response()->json(array_values($campaign->creatives));
+            return response()->json(array_values($creatives->toArray()));
         } else {
-            return response()->json("not found", 404);
+            return response()->json("not found widget " . $query['wg'], 404);
         }
     }
 

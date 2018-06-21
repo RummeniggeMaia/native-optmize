@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Creative extends Model {
 
-    protected $hidden = ['pivot', 'revenue', 'ctr'];
+    protected $hidden = [
+        'id',
+        'pivot', 
+        'revenue', 
+        'ctr',
+        'type_layout',
+        'status',
+        'user_id',
+        'category_id',
+        'creativeLogs',
+        'created_at',
+        'updated_at',
+    ];
 
     protected $fillable = [
         'hashid',
@@ -19,6 +31,12 @@ class Creative extends Model {
         'user_id',
         'category_id'
     ];
+
+    public function getCTR() {
+        $clicks = $this->creativeLogs->sum('clicks');
+        $impressions = $this->creativeLogs->sum('impressions');
+        return $impressions > 0 ? $clicks / $impressions * 100 : 0;
+    }
 
     public function campaingns() {
         return $this->belongsToMany('App\Campaingn')->withTimestamps();

@@ -6,7 +6,9 @@ use App\Click;
 use App\User;
 use App\Widget;
 use App\WidgetLog;
+use App\Campaingn;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Closure;
 
 class SmartLink
@@ -26,23 +28,26 @@ class SmartLink
             return response()->json("invalid request", 400);
         }
         $widget = Widget::where('hashid', $query['wg'])->first();
-        if ($widget) {
-            Click::create(array(
-                'click_id' => hash("sha256", Carbon::now()->toDateTimeString()),
-                'widget_id' => $widget->id,
-            ));
-            // $widget->increment('impressions');
-            $widgetLog = WidgetLog::where('widget_id', $widget->id)
-                ->whereDate('created_at', Carbon::today()->toDateString())->first();
-            if ($widgetLog) {
-                $widgetLog->increment('clicks');
-            } else {
-                WidgetLog::create([
-                    'clicks' => 1,
+        if ($widget && $widget->type_layout == Widget::LAYOUT_S_LINK) {
+            try {
+                DB::beginTransaction();
+
+                Click::create(array(
+                    'click_id' => hash("sha256", Carbon::now()->toDateTimeString()),
                     'widget_id' => $widget->id,
-                ]);
+                ));
+                $widget->createLog(Widget::LOG_CLI, 1);
+
+                DB::commit();
+                return response()->json('ok', 200);
+            } catch (Exception $ex) {
+                DB::rollBack();
+                return response()->json('error', 500);
             }
-            return response()->json('ok', 200);
+            
+            // $campaign = Campaingn::where(['type_layout' => Widget::LAYOUT_S_LINK])
+            //     ->inRandomOrder()
+            //     ->first();
         } else {
             return response()->json('invalid input', 400);
         }
