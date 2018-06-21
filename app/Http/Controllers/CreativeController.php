@@ -295,19 +295,32 @@ class CreativeController extends Controller {
         );
 
         $image_path = Storage::disk(self::DISK)->path($imgPath);
+        //Acessando informacoes da imagem
+        $im_info = getImageSize($image_path);
+        $im_type = $im_info['mime'];
 
-        // create object
-        $ImgCompressor = new ImgCompressor($setting);
+        if ($im_type == 'image/gif')
+        {
+            $compressed_path = Storage::disk(self::DISK)->path($path);
+            $compressed_image_path = $path . "/" . $image_name;
+            Storage::disk(self::DISK)->copy("img/{$image_name}", "img/compressed/{$image_name}");
+            return $compressed_image_path;
+        }
+        else
+        {    
+            // create object
+            $ImgCompressor = new ImgCompressor($setting);
 
-        // run('STRING original file path', 'output file type', INTEGER Compression level: from 0 (no compression) to 9);
-        // example level = 2 same quality 80%, level = 7 same quality 30% etc
-        $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
+            // run('STRING original file path', 'output file type', INTEGER Compression level: from 0 (no compression) to 9);
+            // example level = 2 same quality 80%, level = 7 same quality 30% etc
+            $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
 
-        // return Storage::disk(self::DISK)->path($path . "/" . "compressed-{$image_name}.jpg");
-        $compressed_image_name = $result['data']['compressed']['name'];
-        $compressed_image_path = $path . "/" . $compressed_image_name;
+            // return Storage::disk(self::DISK)->path($path . "/" . "compressed-{$image_name}.jpg");
+            $compressed_image_name = $result['data']['compressed']['name'];
+            $compressed_image_path = $path . "/" . $compressed_image_name;
 
-        return $compressed_image_path;
+            return $compressed_image_path;
+        }
     }
 
 }
