@@ -43,7 +43,13 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-code"></i></span>
-                        {{ Form::textarea('code', $code, ['class'=>'form-control textarea', 'rows' => 3]) }}
+                        {{ Form::textarea('code', $code, ['class'=>'form-control textarea', 'rows' => 3, 'title' => 'Código dos anúncios']) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-code"></i></span>
+                        {{ Form::textarea('iframe', $iframe, ['class'=>'form-control textarea', 'rows' => 3, 'title' => 'Código IFrame']) }}
                     </div>
                 </div>
                 <div class="row"> 

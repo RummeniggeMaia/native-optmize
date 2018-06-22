@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'smartlinks' => \App\Http\Middleware\SmartLink::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'user' => \App\Http\Middleware\UserMiddleware::class,
+        'iframe' => \App\Http\Middleware\IFrame::class,
     ];
 }

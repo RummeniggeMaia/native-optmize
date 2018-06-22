@@ -70,7 +70,7 @@ class RandomCreatives
             // $creatives = array();
             if (count($creatives) > 0) {
                 if (in_array($widget->type_layout, [3,4,5])) {
-                    $creatives = $creatives->slice(0, 1);
+                    $creatives = $creatives->random(1);//slice(0, 1);
                 } else {
                     if (count($creatives) > $widget->quantity) {
                         $creatives = $creatives->slice(0, $widget->quantity);

@@ -18,6 +18,7 @@ class CampaingnController extends Controller {
      *
      * @return Response
      */
+    public $types = ['CPA'=>'CPA','CPC'=>'CPC','CPM'=>'CPM'];
 
     public function __construct() {
         $this->middleware('auth');
@@ -66,9 +67,13 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function create() {
-        $creatives = Creative::where('user_id', Auth::id())
-                        ->orderBy('name', 'asc')->get();
-        return view('campaingns.create')->with(['creatives' => $creatives]);
+        $creatives = Creative::where([
+                'user_id'=>Auth::id(),
+                'type_layout'=>1
+                ])->orderBy('name', 'asc')->get();
+        return view('campaingns.create')->with([
+            'creatives' => $creatives,
+            'types'=>$this->types]);
     }
 
     /** Store a newly created resource in storage.
@@ -85,8 +90,11 @@ class CampaingnController extends Controller {
                     'type_layout' => $post['type_layout']
                 ]
             )->orderBy('name', 'asc')->get();
+            if ($post['type_layout'] == 2) {
+                unset($this->types['CPM']);
+            }
             return view('campaingns.create')
-                ->with(['creatives' => $creatives])
+                ->with(['creatives' => $creatives, 'types'=>$this->types])
                 ->withErrors($validacao);
         } else {
             DB::beginTransaction();
@@ -169,8 +177,13 @@ class CampaingnController extends Controller {
                 ['user_id', Auth::id()],
                 ['type_layout', $campaingn->type_layout]
             ])->get();
+            if ($campaingn->type_layout == 2) {
+                unset($this->types['CPM']);
+            }
             return view('campaingns.update', compact('campaingn'))
-                            ->with('creatives', $creatives);
+                            ->with([
+                                'creatives'=>$creatives,
+                                'types'=>$this->types]);
         }
     }
 
@@ -184,9 +197,18 @@ class CampaingnController extends Controller {
         $post = $request->all();
         $validacao = $this->validar($post);
         if ($validacao->fails()) {
-            return redirect()->back()
-                            ->withInput()
-                            ->withErrors($validacao);
+            $creatives = Creative::where(
+                [
+                    'user_id' => Auth::id(),
+                    'type_layout' => $post['type_layout']
+                ]
+            )->orderBy('name', 'asc')->get();
+            if ($post['type_layout'] == 2) {
+                unset($this->types['CPM']);
+            }
+            return view('campaingns.create')
+                ->with(['creatives' => $creatives, 'types'=>$this->types])
+                ->withErrors($validacao);
         } else {
             $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
             if ($campaingn == null) {
@@ -252,9 +274,13 @@ class CampaingnController extends Controller {
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
-            'type' => 'in:"CPA","CPC","CPM"',
-            'type_layout' => 'in:1,3,4,5',
+            'type_layout' => 'in:1,2,3,4,5',
         );
+        if ($post['type_layout'] == 2) {
+            $rules['type'] = 'in:"CPA","CPC"';
+        } else {
+            $rules['type'] = 'in:"CPA","CPC","CPM"';
+        }
         if (isset($post['type']) && $post['type'] == "CPC") {
             $mensagens['cpc.numeric'] = 'CPC deve ser numérico.';
             $rules['cpc'] = 'numeric';

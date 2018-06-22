@@ -128,6 +128,8 @@ class WidgetController extends Controller {
         } else {
             $json = null;
             $version = md5(time());
+            $code = "";
+            $iframe = "";
             if ($widget->type_layout == 1) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/widget.json");
                 $json = json_decode($jsonFile);
@@ -159,8 +161,10 @@ class WidgetController extends Controller {
                 }
             } else if (in_array($widget->type_layout, [3,4,5])) {
                 $jsonFile = Storage::disk(self::DISK)->get("data/banner.json");
+                $jsonIFrameFile = Storage::disk(self::DISK)->get("data/iframe.json");
                 $json = json_decode($jsonFile);
-                if ($json) {
+                $jsonIFrame = json_decode($jsonIFrameFile);
+                if ($json && $jsonIFrame) {
                     $json->js = str_replace(
                         ['[url]', '[version]'], 
                         [addslashes(url('/')), $version], 
@@ -171,9 +175,14 @@ class WidgetController extends Controller {
                         addslashes($widget->hashid), 
                         $json->html
                     );
+                    $dims = $widget->getBannerDimensions();
+                    $iframe = str_replace(
+                        ['[url]', '[width]', '[height]'], 
+                        [addslashes(url('/iframe?wg=' . $widget->hashid)), $dims[0], $dims[1]], 
+                        $jsonIFrame->iframe
+                    );
                 }
             }
-            $code = "";
             if ($json) {
                 $code = $json->link . "\n" 
                     .  $json->js . "\n" 
@@ -181,7 +190,7 @@ class WidgetController extends Controller {
             }
 
             return view('widgets.show', compact('widget'))
-                            ->with('code', $code);
+                            ->with(['code' => $code, 'iframe' => $iframe]);
         }
     }
 
@@ -380,5 +389,4 @@ class WidgetController extends Controller {
             }
         }
     }
-
 }

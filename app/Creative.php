@@ -38,6 +38,26 @@ class Creative extends Model {
         return $impressions > 0 ? $clicks / $impressions * 100 : 0;
     }
 
+    public function getURL($cId, $widget_id) {
+        if (!preg_match('/^https?:\/\//', $this->url)) {
+            $this->url = 'http://' . $this->url;
+        }
+        $fields = array(
+            $cId,
+            $widget_id,
+            $this->id,
+            urlencode(url('/') . '/' . $this->image),
+            urlencode($this->name),
+        );
+        return str_replace([
+                '[click_id]',
+                '[widget_id]',
+                '[creative_id]',
+                '[image]',
+                '[headline]',
+            ], $fields, $this->url);
+    }
+
     public function campaingns() {
         return $this->belongsToMany('App\Campaingn')->withTimestamps();
     }

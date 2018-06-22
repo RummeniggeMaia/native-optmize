@@ -123,8 +123,10 @@ class CreativeController extends Controller {
     }
 
     public function clicksDataTable($id) {
-        $clickList = Click::where('creative_id', $id)->with(['widget'])->get();
-        return Datatables::of($clickList)->make(true);
+        $clickList = Click::with(['widget'])->where('creative_id', $id)->get();
+        return Datatables::of($clickList)->editColumn('widget.name', function($click){
+            return $click->widget == null ? "-" : $click->widget->name;
+        })->make(true);
     }
 
     /**
@@ -271,7 +273,7 @@ class CreativeController extends Controller {
             'category_id' => 'required',
             'image' => "dimensions:$dimensions". ($edit ? '' : '|required'),
             'status' => 'in:0,1',
-            'type_layout' => 'in:1,3,4,5',
+            'type_layout' => 'in:1,2,3,4,5',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

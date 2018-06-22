@@ -39,6 +39,7 @@
                     {{ 
                         Form::select('type_layout', [
                             '1'=>'Native',
+                            '2'=>'Smart Link',
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',

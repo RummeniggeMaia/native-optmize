@@ -40,6 +40,7 @@
                             'type_layout', 
                             [
                                 '1'=>'Native',
+                                '2'=>'Smart Link',
                                 '3'=>'Banner Square (300x250)',
                                 '4'=>'Banner Mobile (300x100)',
                                 '5'=>'Banner Footer (928x244)',
@@ -75,11 +76,7 @@
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
                         Form::select('type', 
-                            [
-                                'CPA'=>'CPA', 
-                                'CPC'=>'CPC',
-                                'CPM'=>'CPM', 
-                            ],
+                            $types,
                             Input::old('type'), 
                             [
                                 'id'=>'drop_type',

@@ -17,5 +17,6 @@ class VerifyCsrfToken extends BaseVerifier
         '/postbacks',
         '/random_creatives',
         '/smartlinks',
+        '/iframe',
     ];
 }

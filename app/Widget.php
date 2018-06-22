@@ -78,4 +78,16 @@ class Widget extends Model
             ]);
         }
     }
+
+    public function getBannerDimensions() {
+        if ($this->type_layout == 3) {
+            return [300, 250];
+        } else if ($this->type_layout == 4) {
+            return [300, 100];
+        } else if ($this->type_layout == 5) {
+            return [928, 244];
+        } else {
+            return [1, 1];
+        }
+    }
 }
