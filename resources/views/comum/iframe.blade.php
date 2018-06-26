@@ -1,5 +1,7 @@
 <html>
 	<head>
+		<meta name="robots" content="nofollow">
+		<meta name="googlebot" content="noindex">
 		<script src="{{$url}}/js/jquery-3.2.1.min.js"></script>
 		<script src="{{$url}}/js/js-cookie.js"></script>
 		<script type="text/javascript">
