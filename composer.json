@@ -10,7 +10,8 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2.0",
         "spatie/laravel-image-optimizer": "^1.1",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "mobiledetect/mobiledetectlib": "^2.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
