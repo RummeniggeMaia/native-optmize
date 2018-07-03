@@ -106,6 +106,7 @@ class RandomCreatives
                 'widget_id' => $widget,
                 'campaingn_id' => $campaign,
                 'impressions' => 1,
+                'counter' => 1,
             ));
         } else {
             DB::transaction(function () use ($creativeLog) {

@@ -13,6 +13,7 @@ use App\CreativeLog;
 use App\WidgetLog;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class Postbacks {
 
@@ -38,36 +39,34 @@ class Postbacks {
                     /** TODO Adiocionar HALF_UP caso seja necessrio nas proximas atts */
 //                    $value = round(($amt / 2), 2, PHP_ROUND_HALF_UP);
                     $value = $amt * $click->widget->user->taxa;
-                    $click->creative->increment('revenue', $value);
-                    $click->widget->user->increment('revenue', $value);
-                    $log = CreativeLog::where([
-                        'creative_id' => $click->creative->id,
-                        'widget_id' => $click->widget->id
-                    ]);
-                    if ($log) {
-                        $log->increment('revenue', $value);
-                        /* TODO - Caso surja um super usuario, atualizar aqui */
-                        $adm_value = $amt * (1 - $click->widget->user->taxa);
-                        $admin = User::where(['email' => 'admin@admin.in']);
-                        $admin->increment('revenue', $adm_value);
-                    } else {
-                        response()->json("no register", 400);
-                    }
-                    $widgetLog = WidgetLog::where('widget_id', $click->widget->id)
-                        ->whereDate('created_at', Carbon::today()->toDateString())->first();
-                    if ($widgetLog) {
-                        $widgetLog->increment('revenue', $value);
-                    } else {
-                        WidgetLog::create([
-                            'revenue' => $value,
-                            'widget_id' => $click->widget->id,
+                    try {
+                        DB::beginTransaction();
+                        $click->creative->increment('revenue', $value);
+                        $click->widget->user->increment('revenue', $value);
+                        $log = CreativeLog::where([
+                            'creative_id' => $click->creative->id,
+                            'widget_id' => $click->widget->id
                         ]);
+                        if ($log) {
+                            $log->increment('revenue', $value);
+                            /* TODO - Caso surja um super usuario, atualizar aqui */
+                            $adm_value = $amt * (1 - $click->widget->user->taxa);
+                            $admin = User::where(['email' => 'admin@admin.in']);
+                            $admin->increment('revenue', $adm_value);
+                        } else {
+                            response()->json("no register", 400);
+                        }
+                        $click->widget->createLog(Widget::LOG_REV, $value);
+                        Postback::create(array(
+                            'ip' => $request->ip(),
+                            'amt' => $amt,
+                            'click_id' => $click->id
+                        ));
+                        DB::commit();
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                        return response()->json('internal error', 500);
                     }
-                    Postback::create(array(
-                        'ip' => $request->ip(),
-                        'amt' => $amt,
-                        'click_id' => $click->id
-                    ));
                     return response()->json('ok', 200);
                 } else {
                     return response()->json("not found", 400);

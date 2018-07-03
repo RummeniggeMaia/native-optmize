@@ -6,7 +6,7 @@
 		<script src="{{$url}}/js/js-cookie.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function () {
-				var url = '{{ $url }}';
+				var url = '{{ $url }}/api';
 				var wg = '{{ $widget_hashid }}';
 				if (wg === null) {
 					console.log('Native Optimize não encontrado.');

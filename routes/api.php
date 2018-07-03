@@ -18,10 +18,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('campaingns','CampaingnController');
-//Route::resource('campaingn_creatives','CampaingnCreativeController');
 Route::resource('widgets','WidgetController');
-//Route::resource('widget_campaingns','WidgetCampaingnController');
-//Route::resource('creatives','CreativeController');
 Route::resource('categories','CategoryController');
 Route::resource('users', 'UserController');
 Route::resource('payments', 'PaymentController');
+
+Route::post('/clicks')->middleware('clicks');
+Route::post('/impressions')->middleware('impressions');
+Route::get('/postbacks')->middleware('postbacks');
+Route::get('/random_creatives')->middleware('random_creatives');
+Route::get('/smartlinks')->middleware('smartlinks');
+Route::get('/iframe')->middleware('iframe');

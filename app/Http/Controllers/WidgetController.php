@@ -100,9 +100,7 @@ class WidgetController extends Controller {
                 $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 $widget = Widget::create($post);
-//                $widget->campaingns()->sync($post['campaingns']);
                 DB::commit();
-                //$this->create_widget($widget->id);
                 return redirect('widgets')
                                 ->with('success', 'Widget cadastrado com sucesso.');
             } catch (Exception $e) {
@@ -178,7 +176,7 @@ class WidgetController extends Controller {
                     $dims = $widget->getBannerDimensions();
                     $iframe = str_replace(
                         ['[url]', '[width]', '[height]'], 
-                        [addslashes(url('/iframe?wg=' . $widget->hashid)), $dims[0], $dims[1]], 
+                        [addslashes(url('/api/iframe?wg=' . $widget->hashid)), $dims[0], $dims[1]], 
                         $jsonIFrame->iframe
                     );
                 }

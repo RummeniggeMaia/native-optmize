@@ -26,9 +26,9 @@ class Clicks
     {
         if ($request->has(['ct', 'wg', 'click_id'])) {
             $creative = Creative::with('user')->where('hashid', $request->input('ct'))
-                ->first(['id']);
+                ->first();
             $widget = Widget::with('user')->where('hashid', $request->input('wg'))
-                ->first(['id']);
+                ->first();
             $campaign = null;
 
             if ($request->has('cp')) {
@@ -36,8 +36,7 @@ class Clicks
             }
             if ($creative && $widget) {
                 /** TODO campanha deve ser obrigatoria na proxima atualizacao.
-                 * - Codigo do site nao tem campanha ainda 
-                 * - Verificar se revenue do cpc é com base na taxa */
+                 * - Codigo do site nao tem campanha ainda */
                 if ($campaign && $campaign->type == "CPC" && $campaign->cpc > 0) {
                     $widget->user->increment(
                         'revenue',
@@ -66,16 +65,7 @@ class Clicks
                 } else {
                     return response()->json('not found', 404);
                 }
-                $widgetLog = WidgetLog::where('widget_id', $click->widget->id)
-                    ->whereDate('created_at', Carbon::today()->toDateString())->first();
-                if ($widgetLog) {
-                    $widgetLog->increment('clicks');
-                } else {
-                    WidgetLog::create([
-                        'clicks' => 1,
-                        'widget_id' => $widget->id,
-                    ]);
-                }
+                $widget->createLog(Widget::LOG_CLI, 1);
                 return response()->json('ok', 200);
             } else {
                 return response()->json('not found', 404);
