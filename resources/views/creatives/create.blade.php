@@ -41,6 +41,7 @@
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
+                            '6'=>'Vídeo',
                         ],
                         Input::old('type_layout'), 
                         ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Anúncio.']) 
@@ -94,7 +95,7 @@
             <div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-image"></i></span>
-                    {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder' => 'Imagem', 'accept'=>'.png,.jpg,.gif', 'required']) !!}
+                    {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder' => 'Imagem', 'accept'=>'.png,.jpg,.gif,.mp4', 'required']) !!}
                 </div>
                 @if ($errors->has('image'))
                 <span class="help-block">
