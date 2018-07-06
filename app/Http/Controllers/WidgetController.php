@@ -66,6 +66,7 @@ class WidgetController extends Controller {
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
+                            '6'=>'Vídeo',
                         )[$widget->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete']
@@ -180,26 +181,40 @@ class WidgetController extends Controller {
                         $jsonIFrame->iframe
                     );
                 }
+            } else if($widget->type_layout == 6) {
+                $jsonIFrameFile = Storage::disk(self::DISK)->get("data/iframe.json");
+                $jsonIFrame = json_decode($jsonIFrameFile);
+                if ($jsonIFrame) {
+                    $dims = $widget->getBannerDimensions();
+                    $iframe = str_replace(
+                        [$jsonIFrame->iframe], 
+                        [url('/api/preroll?wg=' . $widget->hashid)], 
+                        $jsonIFrame->iframe
+                    );
+                }
             }
             if ($json) {
                 $code = $json->link . "\n" 
                     .  $json->js . "\n" 
                     . $json->html;
             }
-
             return view('widgets.show', compact('widget'))
-                            ->with(['code' => $code, 'iframe' => $iframe]);
+                            ->with(['code'=>$code, 'iframe' => $iframe]);
         }
     }
 
     public function logsDataTable($id) {
-        $logs = CreativeLog::with(['creative'])->where('widget_id', $id);
+        $logs = CreativeLog::with(['creative', 'campaingn'])->where('widget_id', $id);
         return Datatables::of($logs)->editColumn('image', function($log) {
                     return view('comum.image', [
                         'image' => $log->creative->image
                     ]);
                 })->editColumn('revenue', function($log) {
                     return 'R$ ' . round($log->revenue, 2, PHP_ROUND_HALF_UP);
+                })->editColumn('campaingn.name', function($log) {
+                    return $log->campaingn == null ? '-' : $log->campaingn->name;
+                })->editColumn('campaingn.type', function($log) {
+                    return $log->campaingn == null ? '-' : $log->campaingn->type;
                 })->rawColumns(
                         ['image']
                 )->make(true);
@@ -304,7 +319,7 @@ class WidgetController extends Controller {
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             //'url' => 'unique:widgets,url,' .$post['id'],
             // 'type' => 'in:1,2,3,4',
-            'type_layout' => 'in:1,2,3,4,5',
+            'type_layout' => 'in:1,2,3,4,5,6',
         );
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
