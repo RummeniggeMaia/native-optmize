@@ -55,6 +55,7 @@ class CampaingnController extends Controller {
                             '3' => 'Banner Square (300x250)',
                             '4' => 'Banner Mobile (300x100)',
                             '5' => 'Banner Footer (928x244)',
+                            '6' => 'Vídeo',
                         )[$campaingn->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete']
@@ -274,7 +275,7 @@ class CampaingnController extends Controller {
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
-            'type_layout' => 'in:1,2,3,4,5',
+            'type_layout' => 'in:1,2,3,4,5,6',
         );
         if ($post['type_layout'] == 2) {
             $rules['type'] = 'in:"CPA","CPC"';
