@@ -42,51 +42,55 @@
                                 <li>
                                     <a href="{{ route('home') }}">&nbsp;<i class="lnr lnr-screen sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
                                 </li>
-                                @If (Auth::user()->hasRole('admin'))
-                                <li class="active">
-                                    <a href="#" class="sidebar-nav-menu active"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ route('users.create') }}">Adicionar Usuário</a>
+                                @If (Auth::user()->hasAnyRole(['admin', 'adver']))
+                                    @If (Auth::user()->hasRole('admin'))
+                                        <li class="active">
+                                            <a href="#" class="sidebar-nav-menu active"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
+                                            <ul>
+                                                <li>
+                                                    <a href="{{ route('users.create') }}">Adicionar Usuário</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('users') }}">Listar Usuários</a>
+                                                </li>
+                                            </ul>
                                         </li>
+                                    @endif
+                                    <li>
+                                        <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ route('creatives.create') }}">Adicionar Anúncios</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('creatives') }}">Listar Anúncios</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Campanhas</span></a>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ route('campaingns.create') }}">Adicionar Campanha</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('campaingns') }}">Listar Campanhas</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    @If (Auth::user()->hasRole('admin'))
                                         <li>
-                                            <a href="{{ route('users') }}">Listar Usuários</a>
+                                            <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-list sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Categorias</span></a>
+                                            <ul>
+                                                <li>
+                                                    <a href="{{ route('categories.create') }}">Adicionar Categoria</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('categories') }}">Listar Categorias</a>
+                                                </li>
+                                            </ul>
                                         </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ route('creatives.create') }}">Adicionar Anúncios</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('creatives') }}">Listar Anúncios</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Campanhas</span></a>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ route('campaingns.create') }}">Adicionar Campanha</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('campaingns') }}">Listar Campanhas</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-list sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Categorias</span></a>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ route('categories.create') }}">Adicionar Categoria</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('categories') }}">Listar Categorias</a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                    @endif
                                 @else
                                 <li>
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-power-switch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Widgets</span></a>

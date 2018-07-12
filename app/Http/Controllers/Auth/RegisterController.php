@@ -52,6 +52,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'role' => 'in:1,2',
         ]);
     }
 
@@ -63,7 +64,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $role_user = Role::where('name', 'user')->first();
+        $role_user = null;
+        if ($data['role'] == 2) {
+            $role_user = Role::where('name', 'adver')->first();
+        } else {
+            $role_user = Role::where('name', 'publi')->first();
+        }
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],

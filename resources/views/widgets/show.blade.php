@@ -63,6 +63,8 @@
                                         <th>CLICKS</th>
                                         <th>VISUALIZAÇÕES</th>
                                         <th>REVENUES</th>
+                                        <th>CAMPANHA</th>
+                                        <th>TIPO</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -92,6 +94,8 @@
                 {data: 'clicks', name: 'clicks'},
                 {data: 'impressions', name: 'impressions'},
                 {data: 'revenue', name: 'revenue'},
+                {data: 'campaingn.name', name: 'campaingn.name'},
+                {data: 'campaingn.type', name: 'campaingn.type'},
             ],
 
         });

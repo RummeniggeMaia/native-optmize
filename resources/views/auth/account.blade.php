@@ -69,7 +69,13 @@
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    {!! Form::text('revenue', Auth::user()->revenue,['class'=>'form-control input-lg', 'readonly']) !!}
+                    {!! Form::text('revenueAdv', Auth::user()->revenueAdv,['class'=>'form-control input-lg', 'title'=>'Revenue Advertiser', 'readonly']) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                    {!! Form::text('revenue', Auth::user()->revenue,['class'=>'form-control input-lg', 'title'=>'Revenue Publisher', 'readonly']) !!}
                 </div>
             </div>
             <div class="form-group form-actions text-center">

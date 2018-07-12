@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration {
             $table->string('phone')->nullable();
             $table->string('password');
             $table->double('revenue')->default(0.0);
+            $table->double('revenue_adv')->default(0.0);
             $table->string('remember_token')->nullable();
             $table->double('taxa')->default(0.5);
             $table->boolean('status')->default(true);

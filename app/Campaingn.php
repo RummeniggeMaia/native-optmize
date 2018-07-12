@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Campaingn extends Model {
 
+    const LOG_IMP = 'impressions';
+    const LOG_CLI = 'clicks';
+    const LOG_REV = 'revenues';
+
     protected $fillable = [
         'hashid',
         'brand',
@@ -15,6 +19,8 @@ class Campaingn extends Model {
         'cpc',
         'cpm',
         'expires_in',
+        'paused',
+        'status',
         'user_id',
     ];
 
@@ -38,4 +44,25 @@ class Campaingn extends Model {
         return $this->hasMany('App\CreativeLog');
     }
 
+    public function campaignLogs()
+    {
+        return $this->hasMany('App\CampaignLog');
+    }
+
+    public function createLog($property, $value)
+    {
+        $campaignLog = $this->campaignLogs()
+            ->whereDate(
+                'created_at',
+                Carbon::today()->toDateString()
+            )->first();
+        if ($campaignLog) {
+            $campaignLog->increment($property, $value);
+        } else {
+            CampaignLog::create([
+                $property => $value,
+                'campaingn_id' => $this->id,
+            ]);
+        }
+    }
 }

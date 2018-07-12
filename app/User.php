@@ -20,7 +20,7 @@ class User extends Authenticatable {
         'skype', 
         'phone', 
         'password', 
-        'taxa', 
+        'taxa',
         'status'
     ];
 

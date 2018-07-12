@@ -4,13 +4,19 @@
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
 </ul>
-@If (Auth::user()->hasRole('user'))
+<!-- TODO Mudar versao do javascript -->
+<script src="{{ asset('pago/js/pages/compCharts.js?v13') }}"></script>
 <div class="row">
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-tv"></i>Estatísticas dos
-                <b>Widgets</b>
+                @If(Auth::user()->hasAnyRole(['admin', 'adver']))
+                    <i class="fa fa-tv"></i>Estatísticas das
+                    <b>Campanhas</b>
+                @else
+                    <i class="fa fa-tv"></i>Estatísticas dos
+                    <b>Widgets</b>
+                @endif
             </h1>
         </div>
     </div>
@@ -50,7 +56,7 @@
                                         <div style="width:4px;height:0;border:5px solid rgb(52,152,219);overflow:hidden"></div>
                                     </div>
                                 </td>
-                                <td class="legendLabel">Conversões</td>
+                                <td class="legendLabel"></td>
                             </tr>
                             <tr>
                                 <td class="legendColorBox">
@@ -58,7 +64,7 @@
                                         <div style="width:4px;height:0;border:5px solid rgb(51,51,51);overflow:hidden"></div>
                                     </div>
                                 </td>
-                                <td class="legendLabel">Desistências</td>
+                                <td class="legendLabel"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -69,46 +75,56 @@
     <div class="col-sm-4">
         <div class="block">
             <div class="block-title">
-                <h2>Lucros diários</h2>
+                @If(Auth::user()->hasRole('publi'))
+                    <h2>Lucros diários</h2>
+                @elseif(Auth::user()->hasAnyRole(['admin', 'adver']))
+                    <h2>Investimentos diários</h2>
+                @endif
             </div>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['today'], 2) }}</span>
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['today'], 2) }}</span>
                     Hoje
                 </li>
                 <li class="list-group-item">
-                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['yesterday'], 2) }}</span>
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['yesterday'], 2) }}</span>
                     Ontem
                 </li>
                 <li class="list-group-item">
-                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['thisWeek'], 2) }}</span>
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['thisWeek'], 2) }}</span>
                     Esta semana
                 </li>
                 <li class="list-group-item">
-                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['lastWeek'], 2) }}</span>
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['lastWeek'], 2) }}</span>
                     Semana passada
                 </li>
                 <li class="list-group-item">
-                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['thisMonth'], 2) }}</span>
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['thisMonth'], 2) }}</span>
                     Este mês
                 </li>
                 <li class="list-group-item">
-                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($earnings['lastMonth'], 2) }}</span>
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['lastMonth'], 2) }}</span>
                     Mês passado
+                </li>
+                <li class="list-group-item">
+                        <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['thisYear'], 2) }}</span>
+                        Este ano
+                </li>
+                <li class="list-group-item">
+                    <span class="badge" style="background-color:#17c4bb">R$ {{ number_format($money['lastYear'], 2) }}</span>
+                    Ano passado
                 </li>
             </ul>
         </div>
     </div>
 </div>
-<!-- TODO Mudar versao do javascript -->
-<script src="{{ asset('pago/js/pages/compCharts.js?v12') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $.ajax({
             dataType: "json",
             accepts: "application/json",
             method: 'GET',
-            url: '{!! route("home.widgetslc") !!}',
+            url: "{{ Auth::user()->hasAnyRole(['admin', 'adver']) ? route('home.campaignslc') : route('home.widgetslc') }}",
             beforeSend: function (request) {
                 request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
             }
@@ -125,18 +141,7 @@
         });
     });
 </script>
-@elseif (Auth::user()->hasRole('admin'))
-<div class="row">
-    <div class="col-lg-12 content-header">
-        <div class="header-section">
-            <h1>
-                <i class="fa fa-charts"></i>Transações do
-                <b>Sistema</b>
-            </h1>
-        </div>
-    </div>
-</div>
-@include('comum.transactions')
+@if (Auth::user()->hasRole('admin'))
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">

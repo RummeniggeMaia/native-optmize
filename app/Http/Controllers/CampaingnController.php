@@ -56,6 +56,8 @@ class CampaingnController extends Controller {
                             '4' => 'Banner Mobile (300x100)',
                             '5' => 'Banner Footer (928x244)',
                         )[$campaingn->type_layout];
+                })->editColumn('paused', function($campaingn) {
+                    return $campaingn->paused ? 'Sim' : 'Não';
                 })->rawColumns(
                         ['edit', 'show', 'delete']
                 )->make(true);
@@ -292,4 +294,7 @@ class CampaingnController extends Controller {
         return $validator;
     }
 
+    public function pauseAllCampaigns() {
+        DB::table('campaingns')->where('')->update(['paused' => true]);
+    }
 }

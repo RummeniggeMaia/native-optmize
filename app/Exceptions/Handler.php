@@ -55,20 +55,21 @@ class Handler extends ExceptionHandler
                             , 'Já existe um registro no sistema com esses dados.');
             }
         }
-        if ($this->isHttpException($exception)) {
-            switch ($exception->getStatusCode()) {
-                case '403':
-                    return 'not authorized';
-                case '404':
-                    return 'not found';
-                case '500':
-                    return 'server error';
-                default:
-                    return $this->renderHttpException($exception);
-            }
-        } else {
-            return parent::render($request, $exception);
-        }
+        // if ($this->isHttpException($exception)) {
+        //     switch ($exception->getStatusCode()) {
+        //         case '403':
+        //             return 'not authorized';
+        //         case '404':
+        //             return 'not found';
+        //         case '500':
+        //             return 'server error';
+        //         default:
+        //             return $this->renderHttpException($exception);
+        //     }
+        // } else {
+        //     return parent::render($request, $exception);
+        // }
+        return parent::render($request, $exception);
     }
 
     /**

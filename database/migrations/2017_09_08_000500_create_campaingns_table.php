@@ -23,6 +23,8 @@ class CreateCampaingnsTable extends Migration {
             $table->double('cpc')->default(0.0);
             $table->double('cpm')->default(0.0);
             $table->date('expires_in');
+            $table->boolean('paused')->default(false);
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
 

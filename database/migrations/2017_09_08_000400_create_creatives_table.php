@@ -21,7 +21,7 @@ class CreateCreativesTable extends Migration {
             $table->string('image');
             $table->integer('type_layout')->default(0);
             $table->double('revenue')->default(0.0);
-            $table->boolean('status');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
 

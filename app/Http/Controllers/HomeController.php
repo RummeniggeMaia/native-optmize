@@ -31,7 +31,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home')->with('earnings', $this->dailyEarnings());
+        $money = '';
+        if (Auth::user()->hasAnyRole(['admin', 'adver'])) {
+            $money = $this->dailyInvestments();
+        } else if (Auth::user()->hasRole('publi')) {
+            $money = $this->dailyEarnings();
+        }
+        return view('home')->with('money', $money);
     }
 
     public function indexDataTable()
@@ -61,6 +67,20 @@ class HomeController extends Controller
                 DB::raw('MONTH(widget_logs.created_at) as month')]);
     }
 
+    public function campaignsLineChartData()
+    {
+        return DB::table('campaign_logs')
+            ->join('campaingns', 'campaign_logs.campaingn_id', '=', 'campaingns.id')
+            ->where('user_id', Auth::id())
+            ->whereYear('campaign_logs.created_at', Carbon::now()->year)
+            ->groupBy('month')
+            ->get([
+                DB::raw('SUM(campaign_logs.impressions) as impressions'),
+                DB::raw('SUM(campaign_logs.clicks) as clicks'),
+                DB::raw('SUM(campaign_logs.revenues) as revenues'),
+                DB::raw('MONTH(campaign_logs.created_at) as month')]);
+    }
+
     public function dailyEarnings() {
         $earnings = array();
         $earnings['today'] = $this->dateRevenues(
@@ -87,7 +107,52 @@ class HomeController extends Controller
             Carbon::today()->startOfWeek()->subMonth(),
             Carbon::today()->endOfWeek()->subMonth()
         );
+        $earnings['thisYear'] = $this->dateRevenues(
+            Carbon::today()->startOfYear(),
+            Carbon::today()->endOfYear()
+        );
+        $earnings['lastYear'] = $this->dateRevenues(
+            Carbon::today()->startOfYear()->subYear(),
+            Carbon::today()->endOfYear()->subYear()
+        );
         return $earnings;
+    }
+    
+    public function dailyInvestments() {
+        $investments = array();
+        $investments['today'] = $this->dateInvestments(
+            Carbon::today()->startOfDaY(), 
+            Carbon::today()->endOfDay()
+        );
+        $investments['yesterday'] = $this->dateInvestments(
+            Carbon::today()->startOfDaY()->subDay(), 
+            Carbon::today()->endOfDay()->subDay()
+        );
+        $investments['thisWeek'] = $this->dateInvestments(
+            Carbon::today()->startOfWeek(),
+            Carbon::today()->endOfWeek()
+        );
+        $investments['lastWeek'] = $this->dateInvestments(
+            Carbon::today()->startOfWeek()->subWeek(),
+            Carbon::today()->endOfWeek()->subWeek()
+        );
+        $investments['thisMonth'] = $this->dateInvestments(
+            Carbon::today()->startOfMonth(),
+            Carbon::today()->endOfMonth()
+        );
+        $investments['lastMonth'] = $this->dateInvestments(
+            Carbon::today()->startOfWeek()->subMonth(),
+            Carbon::today()->endOfWeek()->subMonth()
+        );
+        $investments['thisYear'] = $this->dateInvestments(
+            Carbon::today()->startOfYear(),
+            Carbon::today()->endOfYear()
+        );
+        $investments['lastYear'] = $this->dateInvestments(
+            Carbon::today()->startOfYear()->subYear(),
+            Carbon::today()->endOfYear()->subYear()
+        );
+        return $investments;
     }
 
     public function dateRevenues($start, $end) {
@@ -96,6 +161,14 @@ class HomeController extends Controller
             ->where('user_id', Auth::id())
             ->whereBetween('widget_logs.created_at', [$start, $end])
             ->sum('widget_logs.revenues');
+    }
+
+    public function dateInvestments($start, $end) {
+        return DB::table('campaign_logs')
+            ->join('campaingns', 'campaign_logs.campaingn_id', '=', 'campaingns.id')
+            ->where('user_id', Auth::id())
+            ->whereBetween('campaign_logs.created_at', [$start, $end])
+            ->sum('campaign_logs.revenues');
     }
 
     public function paymentsDataTable() {

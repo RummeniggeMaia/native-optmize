@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class AdminMiddleware
+class AdvertiserMiddleware
 {
     /**
      * Handle an incoming request.
@@ -14,12 +14,9 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, ...$hasAdver)
+    public function handle($request, Closure $next)
     {
-        if (Auth::check() && 
-            Auth::user()->hasRole('admin') || 
-            !empty($hasAdver)) {
-
+        if (Auth::check() && Auth::user()->hasRole('adver')) {
             return $next($request);
         }
         return redirect('home');

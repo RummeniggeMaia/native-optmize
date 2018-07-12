@@ -116,6 +116,30 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('paused') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-pause"></i></span>
+                    {{ 
+                        Form::select(
+                            'paused', 
+                            [
+                                '1'=>'Sim',
+                                '0'=>'Não',
+                            ],
+                            Input::old('paused'), 
+                            [
+                                'class'=>'selectpicker form-control input-lg',
+                                'title'=>'Campanha pausada'
+                            ]
+                        ) 
+                    }}
+                </div>
+                @if ($errors->has('paused'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('paused') }}</strong>
+                </span>
+                @endif
+            </div>
             <div style="margin-left: 4%">
                 <h5><label>Anúncios:</label></h5>
             </div>
