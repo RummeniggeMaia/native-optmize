@@ -6,14 +6,19 @@ use App\Campaingn;
 use App\CreativeLog;
 use App\Widget;
 use App\WidgetLog;
+use App\Providers\IP2Location;
+use Detection\MobileDetect;
 use Carbon\Carbon;
 use Closure;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class RandomCreatives
 {
+
+    const DISK = "public";
 
     /**
      * Handle an incoming request.
@@ -24,6 +29,21 @@ class RandomCreatives
      */
     public function handle($request, Closure $next)
     {
+
+        /*$detect = new MobileDetect;
+        
+        $isMobile = $detect->isMobile();
+        $isTablet = $detect->isTablet();
+
+        $db = new IP2Location(Storage::disk(self::DISK)->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
+        $user_ip = $request->ip();
+
+        $records = $db->lookup($user_ip,IP2Location::ALL);
+
+        $codigopais= $records['countryCode'];
+        $isp = $records['isp'];*/
+
+
         $query = $request->query();
         if (!isset($query['wg'])) {
             return response()->json("invalid request", 400);
