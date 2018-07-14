@@ -116,6 +116,7 @@
                 </li>
             </ul>
         </div>
+         {!! Form::button('<i class="fa fa-pause"></i>&nbsp;&nbsp;&nbsp;&nbsp;PAUSAR CAMPANHAS', ['type' => 'submit', 'class' => 'btn btn-xs btn-warning btn-block']) !!}
     </div>
 </div>
 <script type="text/javascript">

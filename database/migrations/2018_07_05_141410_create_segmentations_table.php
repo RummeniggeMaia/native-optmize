@@ -20,7 +20,7 @@ class CreateSegmentationsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('segmentation', function (Blueprint $table){
+        Schema::table('segmentations', function (Blueprint $table){
             $table->bigInteger('campaingn_id')->unsigned();
             $table->foreign('campaingn_id')->references('id')->on('campaingns')
                     ->onDelete('cascade');

@@ -43,6 +43,7 @@
                                 '3'=>'Banner Square (300x250)',
                                 '4'=>'Banner Mobile (300x100)',
                                 '5'=>'Banner Footer (928x244)',
+                                '6' => 'Pre Roll',
                             ],
                             Input::old('type_layout'), 
                             [
@@ -112,6 +113,17 @@
                 @if ($errors->has('cpm'))
                 <span class="help-block">
                     <strong>{{ $errors->first('cpm') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('daily_quota') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                    {!! Form::text('daily_quota',null,['class'=>'form-control input-lg', 'placeholder' => 'Orçamento diário', 'title'=>'Orçamento diário']) !!}
+                </div>
+                @if ($errors->has('daily_quota'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('daily_quota') }}</strong>
                 </span>
                 @endif
             </div>

@@ -25,6 +25,7 @@ class CreateCampaingnsTable extends Migration {
             $table->date('expires_in');
             $table->boolean('paused')->default(false);
             $table->boolean('status')->default(false);
+            $table->double('daily_quota')->default(0.0);
             $table->timestamps();
         });
 

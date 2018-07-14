@@ -81,7 +81,7 @@ class CategoryController extends Controller {
      */
     public function show($id) {
         $category = Category::find($id);
-        if ($category->fixed && Auth::user()->hasRole('user')) {
+        if ($category->fixed && Auth::user()->hasRole('publi')) {
             return $this->index();
         }
         return view('categories.show', compact('category'));
@@ -95,7 +95,7 @@ class CategoryController extends Controller {
      */
     public function edit($id) {
         $category = Category::find($id);
-        if ($category->fixed && Auth::user()->hasRole('user')) {
+        if ($category->fixed && Auth::user()->hasRole('publi')) {
             return $this->index();
         }
         return view('categories.update', compact('category'));
@@ -129,7 +129,7 @@ class CategoryController extends Controller {
      */
     public function destroy($id) {
         $category = Category::find($id);
-        if ($category->fixed && Auth::user()->hasRole('user')) {
+        if ($category->fixed && Auth::user()->hasRole('publi')) {
             return redirect('categories');
         }
         $category->delete();

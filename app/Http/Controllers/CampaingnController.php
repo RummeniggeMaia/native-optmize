@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Campaingn;
 use App\Creative;
+use App\User;
 use Illuminate\Http\Request;
 use Validator;
 use Carbon\Carbon;
@@ -25,8 +26,7 @@ class CampaingnController extends Controller {
     }
 
     public function index() {
-        $campaingns = Campaingn::where('user_id', Auth::id())
-                        ->orderBy('name', 'asc')->paginate(5);
+        $campaingns = [];
         return view('campaingns.index', compact('campaingns'));
     }
 
@@ -47,21 +47,68 @@ class CampaingnController extends Controller {
                         'id' => $campaingn->id,
                         'route' => 'campaingns.destroy'
                     ]);
-                })->addColumn('type_layout', function($campaingn) {
-                    return array(
-                            '0' =>  '-',
-                            '1' => 'Native',
-                            '2' => 'Smart Link',
-                            '3' => 'Banner Square (300x250)',
-                            '4' => 'Banner Mobile (300x100)',
-                            '5' => 'Banner Footer (928x244)',
-                        )[$campaingn->type_layout];
+                })->editColumn('type_layout', function($campaingn) {
+                    $types = array(
+                        '0' =>  '-',
+                        '1' => 'Native',
+                        '2' => 'Smart Link',
+                        '3' => 'Banner Square (300x250)',
+                        '4' => 'Banner Mobile (300x100)',
+                        '5' => 'Banner Footer (928x244)',
+                        '6' => 'Pre Roll',
+                    );
+                    return $campaingn->type_layout ? $types[$campaingn->type_layout] : '-';
                 })->editColumn('paused', function($campaingn) {
                     return $campaingn->paused ? 'Sim' : 'Não';
+                })->editColumn('status', function($campaingn) {
+                    if ($campaingn->status) {
+                        return view('comum.status_on');
+                    } else {
+                        return view('comum.status_off');
+                    }
                 })->rawColumns(
-                        ['edit', 'show', 'delete']
+                        ['edit', 'show', 'delete', 'status']
                 )->make(true);
     }
+
+    public function indexInatives() {
+        return view('campaingns.index_inatives');
+    }
+
+    public function inativesDataTable() {
+        $campaingns = Campaingn::with('user')
+                        ->where([
+                            ['user_id', '!=', Auth::id()],
+                            ['status', false]])->get();
+        return Datatables::of($campaingns)->addColumn('show', function($campaingn) {
+                return view('comum.button_show', [
+                    'id' => $campaingn->id,
+                    'route' => 'campaingns.show'
+                ]);
+            })->editColumn('type_layout', function($campaingn) {
+                return array(
+                        '0' =>  '-',
+                        '1' => 'Native',
+                        '2' => 'Smart Link',
+                        '3' => 'Banner Square (300x250)',
+                        '4' => 'Banner Mobile (300x100)',
+                        '5' => 'Banner Footer (928x244)',
+                        '6' => 'Pre Roll',
+                    )[$campaingn->type_layout];
+            })->editColumn('status', function($campaingn) {
+                if ($campaingn->status) {
+                    return view('comum.status_on');
+                } else {
+                    return view('comum.status_off');
+                }
+            })->editColumn('users.name', function($campaingn) {
+                $user = User::find($campaingn->user_id);
+                return $user ? $user->name : '-';
+            })->rawColumns(
+                ['show', 'status']
+            )->make(true);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -69,6 +116,9 @@ class CampaingnController extends Controller {
      * @return Response
      */
     public function create() {
+        if (!Auth::user()->hasRole('admin')) {
+            unset($this->types['CPA']);
+        }
         $creatives = Creative::where([
                 'user_id'=>Auth::id(),
                 'type_layout'=>1
@@ -92,6 +142,9 @@ class CampaingnController extends Controller {
                     'type_layout' => $post['type_layout']
                 ]
             )->orderBy('name', 'asc')->get();
+            if (!Auth::user()->hasRole('admin')) {
+                unset($this->types['CPA']);
+            }
             if ($post['type_layout'] == 2) {
                 unset($this->types['CPM']);
             }
@@ -112,8 +165,12 @@ class CampaingnController extends Controller {
                     $post['cpc'] = 0.0;
                     $post['cpm'] = 0.0;
                 }
+                if (Auth::user()->hasRole('admin')) {
+                    $campaingn['status'] = true;
+                }
                 $campaingn = Campaingn::create($post);
                 $campaingn->creatives()->sync($post['creatives']);
+                
                 DB::commit();
                 return redirect('campaingns')
                                 ->with('success', 'Campaingn cadastrada com sucesso.');
@@ -136,7 +193,7 @@ class CampaingnController extends Controller {
         if ($campaingn == null) {
             return back()->with('error'
                             , 'Campaingn não registrada no sistema.');
-        } else if ($campaingn->user->id != Auth::id()) {
+        } else if ($campaingn->user->id != Auth::id() && !Auth::user()->hasRole('admin')) {
             return back()->with('error'
                             , 'Não pode exibir os dados desta Campanha.');
         } else {
@@ -148,8 +205,8 @@ class CampaingnController extends Controller {
         $campaingn = Campaingn::with(['user', 'creatives'])->find($id);
         if ($campaingn == null) {
             return null;
-        } else if ($campaingn->user->id != Auth::id()) {
-            return null;
+        } else if ($campaingn->user->id != Auth::id() && !Auth::user()->hasRole('admin')) {
+            return [];
         } else {
             return Datatables::of($campaingn->creatives)
                 ->editColumn('image', function($creative) {
@@ -182,6 +239,9 @@ class CampaingnController extends Controller {
             if ($campaingn->type_layout == 2) {
                 unset($this->types['CPM']);
             }
+            if (!Auth::user()->hasRole('admin')) {
+                unset($this->types['CPA']);
+            }
             return view('campaingns.update', compact('campaingn'))
                             ->with([
                                 'creatives'=>$creatives,
@@ -207,6 +267,9 @@ class CampaingnController extends Controller {
             )->orderBy('name', 'asc')->get();
             if ($post['type_layout'] == 2) {
                 unset($this->types['CPM']);
+            }
+            if (!Auth::user()->hasRole('admin')) {
+                unset($this->types['CPA']);
             }
             return view('campaingns.create')
                 ->with(['creatives' => $creatives, 'types'=>$this->types])
@@ -271,17 +334,22 @@ class CampaingnController extends Controller {
             'creatives.min' => 'Selecione um Anúncio..',
             'type.in' => 'Tipo de campanha inválido.',
             'type_layout.in' => 'Layout inválido.',
+            'daily_quota.required' => 'Insira um orçamento diário.',
+            'daily_quota.numeric' => 'Orçamento inválido.',
         );
         $rules = array(
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
             'type_layout' => 'in:1,2,3,4,5',
+            'daily_quota' => 'required|numeric',
         );
-        if ($post['type_layout'] == 2) {
-            $rules['type'] = 'in:"CPA","CPC"';
-        } else {
-            $rules['type'] = 'in:"CPA","CPC","CPM"';
+        $rules['type'] = 'in:"CPC"';
+        if (Auth::user()->hasRole('admin')) {
+            $rules['type'] .= ',"CPA"';
+        }
+        if ($post['type_layout'] != 2) {
+            $rules['type'] .= ',"CPM"';
         }
         if (isset($post['type']) && $post['type'] == "CPC") {
             $mensagens['cpc.numeric'] = 'CPC deve ser numérico.';
@@ -295,6 +363,8 @@ class CampaingnController extends Controller {
     }
 
     public function pauseAllCampaigns() {
-        DB::table('campaingns')->where('')->update(['paused' => true]);
+        DB::table('campaingns')
+            ->where('user_id', Auth::id())
+            ->update(['paused' => true]);
     }
 }

@@ -66,6 +66,7 @@ class WidgetController extends Controller {
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
+                            '6' => 'Pre Roll',
                         )[$widget->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete']

@@ -14,7 +14,10 @@ class Segmentation extends Model
     protected $fillable = [ 
         'device',
         'country',
-        'campaingn_id,
+        'campaingn_id',
     ];
 
+    public function campaingn() {
+        return $this->belongsTo('App\Campaingn');
+    }
 }

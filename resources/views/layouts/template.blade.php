@@ -76,6 +76,11 @@
                                             <li>
                                                 <a href="{{ route('campaingns') }}">Listar Campanhas</a>
                                             </li>
+                                            @If (Auth::user()->hasRole('admin'))
+                                                <li>
+                                                    <a href="{{ route('campaingns.inatives') }}">Listar Campanhas Inativas</a>
+                                                </li>
+                                            @endif
                                         </ul>
                                     </li>
                                     @If (Auth::user()->hasRole('admin'))

@@ -57,6 +57,8 @@ Route::get('/campaingns/{campaingn}/edit', 'CampaingnController@edit')->name('ca
 Route::get('/campaingns/{page?}', 'CampaingnController@index')->name('campaingns')->middleware('role:admin,adver');
 Route::get('/campaignsdata', 'CampaingnController@indexDataTable')->name('campaingns.data')->middleware('role:admin,adver');
 Route::get('/campcreasdata/{campaingn}', 'CampaingnController@creativesDataTable')->name('campaingns.creatives')->middleware('role:admin,adver');
+Route::get('/campsinavites', 'CampaingnController@indexInatives')->name('campaingns.inatives')->middleware('role:admin');
+Route::get('/campsinavitesdata', 'CampaingnController@inativesDataTable')->name('campaingns.inativesdata')->middleware('role:admin');
 
 Route::post('/widgets', 'WidgetController@store')->name('widgets.store')->middleware('role:publi');
 Route::get('/widgets', 'WidgetController@index')->name('widgets')->middleware('role:publi');

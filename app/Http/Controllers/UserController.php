@@ -50,9 +50,11 @@ class UserController extends Controller {
                 })->editColumn('roles', function($user) {
                     $roles = "";
                     if ($user->hasRole('admin')) {
-                        $roles = "Advertiser";
-                    } else if ($user->hasRole('user')) {
+                        $roles = "Administrador";
+                    } else if ($user->hasRole('publi')) {
                         $roles = "Publisher";
+                    } else if ($user->hasRole('adver')) {
+                        $roles = "Advertiser";
                     }
                     return view('comum.user_roles', [
                         'roles' => $roles

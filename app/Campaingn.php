@@ -21,12 +21,9 @@ class Campaingn extends Model {
         'expires_in',
         'paused',
         'status',
+        'daily_quota',
         'user_id',
     ];
-
-    // public function revenues() {
-    //     return $this->creatives()->sum('revenue');
-    // }
     
     public function creatives() {
         return $this->belongsToMany('App\Creative')->withTimestamps();
@@ -47,6 +44,11 @@ class Campaingn extends Model {
     public function campaignLogs()
     {
         return $this->hasMany('App\CampaignLog');
+    }
+
+    public function segmentacoes()
+    {
+        return $this->hasMany('App\Segmentation');
     }
 
     public function createLog($property, $value)

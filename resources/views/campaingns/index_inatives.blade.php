@@ -4,7 +4,7 @@
 @section('content')
 <ul class="breadcrumb breadcrumb-top">
     <li><a href="{{ route('home') }}">Home</a></li>
-    <li><a href="">Lista de Campanhas</a></li>
+    <li><a href="">Lista de Campanhas Inativas</a></li>
 </ul>
 
 <div class="row">
@@ -25,15 +25,10 @@
                         <th class="text-center">NOME</th>
                         <th class="text-center">MARCA</th>
                         <th class="text-center">TIPO</th>
-                        <th class="text-center">CPC</th>
-                        <th class="text-center">CPM</th>
                         <th class="text-center">LAYOUT</th>
-                        <th class="text-center">ORÇAMENTO</th>
-                        <th class="text-center">PAUSADA</th>
                         <th class="text-center">STATUS</th>
-                        <th class="text-center">EDITAR</th>
+                        <th class="text-center">USUÁRIO</th>
                         <th class="text-center">EXIBIR</th>
-                        <th class="text-center">EXCLUIR</th>
                     </tr>
                 </thead>
             </table>
@@ -47,25 +42,20 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{!! route("campaingns.data") !!}',
+                url: '{!! route("campaingns.inativesdata") !!}',
                 type: 'GET',
                 'beforeSend': function (request) {
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
                 }
             },
             columns: [
-                {data: 'name', name: 'name'},
                 {data: 'brand', name: 'brand'},
+                {data: 'name', name: 'name'},
                 {data: 'type', name: 'type'},
-                {data: 'cpc', name: 'cpc'},
-                {data: 'cpm', name: 'cpm'},
                 {data: 'type_layout', name: 'type_layout'},
-                {data: 'daily_quota', name: 'daily_quota'},
-                {data: 'paused', name: 'paused'},
                 {data: 'status', name: 'status'},
-                {data: 'edit', name: 'edit', orderable: false, searchable: false},
+                {data: 'users.name', name: 'users.name'},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
-                {data: 'delete', name: 'delete', orderable: false, searchable: false},
             ],
 
         });
