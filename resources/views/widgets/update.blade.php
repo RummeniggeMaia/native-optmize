@@ -42,7 +42,7 @@
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
-                            '6' => 'Pre Roll',
+                            '6' => 'Vídeo',
                         ],
                         Input::old('type_layout'), 
                         ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Widget.']) 
@@ -100,6 +100,7 @@
     }
     $(document).ready(function () {
         $('#drop_layout').change(toggleFields);
+        $('#drop_layout').change();
     });
 </script>
 @stop

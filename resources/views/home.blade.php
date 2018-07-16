@@ -116,7 +116,11 @@
                 </li>
             </ul>
         </div>
-         {!! Form::button('<i class="fa fa-pause"></i>&nbsp;&nbsp;&nbsp;&nbsp;PAUSAR CAMPANHAS', ['type' => 'submit', 'class' => 'btn btn-xs btn-warning btn-block']) !!}
+        @if(Auth::user()->hasAnyRole(['admin', 'adver']))
+            {!! Form::open(['method' => 'GET', 'route'=>['campaingns.pauseall']]) !!}
+            {!! Form::button('<i class="fa fa-pause"></i>&nbsp;&nbsp;&nbsp;&nbsp;PAUSAR CAMPANHAS', ['type' => 'submit', 'class' => 'btn btn-xs btn-warning btn-block']) !!}
+            {!! Form::close() !!}
+        @endif
     </div>
 </div>
 <script type="text/javascript">

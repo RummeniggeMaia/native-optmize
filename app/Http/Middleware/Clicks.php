@@ -11,6 +11,7 @@ use App\Widget;
 use App\WidgetLog;
 use Carbon\Carbon;
 use Closure;
+use Illuminate\Support\Facades\DB;
 
 class Clicks
 {
@@ -24,48 +25,64 @@ class Clicks
      */
     public function handle($request, Closure $next)
     {
-        if ($request->has(['ct', 'wg', 'click_id'])) {
+        if ($request->has(['ct', 'wg', 'cp', 'click_id'])) {
             $creative = Creative::with('user')->where('hashid', $request->input('ct'))
                 ->first();
             $widget = Widget::with('user')->where('hashid', $request->input('wg'))
                 ->first();
-            $campaign = null;
+            $campaign = Campaingn::where('hashid', $request->input('cp'))
+                ->first();
 
-            if ($request->has('cp')) {
-                $campaign = Campaingn::where('hashid', $request->input('cp'))->first();
-            }
-            if ($creative && $widget) {
-                /** TODO campanha deve ser obrigatoria na proxima atualizacao.
-                 * - Codigo do site nao tem campanha ainda */
-                if ($campaign && $campaign->type == "CPC" && $campaign->cpc > 0) {
-                    $widget->user->increment(
-                        'revenue',
-                        $campaign->cpc * $widget->user->taxa);
-                    $creative->increment(
-                        'revenue',
-                        $campaign->cpc * (1 - $widget->user->taxa));
-                }
-                $log = CreativeLog::with(['creative', 'widget'])->where([
+            if ($creative && $widget && $campaign) {
+                $creativeLog = CreativeLog::with(['creative', 'widget', 'campaingn'])->where([
                     ['creative_id', $creative->id],
                     ['widget_id', $widget->id],
+                    ['campaingn_id', $campaign->id],
                 ])->first();
-                $click = null;
-                if ($log) {
+                if ($creativeLog) {
                     if (!Click::where('click_id', $request->input('click_id'))
                         ->exists()) {
-                        $click = Click::create(array(
+                        Click::create(array(
                             'click_id' => $request->input('click_id'),
                             'creative_id' => $creative->id,
                             'widget_id' => $widget->id,
+                            'campaingn_id' => $campaign->id,
                         ));
-                        $log->increment('clicks');
+                        $creativeLog->increment('clicks');
                     } else {
                         return response()->json('exists', 409);
                     }
                 } else {
                     return response()->json('not found', 404);
                 }
+                if ($campaign->type == "CPC" && $campaign->cpc > 0) {
+                    try {
+                        DB::beginTransaction();
+                        $revenueP = $campaign->cpc * $widget->user->taxa;
+                        $revenueAdm = $campaign->cpc * (1 - $widget->user->taxa);
+                        $campaignLog = $campaign->todayLog();
+                        if ($campaign->user->revenue_adv - $campaign->cpc < 0
+                            || $campaignLog->revenues + $campaign->cpc > $campaign->ceiling) {
+                            throw new Exception();
+                        }
+                        $widget->user->increment('revenue', $revenueP);
+                        $campaign->user->decrement('revenue_adv', $campaign->cpc);
+                        $creative->increment('revenue', $campaign->cpc);
+                        $creativeLog->increment('revenue', $campaign->cpc);
+                        $widget->createLog(Widget::LOG_REV, $revenueP);
+                        $campaignLog->increment(Campaingn::LOG_REV, $campaign->cpc);
+                        $admin = User::with(['roles' => function($query) {
+                            return $query->where('name', 'admin');
+                        }])->first();
+                        $admin->increment('revenue_adv', $revenueAdm);
+                        DB::commit();
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                        return response()->json('internal error', 500);
+                    }
+                }
                 $widget->createLog(Widget::LOG_CLI, 1);
+                $campaign->createLog(Campaingn::LOG_CLI, 1);
                 return response()->json('ok', 200);
             } else {
                 return response()->json('not found', 404);

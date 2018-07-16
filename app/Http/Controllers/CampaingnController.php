@@ -55,11 +55,17 @@ class CampaingnController extends Controller {
                         '3' => 'Banner Square (300x250)',
                         '4' => 'Banner Mobile (300x100)',
                         '5' => 'Banner Footer (928x244)',
-                        '6' => 'Pre Roll',
+                        '6' => 'Vídeo',
                     );
                     return $campaingn->type_layout ? $types[$campaingn->type_layout] : '-';
                 })->editColumn('paused', function($campaingn) {
                     return $campaingn->paused ? 'Sim' : 'Não';
+                })->editColumn('cpc', function($campaingn) {
+                    return 'R$ ' . $campaingn->cpc;
+                })->editColumn('cpm', function($campaingn) {
+                    return 'R$ ' . $campaingn->cpm;
+                })->editColumn('ceiling', function($campaingn) {
+                    return 'R$ ' . $campaingn->ceiling;
                 })->editColumn('status', function($campaingn) {
                     if ($campaingn->status) {
                         return view('comum.status_on');
@@ -78,12 +84,17 @@ class CampaingnController extends Controller {
     public function inativesDataTable() {
         $campaingns = Campaingn::with('user')
                         ->where([
-                            ['user_id', '!=', Auth::id()],
+                            // ['user_id', '!=', Auth::id()],
                             ['status', false]])->get();
         return Datatables::of($campaingns)->addColumn('show', function($campaingn) {
                 return view('comum.button_show', [
                     'id' => $campaingn->id,
                     'route' => 'campaingns.show'
+                ]);
+            })->addColumn('activate', function($campaingn) {
+                return view('comum.button_activate', [
+                    'id' => $campaingn->id,
+                    'route' => 'campaingns.activate'
                 ]);
             })->editColumn('type_layout', function($campaingn) {
                 return array(
@@ -93,7 +104,7 @@ class CampaingnController extends Controller {
                         '3' => 'Banner Square (300x250)',
                         '4' => 'Banner Mobile (300x100)',
                         '5' => 'Banner Footer (928x244)',
-                        '6' => 'Pre Roll',
+                        '6' => 'Vídeo',
                     )[$campaingn->type_layout];
             })->editColumn('status', function($campaingn) {
                 if ($campaingn->status) {
@@ -105,7 +116,7 @@ class CampaingnController extends Controller {
                 $user = User::find($campaingn->user_id);
                 return $user ? $user->name : '-';
             })->rawColumns(
-                ['show', 'status']
+                ['show', 'status', 'activate']
             )->make(true);
     }
 
@@ -173,11 +184,11 @@ class CampaingnController extends Controller {
                 
                 DB::commit();
                 return redirect('campaingns')
-                                ->with('success', 'Campaingn cadastrada com sucesso.');
+                                ->with('success', 'Campanha cadastrada com sucesso.');
             } catch (Exception $e) {
                 DB::rollBack();
                 return redirect('campaingns')
-                                ->with('error', 'Erro ao cadastrar Campaingn.');
+                                ->with('error', 'Erro ao cadastrar Campanha.');
             }
         }
     }
@@ -192,7 +203,7 @@ class CampaingnController extends Controller {
         $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
         if ($campaingn == null) {
             return back()->with('error'
-                            , 'Campaingn não registrada no sistema.');
+                            , 'Campanha não registrada no sistema.');
         } else if ($campaingn->user->id != Auth::id() && !Auth::user()->hasRole('admin')) {
             return back()->with('error'
                             , 'Não pode exibir os dados desta Campanha.');
@@ -258,6 +269,7 @@ class CampaingnController extends Controller {
     public function update(Request $request, $id) {
         $post = $request->all();
         $validacao = $this->validar($post);
+        $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
         if ($validacao->fails()) {
             $creatives = Creative::where(
                 [
@@ -271,11 +283,10 @@ class CampaingnController extends Controller {
             if (!Auth::user()->hasRole('admin')) {
                 unset($this->types['CPA']);
             }
-            return view('campaingns.create')
+            return view('campaingns.update', compact('campaingn'))
                 ->with(['creatives' => $creatives, 'types'=>$this->types])
                 ->withErrors($validacao);
         } else {
-            $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
             if ($campaingn == null) {
                 return back()->with('error'
                                 , 'Campaingn não registrada no sistema.');
@@ -296,14 +307,29 @@ class CampaingnController extends Controller {
                     $campaingn->update($post);
                     $campaingn->creatives()->sync($post['creatives']);
                     DB::commit();
+                    return redirect('campaingns')
+                                ->with('success', 'Campanha atualizada com sucesso.');
                 } catch (Exception $e) {
                     DB::rollBack();
+                    return redirect()->back()
+                                ->with('error', 'Campanha não pode ser atualizada.');
                 }
-                return redirect('campaingns');
             }
         }
     }
 
+    public function activate(Request $request, $id) {
+        $campaign = Campaingn::find($id);
+        if ($campaign) {
+            $campaign['status'] = true;
+            $campaign->save();
+            return redirect()->back()
+                ->with('success', 'Campanha ativada com sucesso.');
+        } else {
+            return redirect()->back()
+                ->with('erro', 'Campanha inexistente no sistema.');
+        }
+    }
     /**
      * Remove the specified resource from the storage.
      *
@@ -334,15 +360,16 @@ class CampaingnController extends Controller {
             'creatives.min' => 'Selecione um Anúncio..',
             'type.in' => 'Tipo de campanha inválido.',
             'type_layout.in' => 'Layout inválido.',
-            'daily_quota.required' => 'Insira um orçamento diário.',
-            'daily_quota.numeric' => 'Orçamento inválido.',
+            'ceiling.required' => 'Insira um orçamento diário.',
+            'ceiling.numeric' => 'Orçamento inválido.',
         );
         $rules = array(
             'name' => 'required|min:4',
             'brand' => 'required|min:4',
             'creatives' => 'required|array|min:1',
             'type_layout' => 'in:1,2,3,4,5',
-            'daily_quota' => 'required|numeric',
+            'ceiling' => 'required|numeric',
+            'type_layout' => 'in:1,2,3,4,5,6',
         );
         $rules['type'] = 'in:"CPC"';
         if (Auth::user()->hasRole('admin')) {
@@ -362,9 +389,11 @@ class CampaingnController extends Controller {
         return $validator;
     }
 
-    public function pauseAllCampaigns() {
+    public function pauseAllCampaigns(Request $request) {
         DB::table('campaingns')
             ->where('user_id', Auth::id())
             ->update(['paused' => true]);
+        return redirect('campaingns')
+            ->with('success', 'Todas as campanhas foram pausadas.');
     }
 }

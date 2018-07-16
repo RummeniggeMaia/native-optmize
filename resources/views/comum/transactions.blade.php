@@ -6,7 +6,11 @@
                     <i class="gi gi-wallet"></i>
                 </div>
                 <h3 class="widget-content text-right animation-pullDown">
-                    <strong>R$ {{ number_format(Auth::user()->revenue, 2) }}</strong>
+                    @if(Auth::user()->hasAnyRole(['admin', 'adver']))
+                        <strong>R$ {{ number_format(Auth::user()->revenue_adv, 2) }}</strong>
+                    @else
+                        <strong>R$ {{ number_format(Auth::user()->revenue, 2) }}</strong>
+                    @endif
                     <small>Disponível</small>
                 </h3>
             </div>
@@ -46,7 +50,12 @@
                     <i class="gi gi-money"></i>
                 </div>
                 <h3 class="widget-content text-right animation-pullDown">
-                    <strong>R$ {{ number_format(Auth::user()->revenue + $waiting, 2) }}</strong>
+                    @if(Auth::user()->hasAnyRole(['admin', 'adver']))
+                        <strong>R$ {{ number_format(Auth::user()->revenue_adv + $waiting, 2) }}</strong>
+                    @else
+                        <strong>R$ {{ number_format(Auth::user()->revenue + $waiting, 2) }}</strong>
+                    @endif
+                    
                     <small>Total</small>
                 </h3>
             </div>

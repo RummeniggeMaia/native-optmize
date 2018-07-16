@@ -21,7 +21,7 @@ class User extends Authenticatable {
         'phone', 
         'password', 
         'taxa',
-        'status'
+        'status',
     ];
 
     /**

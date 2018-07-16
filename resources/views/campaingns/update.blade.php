@@ -44,7 +44,7 @@
                                 '3'=>'Banner Square (300x250)',
                                 '4'=>'Banner Mobile (300x100)',
                                 '5'=>'Banner Footer (928x244)',
-                                '6' => 'Pre Roll',
+                                '6'=>'Vídeo',
                             ],
                             Input::old('type_layout'), 
                             [
@@ -138,6 +138,17 @@
                 @if ($errors->has('paused'))
                 <span class="help-block">
                     <strong>{{ $errors->first('paused') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('ceiling') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                    {!! Form::text('ceiling',null,['class'=>'form-control input-lg', 'placeholder' => 'Orçamento diário', 'title'=>'Orçamento diário']) !!}
+                </div>
+                @if ($errors->has('ceiling'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('ceiling') }}</strong>
                 </span>
                 @endif
             </div>

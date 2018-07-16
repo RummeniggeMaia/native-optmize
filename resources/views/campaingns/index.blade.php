@@ -60,7 +60,7 @@
                 {data: 'cpc', name: 'cpc'},
                 {data: 'cpm', name: 'cpm'},
                 {data: 'type_layout', name: 'type_layout'},
-                {data: 'daily_quota', name: 'daily_quota'},
+                {data: 'ceiling', name: 'ceiling'},
                 {data: 'paused', name: 'paused'},
                 {data: 'status', name: 'status'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},

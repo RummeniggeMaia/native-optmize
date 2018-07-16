@@ -43,7 +43,7 @@
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
-                            '6' => 'Pre Roll',
+                            '6'=>'Vídeo',
                         ],
                         Input::old('type_layout'), 
                         ['id'=>'drop_layout', 'class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Tipo de layout do Anúncio.']) 
@@ -98,7 +98,7 @@
                 <div class="form-group col-sm-6 {{ $errors->has('image') ? ' has-error' : '' }}">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-image"></i></span>
-                        {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder'=>'Imagem', 'accept'=>'.png,.jpg,.gif']) !!}
+                        {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder'=>'Imagem', 'accept'=>'.png,.jpg,.gif,.mp4']) !!}
                     </div>
                     @if ($errors->has('image'))
                     <span class="help-block">
@@ -108,7 +108,19 @@
                 </div>
                 <div class="form-group col-sm-6" style="text-align: center">
                     <div class="col-sm-10">
-                        <img src="{{ asset($creative->image) }}" height="128" width="128" class="img-rounded">
+                        <?php
+                            // $videos_extension = array('avi','mov','wmv','mp4','3gp','3g2','flv','mkv','rm','webp','mpeg4');
+                            $videos_extension = array('mp4');
+
+                            $file_extension = explode(".", $creative->image);
+                            $file_extension = strtolower(end($file_extension));
+
+                            if(in_array($file_extension, $videos_extension)) {
+                                echo '<a href="/'.$creative->image.'" target="new"><img src="/storage/img/video_icon.png" class="img-fluid img-thumbnail"></a>';
+                            } else {
+                                echo '<img src="'.asset($creative->image).'" height="128" width="128" class="img-rounded">';
+                            }
+                        ?>
                     </div>
                 </div>
             </div>

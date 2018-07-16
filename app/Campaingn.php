@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Campaingn extends Model {
 
@@ -21,7 +22,7 @@ class Campaingn extends Model {
         'expires_in',
         'paused',
         'status',
-        'daily_quota',
+        'ceiling',
         'user_id',
     ];
     
@@ -46,11 +47,18 @@ class Campaingn extends Model {
         return $this->hasMany('App\CampaignLog');
     }
 
-    public function segmentacoes()
+    public function segmentations()
     {
         return $this->hasMany('App\Segmentation');
     }
 
+    public function todayLog() {
+        return $this->campaignLogs()
+            ->whereDate(
+                'created_at', 
+                Carbon::today()->toDateString())->first();
+    }
+    
     public function createLog($property, $value)
     {
         $campaignLog = $this->campaignLogs()

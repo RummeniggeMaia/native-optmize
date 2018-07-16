@@ -6,6 +6,7 @@ use App\Campaingn;
 use App\CreativeLog;
 use App\Widget;
 use App\WidgetLog;
+use App\User;
 use App\Providers\IP2Location;
 use Detection\MobileDetect;
 use Carbon\Carbon;
@@ -126,18 +127,27 @@ class RandomCreatives
             ));
         } else {
             DB::transaction(function () use ($creativeLog) {
-                if ($creativeLog->campaingn->type == "CPM" 
-                    && $creativeLog->campaingn->cpm > 0.0) {
+                $cpm = $creativeLog->campaingn->cpm;
+                if ($creativeLog->campaingn->type == "CPM" && $cpm > 0.0) {
 
                     if ($creativeLog->counter == 1000) {
-                        $revenueP = $creativeLog->campaingn->cpm 
-                            * $creativeLog->widget->user->taxa;
-                        $revenueA = $creativeLog->campaingn->cpm 
-                            * (1 - $creativeLog->widget->user->taxa);
+                        $revenueP = $cpm * $creativeLog->widget->user->taxa;
+                        $revenueAdm = $cpm * (1 - $creativeLog->widget->user->taxa);
+                        $campaignLog = $creativeLog->campaingn->todayLog();
+                        if ($creativeLog->campaingn->user->revenue_adv - $cpm < 0
+                            || $campaignLog->revenues + $cpm > $creativeLog->campaingn->ceiling) {
+                            throw new Exception();
+                        }
                         $creativeLog->widget->user->increment('revenue', $revenueP);
-                        $creativeLog->creative->increment('revenue', $revenueA);
-                        $creativeLog->increment('revenue', $revenueA);
+                        $creativeLog->campaingn->user->decrement('revenue_adv', $cpm);
+                        $creativeLog->creative->increment('revenue', $cpm);
+                        $creativeLog->increment('revenue', $cpm);
                         $creativeLog->widget->createLog(Widget::LOG_REV, $revenueP);
+                        $campaignLog->increment(Campaingn::LOG_REV, $cpm);
+                        $admin = User::with(['roles' => function($query) {
+                            return $query->where('name', 'admin');
+                        }])->first();
+                        $admin->increment('revenue_adv', $revenueAdm);
                         $creativeLog->decrement('counter', 1000);
                     }
                     $creativeLog->increment('counter');
@@ -149,12 +159,19 @@ class RandomCreatives
 
     private function getCampaign($cont, $type)
     {
-        $campaigns = Campaingn::where([
-            'type_layout' => $type,
-        ])->get()->sortByDesc(function ($p, $k) {
-            return $p->creatives->sum('revenue');
-        });
+        $campaigns = Campaingn::with(['user', 'campaignLogs'])
+            ->whereHas('user', function($q) {
+                return $q->where('revenue_adv', '>', 0);
+            })
+            ->where([
+                ['type_layout', $type],
+                ['status', true],
+                ['paused', false],
+            ])->get()->sortByDesc(function ($p, $k) {
+                return $p->creatives->sum('revenue');
+            });
         if (!$campaigns->isEmpty()) {
+            $campaign = null;
             if ($cont >= 1 && $cont <= 3) {
                 if ($campaigns->count() == 1) {
                     $cont = 1;
@@ -163,10 +180,12 @@ class RandomCreatives
                         $cont = 2;
                     }
                 }
-                return $campaigns->get($cont - 1);
+                $campaign = $campaigns->get($cont - 1);
             } else {
-                return $campaigns->random();
+                $campaign =  $campaigns->random();
             }
+            $campaign->createLog(Campaingn::LOG_IMP, 1);
+            return $campaign;
         }
     }
 

@@ -24,6 +24,7 @@
                         <th class="text-center">NOME</th>
                         <th class="text-center">E-MAIL</th>
                         <th class="text-center">NIVEL</th>
+                        <th class="text-center">SALDO</th>
                         <th class="text-center">STATUS</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
@@ -51,6 +52,7 @@
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
                 {data: 'roles', name: 'roles'},
+                {data: 'revenue_adv', name: 'revenue_adv'},
                 {data: 'status', name: 'status'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},

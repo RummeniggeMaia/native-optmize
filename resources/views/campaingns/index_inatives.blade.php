@@ -29,6 +29,7 @@
                         <th class="text-center">STATUS</th>
                         <th class="text-center">USUÁRIO</th>
                         <th class="text-center">EXIBIR</th>
+                        <th class="text-center">ATIVAR</th>
                     </tr>
                 </thead>
             </table>
@@ -56,6 +57,7 @@
                 {data: 'status', name: 'status'},
                 {data: 'users.name', name: 'users.name'},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
+                {data: 'activate', name: 'activate', orderable: false, searchable: false},
             ],
 
         });

@@ -76,7 +76,7 @@ class CreativeController extends Controller {
                             '3'=>'Banner Square (300x250)',
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
-                            '6' => 'Pre Roll',
+                            '6'=>'Vídeo',
                         )[$widget->type_layout];
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'image', 'status']
@@ -174,7 +174,7 @@ class CreativeController extends Controller {
                 $image = $request->file('image');
                 $pathToImage = $image->store('img/', self::DISK);
                 $image_path = $this->compress_image($pathToImage, $image->hashName());
-
+                
                 $post['image'] = "storage/" . $image_path;
             }
 //            if (Auth::user()->hasRole('admin')) {
@@ -259,6 +259,7 @@ class CreativeController extends Controller {
             'status.in' => 'Status inválido.',
             'type_layout.in' => 'Layout inválido.',
         );
+
         $dimensions = "";
         if ($post['type_layout'] == '3') {
             $dimensions = "width=300,height=250";
@@ -267,6 +268,7 @@ class CreativeController extends Controller {
         } else if ($post['type_layout'] == '5') {
             $dimensions = "width=928,height=244";
         }
+
         $rules = array(
             'brand' => 'required|min:4',
             'name' => 'required|min:4',
@@ -274,55 +276,67 @@ class CreativeController extends Controller {
             'category_id' => 'required',
             'image' => "dimensions:$dimensions". ($edit ? '' : '|required'),
             'status' => 'in:0,1',
-            'type_layout' => 'in:1,2,3,4,5',
+            'type_layout' => 'in:1,2,3,4,5,6',
         );
+
+        if(empty($dimensions)) {
+            unset($rules['image']);
+        }
+        
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
     }
 
-    public function compress_image($imgPath, $image_name) {
+    public function compress_image($imgPath, $image_name)
+    {
+        // $videos_extension = array('avi','mov','wmv','mp4','3gp','3g2','flv','mkv','rm','webp','mpeg4');
+        $videos_extension = array('mp4');
 
-        $path = "img/compressed";
-        //Cria diretorio storage caso n exista no disco
-        if (!File::exists(Storage::disk(self::DISK)->path($path))) {
-            File::makeDirectory(Storage::disk(self::DISK)->path($path), 0775, true);
-        }
-        // setting
-        $setting = array(
-            // 'directory' => "C:/xampp7/htdocs/native-optimize/storage/app/public/img/compressed", // directory file compressed output
-            'directory' => Storage::disk(self::DISK)->path($path), // directory file compressed output
-            'file_type' => array(// file format allowed
-                'image/jpeg',
-                'image/png'
-            )
-        );
+        $file_extension = explode(".", $image_name);
+        $file_extension = strtolower(end($file_extension));
 
-        $image_path = Storage::disk(self::DISK)->path($imgPath);
-        //Acessando informacoes da imagem
-        $im_info = getImageSize($image_path);
-        $im_type = $im_info['mime'];
+        if(in_array($file_extension, $videos_extension)) {
+            return $imgPath;
+        } else {
+            $path = "img/compressed";
+            //Cria diretorio storage caso n exista no disco
+            if (!File::exists(Storage::disk(self::DISK)->path($path))) {
+                File::makeDirectory(Storage::disk(self::DISK)->path($path), 0775, true);
+            }
+            // setting
+            $setting = array(
+                // 'directory' => "C:/xampp7/htdocs/native-optimize/storage/app/public/img/compressed", // directory file compressed output
+                'directory' => Storage::disk(self::DISK)->path($path), // directory file compressed output
+                'file_type' => array(// file format allowed
+                    'image/jpeg',
+                    'image/png'
+                )
+            );
 
-        if ($im_type == 'image/gif')
-        {
-            $compressed_path = Storage::disk(self::DISK)->path($path);
-            $compressed_image_path = $path . "/" . $image_name;
-            Storage::disk(self::DISK)->copy("img/{$image_name}", "img/compressed/{$image_name}");
-            return $compressed_image_path;
-        }
-        else
-        {    
-            // create object
-            $ImgCompressor = new ImgCompressor($setting);
+            $image_path = Storage::disk(self::DISK)->path($imgPath);
+            //Acessando informacoes da imagem
+            $im_info = getImageSize($image_path);
+            $im_type = $im_info['mime'];
 
-            // run('STRING original file path', 'output file type', INTEGER Compression level: from 0 (no compression) to 9);
-            // example level = 2 same quality 80%, level = 7 same quality 30% etc
-            $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
-
-            // return Storage::disk(self::DISK)->path($path . "/" . "compressed-{$image_name}.jpg");
-            $compressed_image_name = $result['data']['compressed']['name'];
-            $compressed_image_path = $path . "/" . $compressed_image_name;
-
-            return $compressed_image_path;
+            if ($im_type == 'image/gif') {
+                $compressed_path = Storage::disk(self::DISK)->path($path);
+                $compressed_image_path = $path . "/" . $image_name;
+                Storage::disk(self::DISK)->copy("img/{$image_name}", "img/compressed/{$image_name}");
+                return $compressed_image_path;
+            } else {
+                // create object
+                $ImgCompressor = new ImgCompressor($setting);
+    
+                // run('STRING original file path', 'output file type', INTEGER Compression level: from 0 (no compression) to 9);
+                // example level = 2 same quality 80%, level = 7 same quality 30% etc
+                $result = $ImgCompressor->run($image_path, "compressed-{$image_name}.jpg", 'jpg', 1);
+    
+                // return Storage::disk(self::DISK)->path($path . "/" . "compressed-{$image_name}.jpg");
+                $compressed_image_name = $result['data']['compressed']['name'];
+                $compressed_image_path = $path . "/" . $compressed_image_name;
+    
+                return $compressed_image_path;
+            }
         }
     }
 

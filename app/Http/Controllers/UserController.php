@@ -65,6 +65,12 @@ class UserController extends Controller {
                     } else {
                         return view('comum.status_off');
                     }
+                })->editColumn('revenue_adv', function($user) {
+                    if ($user->hasRole('adver')) {
+                        return 'R$ ' . $user->revenue_adv;
+                    } else {
+                        return '-';
+                    }
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'roles', 'status']
                 )->make(true);
@@ -95,7 +101,7 @@ class UserController extends Controller {
         } else {
             $post['taxa'] = $post['taxa'] * 0.01;
             $post['password'] = Hash::make($post['password']);
-            $role = Role::where('name', 'user')->first();
+            $role = Role::where('name', 'publi')->first();
             $user = User::create($post);
             $user->roles()->sync([$role->id]);
 //            $user->roles()->attach(Role::where('name', 'user')->first());
@@ -136,22 +142,33 @@ class UserController extends Controller {
      */
     public function update(Request $request, $id) {
         $post = $request->all();
-        $v = $this->validar($post, true);
+        $user = User::find($id);
+        if (!$user) {
+            return redirect('users')->with('error'
+                                        , 'Usuário inexistente.');
+        }
+        $v = $this->validar($post, true, $user->hasRole('adver'));
         if ($v->fails()) {
             return redirect()->back()
                             ->withErrors($v)
                             ->withInput();
         } else {
-            $post['taxa'] = $post['taxa'] * 0.01;
-            if ($post['password']) {
-                $post['password'] = Hash::make($post['password']);
-            } else {
-                unset($post['password']);
+            try {
+                DB::beginTransaction();
+                $post['taxa'] = $post['taxa'] * 0.01;
+                if ($post['password']) {
+                    $post['password'] = Hash::make($post['password']);
+                } else {
+                    unset($post['password']);
+                }
+                $user->update($post);
+                $user->increment('revenue_adv', $post['revenue_adv']);
+                DB::commit();
+                return redirect()->back()->with('success'
+                                        , 'Usuário atualizado com sucesso.');
+            } catch (Exception $e) {
+                DB::rollBack();
             }
-            $user = User::find($id);
-            $user->update($post);
-            return redirect('users')->with('success'
-                                    , 'Usuário atualizado com sucesso.');
         }
     }
 
@@ -213,7 +230,7 @@ class UserController extends Controller {
         }
     }
 
-    private function validar($post, $update = false) {
+    private function validar($post, $update = false, $isAdver = false) {
         $mensagens = array(
             'name.required' => 'Insira o nome.',
             'name.min' => 'Nome muito curto.',
@@ -224,6 +241,7 @@ class UserController extends Controller {
             'password.max' => 'Password deve ter entre 6 e 10 caracters.',
             'password.regex' => 'Password inválido. Deve conter ao menos uma letra e um número.',
             'status.in' => 'Status inválido.',
+            'revenue_adv' => 'Valor não numérico.'
         );
         $rules = array(
             'name' => 'required|min:4',
@@ -235,6 +253,9 @@ class UserController extends Controller {
         );
         if (!$update) {
             $rules['password'] = 'required|min:6|max:10|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/';
+        }
+        if ($isAdver) {
+            $rules['revenue_adv'] = 'numeric';
         }
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;
