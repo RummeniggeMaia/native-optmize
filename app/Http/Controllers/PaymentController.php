@@ -58,7 +58,7 @@ class PaymentController extends Controller
                 if ($payment->status == Payment::STATUS_PAID) {
                     return view('comum.status_paid');
                 } else if ($payment->status == Payment::STATUS_WAITING) {
-                    return view('comum.status_waiting');
+                    return view('comum.status_waiting')->with(['name' => 'Pagamento']);
                 } else if ($payment->status == Payment::STATUS_REVERSED) {
                     return view('comum.status_reversed');
                 }

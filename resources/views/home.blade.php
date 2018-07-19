@@ -117,9 +117,7 @@
             </ul>
         </div>
         @if(Auth::user()->hasAnyRole(['admin', 'adver']))
-            {!! Form::open(['method' => 'GET', 'route'=>['campaingns.pauseall']]) !!}
-            {!! Form::button('<i class="fa fa-pause"></i>&nbsp;&nbsp;&nbsp;&nbsp;PAUSAR CAMPANHAS', ['type' => 'submit', 'class' => 'btn btn-xs btn-warning btn-block']) !!}
-            {!! Form::close() !!}
+            <a href="{{ route('campaingns.pauseconfirm') }}" class="btn btn-xs btn-default btn-block"><i class="fa fa-pause"></i>&nbsp;&nbsp;&nbsp;&nbsp;PAUSAR CAMPANHAS</a>
         @endif
     </div>
 </div>
@@ -181,50 +179,17 @@
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
                 }
             },
-            columns: [{
-                    data: 'created_at',
-                    name: 'created_at'
-                },
-                {
-                    data: 'user.name',
-                    name: 'user.name'
-                },
-                {
-                    data: 'payment_form',
-                    name: 'payment_form'
-                },
-                {
-                    data: 'brute_value',
-                    name: 'brute_value'
-                },
-                {
-                    data: 'paid_value',
-                    name: 'paid_value'
-                },
-                {
-                    data: 'taxa',
-                    name: 'user.taxa',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'liquid_value',
-                    name: 'liquid_value',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'show',
-                    name: 'show',
-                    orderable: false,
-                    searchable: false
-                },
+            columns: [
+                {data: 'created_at', name: 'created_at'},
+                {data: 'user.name', name: 'user.name'},
+                {data: 'payment_form', name: 'payment_form'},
+                {data: 'brute_value', name: 'brute_value'},
+                {data: 'paid_value', name: 'paid_value' },
+                {data: 'taxa', name: 'user.taxa', orderable: false, searchable: false},
+                {data: 'liquid_value', name: 'liquid_value', orderable: false, searchable: false},
+                {data: 'status', name: 'status'},
+                {data: 'show', name: 'show', orderable: false, searchable: false},
             ],
-
         });
         $('.dataTables_filter input').attr('placeholder', 'Buscar');
     });

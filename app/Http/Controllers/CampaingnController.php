@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+use App\Providers\IP2Location;
 
 class CampaingnController extends Controller {
     /*
@@ -59,7 +60,11 @@ class CampaingnController extends Controller {
                     );
                     return $campaingn->type_layout ? $types[$campaingn->type_layout] : '-';
                 })->editColumn('paused', function($campaingn) {
-                    return $campaingn->paused ? 'Sim' : 'Não';
+                    if ($campaingn->paused) {
+                        return view('comum.paused_on');
+                    } else {
+                        return view('comum.paused_off');
+                    }
                 })->editColumn('cpc', function($campaingn) {
                     return 'R$ ' . $campaingn->cpc;
                 })->editColumn('cpm', function($campaingn) {
@@ -70,10 +75,10 @@ class CampaingnController extends Controller {
                     if ($campaingn->status) {
                         return view('comum.status_on');
                     } else {
-                        return view('comum.status_off');
+                        return view('comum.status_waiting')->with(['name' => 'validação']);;
                     }
                 })->rawColumns(
-                        ['edit', 'show', 'delete', 'status']
+                        ['edit', 'show', 'delete', 'status', 'paused']
                 )->make(true);
     }
 
@@ -136,7 +141,9 @@ class CampaingnController extends Controller {
                 ])->orderBy('name', 'asc')->get();
         return view('campaingns.create')->with([
             'creatives' => $creatives,
-            'types'=>$this->types]);
+            'types'=>$this->types,
+            'countries' => $this->countries()
+        ]);
     }
 
     /** Store a newly created resource in storage.
@@ -395,5 +402,19 @@ class CampaingnController extends Controller {
             ->update(['paused' => true]);
         return redirect('campaingns')
             ->with('success', 'Todas as campanhas foram pausadas.');
+    }
+
+    public function pauseConfirm() {
+        return view('campaingns.pauseconfirm');
+    }
+
+    public function countries() {
+        // $db = new IP2Location(Storage::disk(self::DISK)->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
+        // $user_ip = $request->ip();
+
+        // $records = $db->lookup($user_ip,IP2Location::ALL);
+
+        // $codigopais= $records['countryCode'];
+        // $isp = $records['isp'];
     }
 }

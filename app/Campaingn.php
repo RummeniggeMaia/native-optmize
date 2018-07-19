@@ -47,9 +47,9 @@ class Campaingn extends Model {
         return $this->hasMany('App\CampaignLog');
     }
 
-    public function segmentations()
+    public function segmentation()
     {
-        return $this->hasMany('App\Segmentation');
+        return $this->hasOne('App\Segmentation');
     }
 
     public function todayLog() {

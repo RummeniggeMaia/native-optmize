@@ -65,11 +65,11 @@ class UserController extends Controller {
                     } else {
                         return view('comum.status_off');
                     }
-                })->editColumn('revenue_adv', function($user) {
+                })->editColumn('revenue', function($user) {
                     if ($user->hasRole('adver')) {
                         return 'R$ ' . $user->revenue_adv;
                     } else {
-                        return '-';
+                        return 'R$ ' . $user->revenue;
                     }
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'roles', 'status']

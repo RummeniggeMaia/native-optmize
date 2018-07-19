@@ -52,7 +52,7 @@
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
                 {data: 'roles', name: 'roles'},
-                {data: 'revenue_adv', name: 'revenue_adv'},
+                {data: 'revenue', name: 'revenue'},
                 {data: 'status', name: 'status'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},

@@ -60,7 +60,8 @@ Route::get('/campcreasdata/{campaingn}', 'CampaingnController@creativesDataTable
 Route::get('/campsinavites', 'CampaingnController@indexInatives')->name('campaingns.inatives')->middleware('role:admin');
 Route::get('/campsinavitesdata', 'CampaingnController@inativesDataTable')->name('campaingns.inativesdata')->middleware('role:admin');
 Route::patch('/activatecampaingns/{campaingn}', 'CampaingnController@activate')->name('campaingns.activate')->middleware('role:admin');
-Route::get('/pausecampaingns', 'CampaingnController@pauseAllCampaigns')->name('campaingns.pauseall')->middleware('role:admin, adver');
+Route::get('/pausecampaingns', 'CampaingnController@pauseAllCampaigns')->name('campaingns.pauseall')->middleware('role:admin,adver');
+Route::get('/pauseconfirm', 'CampaingnController@pauseConfirm')->name('campaingns.pauseconfirm')->middleware('role:admin,adver');
 
 Route::post('/widgets', 'WidgetController@store')->name('widgets.store')->middleware('role:publi');
 Route::get('/widgets', 'WidgetController@index')->name('widgets')->middleware('role:publi');
@@ -106,7 +107,7 @@ Route::patch('/auth/updatePassword', 'Auth\AuthController@updatePassword')
 Route::patch('/auth/updatePaymentData', 'Auth\AuthController@updatePaymentData')
     ->name('auth.updatePaymentData')->middleware('role:admin,adver,publi');
     
-Route::post('/clicks')->middleware('clicks');
+Route::get('/clicks')->middleware('clicks');
 Route::post('/impressions')->middleware('impressions');
 Route::get('/postbacks')->middleware('postbacks');
 Route::get('/random_creatives')->middleware('random_creatives');

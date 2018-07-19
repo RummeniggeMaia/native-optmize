@@ -33,7 +33,6 @@ class SmartLink
         if ($widget && $widget->type_layout == Widget::LAYOUT_S_LINK) {
             try {
                 DB::beginTransaction();
-
                 $click = Click::create(array(
                     'click_id' => hash("sha256", Carbon::now()->toDateTimeString()),
                     'widget_id' => $widget->id,
@@ -44,7 +43,8 @@ class SmartLink
                 if (count($campaigns) > 0) {
                     $campaign = $campaigns->random();
                     $creative = $campaign->creatives->random();
-                    $url = $creative->getURL($click->id, $widget->id);
+                    $url = $creative->getURL($click);
+                    $campaign->createLog(Campaingn::LOG_CLI, 1);
                 } else {
                     throw new Exception();
                 }

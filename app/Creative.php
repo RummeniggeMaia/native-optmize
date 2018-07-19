@@ -38,13 +38,13 @@ class Creative extends Model {
         return $impressions > 0 ? $clicks / $impressions * 100 : 0;
     }
 
-    public function getURL($cId, $widget_id) {
+    public function getURL($click) {
         if (!preg_match('/^https?:\/\//', $this->url)) {
             $this->url = 'http://' . $this->url;
         }
         $fields = array(
-            $cId,
-            $widget_id,
+            $click->click_id,
+            $click->widget->id,
             $this->id,
             urlencode(url('/') . '/' . $this->image),
             urlencode($this->name),

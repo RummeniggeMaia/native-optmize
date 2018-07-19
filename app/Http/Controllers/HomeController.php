@@ -31,11 +31,25 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $money = '';
+        $money = [
+            'today' => 0,
+            'yesterday' => 0,
+            'thisWeek' => 0,
+            'lastWeek' => 0,
+            'thisMonth' => 0,
+            'lastMonth' => 0,
+            'thisYear' => 0,
+            'lastYear' => 0,
+        ];
         if (Auth::user()->hasAnyRole(['admin', 'adver'])) {
             $money = $this->dailyInvestments();
         } else if (Auth::user()->hasRole('publi')) {
             $money = $this->dailyEarnings();
+        } else {
+            Auth::logout();
+            return redirect('login')
+                ->with('error'
+                    , 'Usuário com perfil inválido.');
         }
         return view('home')->with('money', $money);
     }
@@ -207,7 +221,7 @@ class HomeController extends Controller
                 if ($payment->status == Payment::STATUS_PAID) {
                     return view('comum.status_paid');
                 } else if ($payment->status == Payment::STATUS_WAITING) {
-                    return view('comum.status_waiting');
+                    return view('comum.status_waiting')->with(['name' => 'Pagamento']);
                 } else if ($payment->status == Payment::STATUS_REVERSED) {
                     return view('comum.status_reversed');
                 }

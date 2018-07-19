@@ -126,7 +126,7 @@ class WidgetController extends Controller {
                             , 'Não pode exibir os dados deste Widget.');
         } else {
             $json = null;
-            $version = md5(time());
+            $version = '0001';//md5(time());
             $code = "";
             $iframe = "";
             if ($widget->type_layout == 1) {

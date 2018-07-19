@@ -38,7 +38,7 @@
                                 <form action="{{ route('login') }}" method="post" id="form-login" name="form-login" class="form-horizontal">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     @if (session('csrf_error'))
-                                    <div class="alert alert-success">
+                                    <div class="alert alert-warning">
                                         {{ session('csrf_error') }}
                                     </div>
                                     @endif

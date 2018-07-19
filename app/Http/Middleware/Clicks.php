@@ -32,7 +32,7 @@ class Clicks
                 ->first();
             $campaign = Campaingn::where('hashid', $request->input('cp'))
                 ->first();
-
+            $click = null;
             if ($creative && $widget && $campaign) {
                 $creativeLog = CreativeLog::with(['creative', 'widget', 'campaingn'])->where([
                     ['creative_id', $creative->id],
@@ -40,17 +40,16 @@ class Clicks
                     ['campaingn_id', $campaign->id],
                 ])->first();
                 if ($creativeLog) {
-                    if (!Click::where('click_id', $request->input('click_id'))
-                        ->exists()) {
-                        Click::create(array(
+                    $click = Click::where('click_id', $request->input('click_id'))->first();
+                    if (!$click) {
+                        $click = Click::create(array(
                             'click_id' => $request->input('click_id'),
                             'creative_id' => $creative->id,
                             'widget_id' => $widget->id,
-                            'campaingn_id' => $campaign->id,
                         ));
                         $creativeLog->increment('clicks');
                     } else {
-                        return response()->json('exists', 409);
+                        return redirect()->to($creative->getURL($click));
                     }
                 } else {
                     return response()->json('not found', 404);
@@ -83,7 +82,7 @@ class Clicks
                 }
                 $widget->createLog(Widget::LOG_CLI, 1);
                 $campaign->createLog(Campaingn::LOG_CLI, 1);
-                return response()->json('ok', 200);
+                return redirect()->to($creative->getURL($click));
             } else {
                 return response()->json('not found', 404);
             }

@@ -30,20 +30,13 @@ class RandomCreatives
      */
     public function handle($request, Closure $next)
     {
+        // $db = new IP2Location(Storage::disk(self::DISK)->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
+        // $user_ip = $request->ip();
 
-        /*$detect = new MobileDetect;
-        
-        $isMobile = $detect->isMobile();
-        $isTablet = $detect->isTablet();
+        // $records = $db->lookup($user_ip,IP2Location::ALL);
 
-        $db = new IP2Location(Storage::disk(self::DISK)->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
-        $user_ip = $request->ip();
-
-        $records = $db->lookup($user_ip,IP2Location::ALL);
-
-        $codigopais= $records['countryCode'];
-        $isp = $records['isp'];*/
-
+        // $codigopais= $records['countryCode'];
+        // $isp = $records['isp'];
 
         $query = $request->query();
         if (!isset($query['wg'])) {
@@ -159,10 +152,19 @@ class RandomCreatives
 
     private function getCampaign($cont, $type)
     {
-        $campaigns = Campaingn::with(['user', 'campaignLogs'])
+        $detect = new MobileDetect;
+        $device = $detect->isMobile() ? 1 : 2;
+
+        $campaigns = Campaingn::with(['user', 'campaignLogs'/*, 'segmentation'*/])
             ->whereHas('user', function($q) {
                 return $q->where('revenue_adv', '>', 0);
             })
+            // ->whereHas('segmentation', function($q) use ($device, $country) {
+            //     return $q->where(
+            //         ['device' => $device],
+            //         ['country' => $country]
+            //     );
+            // })
             ->where([
                 ['type_layout', $type],
                 ['status', true],

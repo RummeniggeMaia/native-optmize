@@ -23,7 +23,7 @@ Route::resource('categories','CategoryController');
 Route::resource('users', 'UserController');
 Route::resource('payments', 'PaymentController');
 
-Route::post('/clicks')->middleware('clicks');
+Route::get('/clicks')->middleware('clicks');
 Route::post('/impressions')->middleware('impressions');
 Route::get('/postbacks')->middleware('postbacks');
 Route::get('/random_creatives')->middleware('random_creatives');
