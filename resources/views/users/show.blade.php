@@ -51,12 +51,21 @@
                     <input title="Tarifa em % dos revenues" type="text" class="form-control  input-lg" id="taxa" placeholder="{{ $user->taxa * 100 }}" readonly>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    <input title="Revenue"  style="background-color: white" type="text" class="form-control input-lg" id="revenue" placeholder="{{ number_format(($user->revenue), 2) }}" readonly>
+            @if(Auth::user()->hasAnyRole(['adver', 'admin']))
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                        <input title="Saldo" type="text" class="form-control input-lg" id="revenue" placeholder="{{ number_format(($user->revenue_adv), 2) }}" readonly>
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                        <input title="Revenue" type="text" class="form-control input-lg" id="revenue" placeholder="{{ number_format(($user->revenue), 2) }}" readonly>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>

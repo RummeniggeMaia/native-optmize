@@ -158,6 +158,48 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('device') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('device', 
+                            ['1' => 'Desktop', '2' => 'Mobile'],
+                            Input::old('country'), 
+                            [
+                                'class'=>'selectpicker form-control input-lg', 
+                                'required', 
+                                'title'=>'Segmentação: Tipo de dispotivo'
+                            ]
+                        ) 
+                    }}
+                </div>
+                @if ($errors->has('device'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('device') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('country') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('country', 
+                            $countries,
+                            Input::old('country') ? Input::old('country') : '76', 
+                            [
+                                'class'=>'selectpicker form-control input-lg', 
+                                'required', 
+                                'title'=>'Segmentação: Pais onde será exibida a campanha'
+                            ]
+                        ) 
+                    }}
+                </div>
+                @if ($errors->has('country'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('country') }}</strong>
+                </span>
+                @endif
+            </div>
             <div class="form-group form-actions text-center">
                 {!! Form::submit('Salvar', ['class' => 'btn btn-md btn-default']) !!}
             </div>

@@ -35,6 +35,8 @@ Route::delete('/users/{user}', 'UserController@destroy')->name('users.destroy')-
 Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit')->middleware('role:admin');
 Route::get('users/{page?}', 'UserController@index')->name('users.index')->middleware('role:admin');
 Route::get('/usersdata', 'UserController@indexDataTable')->name('users.data')->middleware('role:admin');
+Route::get('/users/{user}/credits', 'UserController@addCredits')->name('users.add_credits')->middleware('role:admin');
+Route::patch('/users/{user}/applycredits', 'UserController@applyCredits')->name('users.apply_credits')->middleware('role:admin');
 
 Route::post('/creatives', 'CreativeController@store')->name('creatives.store')->middleware('role:admin,adver');
 Route::get('/creatives', 'CreativeController@index')->name('creatives')->middleware('role:admin,adver');

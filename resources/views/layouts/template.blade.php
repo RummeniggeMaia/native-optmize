@@ -44,8 +44,8 @@
                                 </li>
                                 @If (Auth::user()->hasAnyRole(['admin', 'adver']))
                                     @If (Auth::user()->hasRole('admin'))
-                                        <li class="active">
-                                            <a href="#" class="sidebar-nav-menu active"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
+                                        <li class="{!! Request::is('users*') ? 'active' : '' !!}">
+                                            <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
                                             <ul>
                                                 <li>
                                                     <a href="{{ route('users.create') }}">Adicionar Usuário</a>
@@ -56,7 +56,7 @@
                                             </ul>
                                         </li>
                                     @endif
-                                    <li>
+                                    <li class="{!! Request::is('creatives*') ? 'active' : '' !!}">
                                         <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
                                         <ul>
                                             <li>
@@ -67,7 +67,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li>
+                                    <li class="{!! Request::is('campaingns*') || Request::is('campsinavites') ? 'active' : '' !!}">
                                         <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Campanhas</span></a>
                                         <ul>
                                             <li>
@@ -84,7 +84,7 @@
                                         </ul>
                                     </li>
                                     @If (Auth::user()->hasRole('admin'))
-                                        <li>
+                                        <li class="{!! Request::is('categories*') ? 'active' : '' !!}">
                                             <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-list sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Categorias</span></a>
                                             <ul>
                                                 <li>
@@ -97,7 +97,7 @@
                                         </li>
                                     @endif
                                 @else
-                                <li>
+                                <li class="{!! Request::is('widgets*') ? 'active' : '' !!}">
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-power-switch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Widgets</span></a>
                                     <ul>
                                         <li>
@@ -108,11 +108,11 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li>
+                                <li class="{!! Request::is('payments*') ? 'active' : '' !!}">
                                     <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pagamentos</span></a>
                                     <ul>
                                         <li>
-                                            <a href="{{ route('payments.create') }}">Solicitar pagamento</a>
+                                        <a href="{{ route('payments.create') }}">Solicitar pagamento</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('payments') }}">Listar Pagamentos</a>

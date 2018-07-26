@@ -32,7 +32,12 @@ class UserController extends Controller {
 
     public function indexDataTable() {
         $users = User::all();
-        return Datatables::of($users)->addColumn('edit', function($user) {
+        return Datatables::of($users)->addColumn('credits', function($campaingn) {
+                    return view('comum.button_credits', [
+                        'id' => $campaingn->id,
+                        'route' => 'users.add_credits'
+                    ]);
+                })->addColumn('edit', function($user) {
                     return view('comum.button_edit', [
                         'id' => $user->id,
                         'route' => 'users.edit'
@@ -72,7 +77,7 @@ class UserController extends Controller {
                         return 'R$ ' . $user->revenue;
                     }
                 })->rawColumns(
-                        ['edit', 'show', 'delete', 'roles', 'status']
+                        ['edit', 'show', 'delete', 'roles', 'status', 'credits']
                 )->make(true);
     }
 
@@ -144,8 +149,7 @@ class UserController extends Controller {
         $post = $request->all();
         $user = User::find($id);
         if (!$user) {
-            return redirect('users')->with('error'
-                                        , 'Usuário inexistente.');
+            return redirect('users')->with('error', 'Usuário inexistente.');
         }
         $v = $this->validar($post, true, $user->hasRole('adver'));
         if ($v->fails()) {
@@ -162,7 +166,7 @@ class UserController extends Controller {
                     unset($post['password']);
                 }
                 $user->update($post);
-                $user->increment('revenue_adv', $post['revenue_adv']);
+                // $user->increment('revenue_adv', $post['revenue_adv']);
                 DB::commit();
                 return redirect()->back()->with('success'
                                         , 'Usuário atualizado com sucesso.');
@@ -230,6 +234,29 @@ class UserController extends Controller {
         }
     }
 
+    public function addCredits($id) {
+        $user = User::find($id);
+        return view('users.add_credits', compact('user'));
+    }
+
+    public function applyCredits(Request $request, $id) {
+        return redirect()->back()->with('warning'
+                                        , 'Função a ser implementada.');
+        // $post = $request->all();
+        // $user = User::find($id);
+        // if (!$user) {
+        //     return redirect()->back()->with('error', 'Usuário inexistente.');
+        // } else {
+        //     try {
+        //         $user->increment('revenue_adv', $post['revenue_adv']);
+        //         return redirect()->back()->with('success'
+        //                                 , 'Usuário atualizado com sucesso.');
+        //     } catch (Exception $e) {
+        //         DB::rollBack();
+        //     }
+        // }
+    }
+
     private function validar($post, $update = false, $isAdver = false) {
         $mensagens = array(
             'name.required' => 'Insira o nome.',
@@ -255,7 +282,7 @@ class UserController extends Controller {
             $rules['password'] = 'required|min:6|max:10|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/';
         }
         if ($isAdver) {
-            $rules['revenue_adv'] = 'numeric';
+            // $rules['revenue_adv'] = 'numeric';
         }
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

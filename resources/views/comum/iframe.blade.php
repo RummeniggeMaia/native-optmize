@@ -30,21 +30,9 @@
 					if (x != null && x.length> 0) {
 						v = x[0];
 						a = $('<a>', {
-							title: v.name,
-							href: v.url,
+							title: '',
+							href: url + '/clicks?click_id=' + v.click_id + '&ct=' + v.hashid + '&wg=' + wg + '&cp=' + v.campaign_id,
 							target: '_blank',
-							click: function () {
-								$.post({
-									url: url + '/clicks',
-									dataType: "json",
-									data: {
-										click_id: v.click_id,
-										ct: v.hashid,
-										wg: wg,
-										cp: v.campaign_id
-									}
-								});
-							}
 						});
 						img = $('<img>', {
 							src: v.image

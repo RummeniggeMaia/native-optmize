@@ -11,7 +11,7 @@
     <div class="col-lg-12 content-header">
         <div class="header-section">
             <h1>
-                <i class="lnr lnr-bullhorn"></i>Lista de <b>Campanhas</b>
+                <i class="lnr lnr-bullhorn"></i>Lista de <b>Campanhas Inativas</b>
             </h1>
         </div>
     </div>

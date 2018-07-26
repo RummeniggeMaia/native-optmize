@@ -93,25 +93,6 @@
                 </span>
                 @endif
             </div>
-            @if($user->hasRole('adver'))
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                        <input type="text" value="{{$user->revenue_adv}}" class="form-control input-lg" title="Saldo atual" readonly/>
-                    </div>
-                </div>
-                <div class="form-group {{ $errors->has('revenue_adv') ? ' has-error' : '' }}">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                        {!! Form::text('revenue_adv',0,['class'=>'form-control input-lg', 'placeholder'=>'Aumentar saldo do Advertiser', 'title'=>'Aumentar saldo do Advertiser']) !!}
-                    </div>
-                    @if ($errors->has('revenue_adv'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('revenue_adv') }}</strong>
-                    </span>
-                    @endif
-                </div>
-            @endif
             <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>

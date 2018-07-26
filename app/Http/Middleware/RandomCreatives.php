@@ -155,6 +155,16 @@ class RandomCreatives
         $detect = new MobileDetect;
         $device = $detect->isMobile() ? 1 : 2;
 
+        $db = new IP2Location(Storage::disk('public')->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
+        $user_ip = request()->ip();
+        /**
+         * TODO caso seja acessado do localhost, mudar o ip para o da google.
+         * Essa parte funciona apenas para teste.
+         */
+        $user_ip = $user_ip == '::1' ? '8.8.8.8' : $user_ip;
+        $records = $db->lookup($user_ip, IP2Location::ALL);
+        $codigopais = $records['countryCode'];
+
         $campaigns = Campaingn::with(['user', 'campaignLogs'/*, 'segmentation'*/])
             ->whereHas('user', function($q) {
                 return $q->where('revenue_adv', '>', 0);
@@ -162,7 +172,7 @@ class RandomCreatives
             // ->whereHas('segmentation', function($q) use ($device, $country) {
             //     return $q->where(
             //         ['device' => $device],
-            //         ['country' => $country]
+            //         ['country' => $codigopais]
             //     );
             // })
             ->where([

@@ -26,6 +26,7 @@
                         <th class="text-center">NIVEL</th>
                         <th class="text-center">SALDO</th>
                         <th class="text-center">STATUS</th>
+                        <th class="text-center">CRÉDITOS</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
                         <th class="text-center">EXCLUIR</th>
@@ -54,6 +55,7 @@
                 {data: 'roles', name: 'roles'},
                 {data: 'revenue', name: 'revenue'},
                 {data: 'status', name: 'status'},
+                {data: 'credits', name: 'credits', orderable: false, searchable: false},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
                 {data: 'delete', name: 'delete', orderable: false, searchable: false},
