@@ -194,7 +194,7 @@
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
                         Form::select('device', 
-                            ['1' => 'Desktop', '2' => 'Mobile'],
+                            ['1' => 'Mobile', '2' => 'Desktop'],
                             $campaingn->segmentation ? $campaingn->segmentation->device : Input::old('country'), 
                             [
                                 'class'=>'selectpicker form-control input-lg', 

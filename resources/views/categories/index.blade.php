@@ -43,6 +43,15 @@
                 type: 'GET',
                 'beforeSend': function (request) {
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                },
+                data: function(data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (! data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
                 }
             },
             columns: [

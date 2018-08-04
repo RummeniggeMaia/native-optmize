@@ -144,32 +144,204 @@
         });
     });
 </script>
+<script src="{{ asset('js/Chart.min.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajax({
+            dataType: "json",
+            accepts: "application/json",
+            method: 'GET',
+            url: '{{ Auth::user()->hasAnyRole(["admin", "adver"]) ? route("home.dailycampaigns") : route("home.dailywidgets") }}'
+        }).done(function (data) {
+            let clicks = new Array();
+            let revenues = new Array(); 
+            let impressions = new Array();
+            let labels = new Array();
+            $.each(data, function (i, v) {
+                clicks.push(v['clicks']);
+                revenues.push(v['revenues']);
+                impressions.push(v['impressions']);
+                labels.push(v['day']);
+            });
+            let lines = {
+                'labels' : labels,
+                'datasets' : [{
+                    label: 'Clicks',
+                    fill: false,
+                    backgroundColor: "rgb(54,128,45)",
+                    borderColor: "rgb(54,128,45)", // The main line color
+                    borderCapStyle: 'square',
+                    borderDash: [], // try [5, 15] for instance
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "black",
+                    pointBackgroundColor: "white",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: "#17c4bb",
+                    pointHoverBorderColor: "blue",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 10,
+                    data: clicks,
+                }, {
+                    label: 'Impressions',
+                    fill: false,
+                    backgroundColor: "#A8DCA8",
+                    borderColor: "#A8DCA8", // The main line color
+                    borderCapStyle: 'square',
+                    borderDash: [], // try [5, 15] for instance
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "black",
+                    pointBackgroundColor: "white",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: "#17c4bb",
+                    pointHoverBorderColor: "blue",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 10,
+                    data: impressions,
+                }, {
+                    label: 'Revenues R$',
+                    fill: false,
+                    backgroundColor: "#979797",
+                    borderColor: "#979797", // The main line color
+                    borderCapStyle: 'square',
+                    borderDash: [], // try [5, 15] for instance
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "black",
+                    pointBackgroundColor: "white",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: "#17c4bb",
+                    pointHoverBorderColor: "blue",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 10,
+                    data: revenues,
+                }]
+            };
+            let myChart = new Chart($('#widgetsDaily'), {
+                type: 'line',
+                data: lines,
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0, 
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        }).fail(function () {
+            console.log('Gráfico diário dos widgets não pode ser carregado.');
+        });
+    });
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="block-title">
+                <h2>Estatísticas diárias deste mês ({{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'Despesas' : 'Lucros' }})</h2>
+            </div>
+            <canvas id="widgetsDaily"></canvas>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="block-title">
+                <h2>Tabela com dados gerais</h2>
+            </div>
+            <div class="table-responsive">
+                <table id="datatable-dashboard" class="table table-vcenter table-borderbottom table-condensed">
+                    <thead>
+                        <tr class="block-title">
+                            <th class="text-center">DATA</th>
+                            <th class="text-center">CLICKS</th>
+                            <th class="text-center">IMPRESSIONS</th>
+                            <th class="text-center">REVENUES</th>
+                            <th class="text-center">{{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'CAMPANHAS' : 'WIDGETS' }}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        App.datatables();
+        $('#datatable-dashboard').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{!! Auth::user()->hasAnyRole(["admin", "adver"]) ? route("campaingns.dashtable") : route("widgets.dashtable") !!}',
+                type: 'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                },
+                data: function(data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (! data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
+                }
+            },
+            columns: [
+                {data: 'created_at', name: 'created_at'},
+                {data: 'clicks', name: 'clicks'},
+                {data: 'impressions', name: 'impressions'},
+                {data: 'revenues', name: 'revenues'},
+                {data: 'name', name: 'name'},
+            ],
+        });
+    });
+    $('.dataTables_filter input').attr('placeholder', 'Buscar');
+</script>
 @if (Auth::user()->hasRole('admin'))
 <div class="row">
     <div class="col-md-12">
-        <div class="table-responsive">
-            <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
-                <thead>
-                    <tr class="block-title">
-                        <th class="text-center">DATA</th>
-                        <th class="text-center">NOME</th>
-                        <th class="text-center">FORMA</th>
-                        <th class="text-center">VALOR BRUTO</th>
-                        <th class="text-center">VALOR PAGO</th>
-                        <th class="text-center">TAXA</th>
-                        <th class="text-center">VALOR LÍQUIDO</th>
-                        <th class="text-center">STATUS</th>
-                        <th class="text-center">INFO</th>
-                    </tr>
-                </thead>
-            </table>
+        <div class="block">
+            <div class="block-title">
+                <h2>Solicitações de pagamento</h2>
+            </div>
+            <div class="table-responsive">
+                <table id="datatable-payments" class="table table-vcenter table-borderbottom table-condensed">
+                    <thead>
+                        <tr class="block-title">
+                            <th class="text-center">DATA</th>
+                            <th class="text-center">NOME</th>
+                            <th class="text-center">FORMA</th>
+                            <th class="text-center">VALOR BRUTO</th>
+                            <th class="text-center">VALOR PAGO</th>
+                            <th class="text-center">TAXA</th>
+                            <th class="text-center">VALOR LÍQUIDO</th>
+                            <th class="text-center">STATUS</th>
+                            <th class="text-center">INFO</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        App.datatables();
-        $('#datatable').DataTable({
+        $('#datatable-payments').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -177,6 +349,15 @@
                 type: 'GET',
                 'beforeSend': function (request) {
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                },
+                data: function(data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (! data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
                 }
             },
             columns: [
@@ -191,7 +372,6 @@
                 {data: 'show', name: 'show', orderable: false, searchable: false},
             ],
         });
-        $('.dataTables_filter input').attr('placeholder', 'Buscar');
     });
 </script>
 @endif @endauth @endsection

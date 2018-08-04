@@ -58,6 +58,16 @@
                         <input title="Campanha pausada:" type="text" class="form-control input-lg" id="expires" placeholder="{{ $campaingn->paused ? 'Sim' : 'Não' }}" readonly>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="block">
+                            <div class="block-title">
+                                <h2>Estatísticas diárias deste mês</h2>
+                            </div>
+                            <canvas id="campaignDaily"></canvas>
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
                         <thead>
@@ -74,6 +84,7 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('js/Chart.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         App.datatables();
@@ -85,6 +96,15 @@
                 type: 'GET',
                 'beforeSend': function (request) {
                     request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                },
+                data: function(data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (! data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
                 }
             },
             columns: [
@@ -95,6 +115,104 @@
             ],
         });
         $('.dataTables_filter input').attr('placeholder', 'Buscar');
+        $.ajax({
+            dataType: "json",
+            accepts: "application/json",
+            method: 'GET',
+            url: '{!! route("campaingns.dailycl", ["id" => $campaingn->id]) !!}'
+        }).done(function (data) {
+            let clicks = new Array();
+            let revenues = new Array(); 
+            let impressions = new Array();
+            let labels = new Array();
+            $.each(data, function (i, v) {
+                clicks.push(v['clicks']);
+                revenues.push(v['revenues']);
+                impressions.push(v['impressions']);
+                labels.push(v['day']);
+            });
+            let lines = {
+                'labels' : labels,
+                'datasets' : [{
+                    label: 'Clicks',
+                    fill: false,
+                    backgroundColor: "rgb(54,128,45)",
+                    borderColor: "rgb(54,128,45)", // The main line color
+                    borderCapStyle: 'square',
+                    borderDash: [], // try [5, 15] for instance
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "black",
+                    pointBackgroundColor: "white",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: "#17c4bb",
+                    pointHoverBorderColor: "blue",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 10,
+                    data: clicks,
+                }, {
+                    label: 'Impressions',
+                    fill: false,
+                    backgroundColor: "#A8DCA8",
+                    borderColor: "#A8DCA8", // The main line color
+                    borderCapStyle: 'square',
+                    borderDash: [], // try [5, 15] for instance
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "black",
+                    pointBackgroundColor: "white",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: "#17c4bb",
+                    pointHoverBorderColor: "blue",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 10,
+                    data: impressions,
+                }, {
+                    label: 'Revenues R$',
+                    fill: false,
+                    backgroundColor: "#979797",
+                    borderColor: "#979797", // The main line color
+                    borderCapStyle: 'square',
+                    borderDash: [], // try [5, 15] for instance
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "black",
+                    pointBackgroundColor: "white",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: "#17c4bb",
+                    pointHoverBorderColor: "blue",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHitRadius: 10,
+                    data: revenues,
+                }]
+            };
+            let myChart = new Chart($('#campaignDaily'), {
+                type: 'line',
+                data: lines,
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0, 
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        }).fail(function () {
+            console.log('Gráfico diário dos widgets não pode ser carregado.');
+        });
     });
 </script>
 @stop

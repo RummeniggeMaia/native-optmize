@@ -1,6 +1,6 @@
 (function(){
-	// var url = 'http://localhost/native-optimize/public';
-	var url = 'https://app.ads4xxx.com';
+	var url = 'http://localhost/native-optimize/public';
+	// var url = 'https://app.ads4xxx.com';
 	var version = '0001';//new Date().getMilliseconds();
 	if(typeof jQuery == 'undefined'){
 		var script = document.createElement( "script" );

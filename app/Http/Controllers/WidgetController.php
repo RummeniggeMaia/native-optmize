@@ -73,6 +73,19 @@ class WidgetController extends Controller {
                 )->make(true);
     }
 
+    public function widgetsDashboardTable() {
+        $widgets = Widget::with('widgetLogs')
+                        ->where(['user_id' => Auth::id()])->get();
+        return Datatables::of($widgets)->editColumn('clicks', function($widget) {
+                return $widget->widgetLogs->sum('clicks');
+            })->editColumn('impressions', function($widget) {
+                return $widget->widgetLogs->sum('impressions');
+            })->editColumn('revenues', function($widget) {
+                $revenues = $widget->widgetLogs->sum('revenues');
+                return 'R$ ' . number_format($revenues, 4);
+            })->make(true);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -199,7 +212,10 @@ class WidgetController extends Controller {
                     . $json->html;
             }
             return view('widgets.show', compact('widget'))
-                            ->with(['code'=>$code, 'iframe' => $iframe]);
+                            ->with([
+                                'code'=>$code, 
+                                'iframe' => $iframe,
+                            ]);
         }
     }
 
@@ -333,8 +349,6 @@ class WidgetController extends Controller {
             Storage::disk(self::DISK)->makeDirectory($url);
         }
 
-        //$folder_name = Storage::disk('native_storage')->url("data/{$id}");
-        // $folder_name = "data/{$id}";
         $file_name = $widget->name . '.json';
 
         $json_content = array(
@@ -347,7 +361,6 @@ class WidgetController extends Controller {
     }
 
     public function create_json($folder_name, $file_name, $json_content, $widget_id) {
-        //$abrir = fopen($folder_name."/".$file_name, "w");
         $abrir = $folder_name . "/" . $file_name;
         $widget_base = Storage::disk(self::DISK)->path('data/widget_example.js');
         $tpl = new Template($widget_base);
@@ -358,27 +371,7 @@ class WidgetController extends Controller {
         $tpl->WIDGET_ID = $widget->id;
         $tpl->block("BLOCK_CONTEUDO", true);
 
-//        $creatives = Creative::all()->where('user_id', Auth::id());
-//
-//        $contador = 0;
-//
-//        foreach ($creatives as $creative) {
-//            $tpl->TITLE = $creative->name;
-//            $tpl->IMAGE = $creative->image;
-//            $tpl->URL = $creative->url;
-//            $tpl->CONTADOR = $contador;
-//            $tpl->block("BLOCK_CONTEUDO", true);
-//
-//            $contador++;
-//        }
-//
-//        $tpl->HASHID = sha1($widget_id);
-//        $tpl->block("BLOCK_AJAX", true);
-
         $json_content['js'] = $tpl->parse();
-
-        //fwrite($abrir,json_encode($json_content));
-        //fclose($abrir);
 
         Storage::disk(self::DISK)->put($abrir, json_encode($json_content, JSON_PRETTY_PRINT));
     }
@@ -401,5 +394,18 @@ class WidgetController extends Controller {
                 $post['type'] = 1;
             }
         }
+    }
+
+    public function dailyLineChartData($id) {
+        return DB::table('widget_logs')
+                ->where('widget_id', $id)
+                ->whereYear('widget_logs.created_at', Carbon::now()->year)
+                ->whereMonth('widget_logs.created_at', Carbon::now()->month)
+                ->groupBy('day')
+                ->get([
+                    DB::raw('SUM(widget_logs.impressions) as impressions'),
+                    DB::raw('SUM(widget_logs.clicks) as clicks'),
+                    DB::raw('SUM(widget_logs.revenues) as revenues'),
+                    DB::raw('DAY(widget_logs.created_at) as day')]);
     }
 }

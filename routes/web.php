@@ -15,7 +15,19 @@ Route::get('/', function () {
     if (Auth::guest()) {
         return view('auth.login');
     } else {
-        return view('home')->with(['widgets' => array(), 'earnings' => 0]);
+        return view('home')->with(
+            ['widgets' => array(), 
+                'money' => [
+                    'today' => 0,
+                    'yesterday' => 0,
+                    'thisWeek' => 0,
+                    'lastWeek' => 0,
+                    'thisMonth' => 0,
+                    'lastMonth' => 0,
+                    'thisYear' => 0,
+                    'lastYear' => 0,
+                ]
+            ]);
     }
 });
 
@@ -25,6 +37,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/homewidgetslc', 'HomeController@widgetsLineChartData')->name('home.widgetslc')->middleware('role:publi');
 Route::get('/homecampaignslc', 'HomeController@campaignsLineChartData')->name('home.campaignslc')->middleware('role:admin,adver');
 Route::get('/homepayments', 'HomeController@paymentsDataTable')->name('home.payments')->middleware('role:admin');
+Route::get('/home/widgets/daily/linechart', 'HomeController@widgetsDailyLineChartData')->name('home.dailywidgets')->middleware('role:publi,adver,admin');
+Route::get('/home/campaigns/daily/linechart', 'HomeController@campaignsDailyLineChartData')->name('home.dailycampaigns')->middleware('role:publi,adver,admin');
 
 Route::post('/users', 'UserController@store')->name('users.store')->middleware('role:admin');
 Route::get('/users', 'UserController@index')->name('users')->middleware('role:admin');
@@ -64,6 +78,8 @@ Route::get('/campsinavitesdata', 'CampaingnController@inativesDataTable')->name(
 Route::patch('/activatecampaingns/{campaingn}', 'CampaingnController@activate')->name('campaingns.activate')->middleware('role:admin');
 Route::get('/pausecampaingns', 'CampaingnController@pauseAllCampaigns')->name('campaingns.pauseall')->middleware('role:admin,adver');
 Route::get('/pauseconfirm', 'CampaingnController@pauseConfirm')->name('campaingns.pauseconfirm')->middleware('role:admin,adver');
+Route::get('/campaingns/{campaingns}/daily/chartline', 'CampaingnController@dailyLineChartData')->name('campaingns.dailycl')->middleware('role:admin,adver');
+Route::get('/campaingns/dashboard/table', 'CampaingnController@campaignsDashboardTable')->name('campaingns.dashtable')->middleware('role:admin,adver');
 
 Route::post('/widgets', 'WidgetController@store')->name('widgets.store')->middleware('role:publi');
 Route::get('/widgets', 'WidgetController@index')->name('widgets')->middleware('role:publi');
@@ -75,6 +91,8 @@ Route::get('/widgets/{widget}/edit', 'WidgetController@edit')->name('widgets.edi
 Route::get('/widgets/{page?}', 'WidgetController@index')->name('widgets.index')->middleware('role:publi');
 Route::get('/widgetsdata', 'WidgetController@indexDataTable')->name('widgets.data')->middleware('role:publi');
 Route::get('/widgetlogsdata/{widget}', 'WidgetController@logsDataTable')->name('widgets.logs')->middleware('role:publi');
+Route::get('/widgets/{widget}/daily/chartline', 'WidgetController@dailyLineChartData')->name('widgets.dailycl')->middleware('role:publi');
+Route::get('/widgets/dashboard/table', 'WidgetController@widgetsDashboardTable')->name('widgets.dashtable')->middleware('role:publi');
 
 Route::post('/categories', 'CategoryController@store')->name('categories.store')->middleware('role:admin');
 Route::get('/categories', 'CategoryController@index')->name('categories')->middleware('role:admin');
@@ -96,8 +114,7 @@ Route::delete('/payments/{payment}', 'PaymentController@destroy')->name('payment
 Route::get('/payments/{payment}/edit', 'PaymentController@edit')->name('payments.edit')->middleware('role:admin');
 Route::get('/payments/{payment}/voucher', 'PaymentController@voucher')->name('payments.voucher')->middleware('role:admin');
 Route::patch('/payments/vouchers/{payment}', 'PaymentController@sendVoucher')->name('payments.send_voucher')->middleware('role:admin');
-
-Route::patch('/users/payment/{payment}', 'UserController@payment')->name('users.payment')->middleware('role:admin');
+Route::patch('/payments/payment/{payment}', 'PaymentController@payment')->name('payments.payment')->middleware('role:admin');
 
 Route::get('/auth/account', 'Auth\AuthController@edit')->name('auth.account')->middleware('role:admin,adver,publi');
 Route::get('/auth/change', 'Auth\AuthController@changePassword')->name('auth.changePassword')->middleware('role:admin,adver,publi');

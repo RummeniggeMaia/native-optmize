@@ -107,7 +107,7 @@
                     </div>
                 @endif
             @endif
-            {!! Form::model($payment->user,['class'=>'form-bordered', 'method' => 'patch','route'=>['users.payment',$payment->id]]) !!}
+            {!! Form::model($payment->user,['class'=>'form-bordered', 'method' => 'patch','route'=>['payments.payment',$payment->id]]) !!}
             <div class="form-group {{ $errors->has('info') ? ' has-error' : ''}} ">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-info"></i></span>

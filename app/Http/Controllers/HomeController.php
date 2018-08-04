@@ -77,7 +77,7 @@ class HomeController extends Controller
             ->get([
                 DB::raw('SUM(widget_logs.impressions) as impressions'),
                 DB::raw('SUM(widget_logs.clicks) as clicks'),
-                DB::raw('SUM(widget_logs.revenues) as revenues'),
+                DB::raw('FORMAT(SUM(widget_logs.revenues), 4) as revenues'),
                 DB::raw('MONTH(widget_logs.created_at) as month')]);
     }
 
@@ -91,8 +91,36 @@ class HomeController extends Controller
             ->get([
                 DB::raw('SUM(campaign_logs.impressions) as impressions'),
                 DB::raw('SUM(campaign_logs.clicks) as clicks'),
-                DB::raw('SUM(campaign_logs.revenues) as revenues'),
+                DB::raw('FORMAT(SUM(campaign_logs.revenues), 4) as revenues'),
                 DB::raw('MONTH(campaign_logs.created_at) as month')]);
+    }
+
+    public function widgetsDailyLineChartData() {
+        return DB::table('widget_logs')
+            ->join('widgets', 'widget_logs.widget_id', '=', 'widgets.id')
+            ->where('user_id', Auth::id())
+            ->whereYear('widget_logs.created_at', Carbon::now()->year)
+            ->whereMonth('widget_logs.created_at', Carbon::now()->month)
+            ->groupBy('day')
+            ->get([
+                DB::raw('SUM(widget_logs.impressions) as impressions'),
+                DB::raw('SUM(widget_logs.clicks) as clicks'),
+                DB::raw('FORMAT(SUM(widget_logs.revenues), 4) as revenues'),
+                DB::raw('DAY(widget_logs.created_at) as day')]);
+    }
+
+    public function campaignsDailyLineChartData() {
+        return DB::table('campaign_logs')
+                ->join('campaingns', 'campaign_logs.campaingn_id', '=', 'campaingns.id')
+                ->where('user_id', Auth::id())
+                ->whereYear('campaign_logs.created_at', Carbon::now()->year)
+                ->whereMonth('campaign_logs.created_at', Carbon::now()->month)
+                ->groupBy('day')
+                ->get([
+                    DB::raw('SUM(campaign_logs.impressions) as impressions'),
+                    DB::raw('SUM(campaign_logs.clicks) as clicks'),
+                    DB::raw('FORMAT(SUM(campaign_logs.revenues), 4) as revenues'),
+                    DB::raw('DAY(campaign_logs.created_at) as day')]);
     }
 
     public function dailyEarnings() {

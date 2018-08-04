@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Role;
 use App\Payment;
+use App\UserCredits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -188,73 +189,37 @@ class UserController extends Controller {
                                     , 'Usuário excluído com sucesso.');
     }
 
-    /**
-     * TODO Mudar essa funcao para o PaymentController
-     */
-    public function payment(Request $request, $id) {
-        $post = $request->only(['paid_value', 'info', 'status']);
-        $payment = Payment::with('user')->find($id);
-        $v = Validator::make($post, 
-            [
-                'paid_value' => 'numeric|min:0|max:2147483647',
-                'info' => 'max:190',
-                'upload_file' => 'mimes:pdf',
-                'status' => 'in:1,3',
-            ], 
-            [
-                'paid_value.numeric' => 'Valor não numérico',
-                'paid_value.min' => 'Valor abaixo de zero.',
-                'paid_value.max' => 'Valor muito alto.',
-                'info.max' => 'No máximo 190 caracteres.',
-                'status.in' => 'Método de pagamento inválido.',
-            ]
-        );
-        if ($payment && !$v->fails()) {
-            if ($payment->status == Payment::STATUS_REVERSED) {
-                return redirect()->back()->with('error'
-                                        , 'Pagamento já foi estornado.');
-            }
-            DB::transaction(function() use ($post, $payment) {
-                $status = intval($post['status']);
-                $payment->paid_value = doubleval($post['paid_value']);
-                if ($status == Payment::STATUS_REVERSED) {
-                    $payment->user->increment('revenue', $payment->brute_value);
-                    $payment->paid_value = 0.0;
-                }
-                $payment->status = $status;
-                $payment->info = $post['info'];
-                $payment->save();
-            });
-            return redirect()->back()->with('success', 
-                'Pagamento ' . (Payment::STATUS_REVERSED ? 'estornado' : 'realizado') .' com sucesso.');
-        } else {
-            return redirect()->back()
-                            ->withErrors($v)
-                            ->withInput();
-        }
-    }
-
     public function addCredits($id) {
         $user = User::find($id);
         return view('users.add_credits', compact('user'));
     }
 
     public function applyCredits(Request $request, $id) {
-        return redirect()->back()->with('warning'
-                                        , 'Função a ser implementada.');
-        // $post = $request->all();
-        // $user = User::find($id);
-        // if (!$user) {
-        //     return redirect()->back()->with('error', 'Usuário inexistente.');
-        // } else {
-        //     try {
-        //         $user->increment('revenue_adv', $post['revenue_adv']);
-        //         return redirect()->back()->with('success'
-        //                                 , 'Usuário atualizado com sucesso.');
-        //     } catch (Exception $e) {
-        //         DB::rollBack();
-        //     }
-        // }
+        // return redirect()->back()->with('warning'
+        //                                 , 'Função a ser implementada.');
+        $post = $request->only('revenue_adv');
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuário inexistente.');
+        } else if (!isset( $post['revenue_adv']) &&  $post['revenue_adv']) {
+
+        } else {
+            try {
+                DB::beginTransaction();
+                $user->increment('revenue_adv', $post['revenue_adv']);
+                UserCredits::create([
+                    'value' => $post['revenue_adv'],
+                    'user_id' => $user->id
+                ]);
+                DB::commit();
+                return redirect()->back()->with('success'
+                                        , 'Usuário atribuídos com sucesso.');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->with('success'
+                                        , 'Usuário atribuídos com sucesso.');
+            }
+        }
     }
 
     private function validar($post, $update = false, $isAdver = false) {
