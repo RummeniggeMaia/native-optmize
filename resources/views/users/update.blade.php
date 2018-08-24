@@ -32,17 +32,6 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
-                    {!! Form::text('email',null,['id'=>'email', 'class'=>'form-control input-lg', 'placeholder'=>'E-Mail', 'required']) !!}
-                </div>
-                @if ($errors->has('email'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('email') }}</strong>
-                </span>
-                @endif
-            </div>
             <div class="form-group {{ $errors->has('skype') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-skype"></i></span>
@@ -57,7 +46,7 @@
             <div class="form-group {{ $errors->has('phone') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-whatsapp"></i></span>
-                    {!! Form::text('phone',null,['id'=>'phone', 'class'=>'form-control input-lg', 'placeholder'=>'Telefone/Whatsapp', 'required']) !!}
+                    {!! Form::text('phone',null,['id'=>'phone', 'class'=>'form-control input-lg', 'placeholder'=>'Telefone/Whatsapp']) !!}
                 </div>
                 @if ($errors->has('skype'))
                 <span class="help-block">
@@ -102,6 +91,24 @@
                 <span class="help-block">
                     <strong>{{ $errors->first('password') }}</strong>
                 </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('role') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('role', [
+                            '1'=>'Publisher', 
+                            '2'=>'Advertiser',
+                        ],
+                        $user->hasRole('publi')? 1 : 2, 
+                        ['class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Perfil do usuário.']) 
+                    }}
+                </div>
+                @if ($errors->has('role'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('role') }}</strong>
+                    </span>
                 @endif
             </div>
             <div class="form-group form-actions text-center">

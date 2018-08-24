@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Role;
 use App\Payment;
-use App\UserCredits;
+use App\UserCredit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -107,10 +107,10 @@ class UserController extends Controller {
         } else {
             $post['taxa'] = $post['taxa'] * 0.01;
             $post['password'] = Hash::make($post['password']);
-            $role = Role::where('name', 'publi')->first();
             $user = User::create($post);
+            $roneName = $post['role'] == 2 ? 'adver' : 'publi';
+            $role = Role::where('name', $roleName)->first();
             $user->roles()->sync([$role->id]);
-//            $user->roles()->attach(Role::where('name', 'user')->first());
 
             return redirect('users')->with('success'
                                     , 'Usuário cadastrado com sucesso.');
@@ -167,12 +167,17 @@ class UserController extends Controller {
                     unset($post['password']);
                 }
                 $user->update($post);
-                // $user->increment('revenue_adv', $post['revenue_adv']);
+                $roleName = $post['role'] == 2 ? 'adver' : 'publi';
+                $role = Role::where('name', $roleName)->first();
+                $user->roles()->sync([$role->id]);
                 DB::commit();
                 return redirect()->back()->with('success'
                                         , 'Usuário atualizado com sucesso.');
             } catch (Exception $e) {
                 DB::rollBack();
+                return redirect()->back()
+                    ->with('error'
+                    , 'Usuário não foi atualizado.');
             }
         }
     }
@@ -195,34 +200,45 @@ class UserController extends Controller {
     }
 
     public function applyCredits(Request $request, $id) {
-        // return redirect()->back()->with('warning'
-        //                                 , 'Função a ser implementada.');
         $post = $request->only('revenue_adv');
         $user = User::find($id);
         if (!$user) {
             return redirect()->back()->with('error', 'Usuário inexistente.');
-        } else if (!isset( $post['revenue_adv']) &&  $post['revenue_adv']) {
-
         } else {
-            try {
-                DB::beginTransaction();
-                $user->increment('revenue_adv', $post['revenue_adv']);
-                UserCredits::create([
-                    'value' => $post['revenue_adv'],
-                    'user_id' => $user->id
-                ]);
-                DB::commit();
-                return redirect()->back()->with('success'
-                                        , 'Usuário atribuídos com sucesso.');
-            } catch (Exception $e) {
-                DB::rollBack();
-                return redirect()->back()->with('success'
-                                        , 'Usuário atribuídos com sucesso.');
+            $rules = [
+                'revenue_adv' => 'required|numeric|min:1'
+            ];
+            $msgs = [
+                'revenue_adv.required' => 'Insira o valor.',
+                'revenue_adv.numeric' => 'Valor deve ser numérico.',
+                'revenue_adv.min' => 'Valor muito baixo.',
+            ];
+            $v = Validator::make($post, $rules, $msgs);
+            if ($v->fails()) {
+                return redirect()->back()
+                                ->withErrors($v)
+                                ->withInput();
+            } else {
+                try {
+                    DB::beginTransaction();
+                    $user->increment('revenue_adv', $post['revenue_adv']);
+                    UserCredit::create([
+                        'value' => $post['revenue_adv'],
+                        'user_id' => $user->id
+                    ]);
+                    DB::commit();
+                    return redirect()->back()->with('success'
+                                            , 'Créditos atribuídos com sucesso.');
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    return redirect()->back()->with('success'
+                                            , 'Créditos atribuídos com sucesso.');
+                }
             }
         }
     }
 
-    private function validar($post, $update = false, $isAdver = false) {
+    public function validar($post, $update = false, $isAdver = false) {
         $mensagens = array(
             'name.required' => 'Insira o nome.',
             'name.min' => 'Nome muito curto.',
@@ -233,18 +249,20 @@ class UserController extends Controller {
             'password.max' => 'Password deve ter entre 6 e 10 caracters.',
             'password.regex' => 'Password inválido. Deve conter ao menos uma letra e um número.',
             'status.in' => 'Status inválido.',
-            'revenue_adv' => 'Valor não numérico.'
+            'revenue_adv' => 'Valor não numérico.',
+            'role.in' => 'Perfil de usuário inválido'
         );
         $rules = array(
             'name' => 'required|min:4',
-            'email' => array(
-                'required',
-                'regex:/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
-            ),
             'status' => 'in:0,1',
+            'role' => 'in:1,2',
         );
         if (!$update) {
             $rules['password'] = 'required|min:6|max:10|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/';
+            $rules['email'] = array(
+                'required',
+                'regex:/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/'
+            );
         }
         if ($isAdver) {
             // $rules['revenue_adv'] = 'numeric';

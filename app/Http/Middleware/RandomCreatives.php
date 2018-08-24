@@ -157,16 +157,16 @@ class RandomCreatives
         $records = $db->lookup($user_ip, IP2Location::ALL);
         $codigopais = $records['countryCode'];
 
-        $campaigns = Campaingn::with(['user', 'campaignLogs', 'segmentation'])
+        $campaigns = Campaingn::with(['user', 'campaignLogs'/*, 'segmentation'*/])
             ->whereHas('user', function($q) {
                 return $q->where('revenue_adv', '>', 0);
             })
-            ->whereHas('segmentation', function($q) use ($device, $codigopais) {
-                return $q->where(
-                    ['device' => $device],
-                    ['country' => $codigopais]
-                );
-            })
+            // ->whereHas('segmentation', function($q) use ($device, $codigopais) {
+            //     return $q->where(
+            //         ['device' => $device],
+            //         ['country' => $codigopais]
+            //     );
+            // })
             ->where([
                 ['type_layout', $type],
                 ['status', true],

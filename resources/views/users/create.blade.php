@@ -103,6 +103,24 @@
                 </span>
                 @endif
             </div>
+            <div class="form-group {{ $errors->has('role') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                    {{ 
+                        Form::select('role', [
+                            '1'=>'Publisher', 
+                            '2'=>'Advertiser',
+                        ],
+                        Input::old('role'), 
+                        ['class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Perfil do usuário.']) 
+                    }}
+                </div>
+                @if ($errors->has('role'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('role') }}</strong>
+                    </span>
+                @endif
+            </div>
             <div class="form-group form-actions text-center">
                 {!! Form::submit('SALVAR', ['class' => 'btn btn-md btn-default']) !!}
             </div>
