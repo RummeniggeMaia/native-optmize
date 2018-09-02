@@ -108,7 +108,7 @@ class UserController extends Controller {
             $post['taxa'] = $post['taxa'] * 0.01;
             $post['password'] = Hash::make($post['password']);
             $user = User::create($post);
-            $roneName = $post['role'] == 2 ? 'adver' : 'publi';
+            $roleName = $post['role'] == 2 ? 'adver' : 'publi';
             $role = Role::where('name', $roleName)->first();
             $user->roles()->sync([$role->id]);
 

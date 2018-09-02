@@ -435,7 +435,7 @@ class CampaingnController extends Controller {
             'ceiling' => 'required|numeric',
             'type_layout' => 'in:1,2,3,4,5,6',
             'device' => 'in:1,2',
-            'country' => "in:$contryCodes"
+            'country' => "in:$contryCodes",
         );
         $rules['type'] = 'in:"CPC"';
         if (Auth::user()->hasRole('admin')) {
@@ -446,10 +446,12 @@ class CampaingnController extends Controller {
         }
         if (isset($post['type']) && $post['type'] == "CPC") {
             $mensagens['cpc.numeric'] = 'CPC deve ser numérico.';
-            $rules['cpc'] = 'numeric';
+            $mensagens['cpc.min'] = 'Valor mínimo para CPC: 0.001.';
+            $rules['cpc'] = 'numeric|min:0.001';
         } else if (isset($post['type']) && $post['type'] == "CPM") {
             $mensagens['cpm.numeric'] = 'CPM deve ser numérico.';
-            $rules['cpm'] = 'numeric';
+            $mensagens['cpm.min'] = 'Valor mínimo para CPM: 0.5.';
+            $rules['cpm'] = 'numeric|min:0.5';
         }
         $validator = Validator::make($post, $rules, $mensagens);
         return $validator;

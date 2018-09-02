@@ -95,7 +95,7 @@
             <div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-image"></i></span>
-                    {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder' => 'Imagem', 'accept'=>'.png,.jpg,.gif,.mp4', 'required']) !!}
+                    {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder' => 'Imagem', 'accept'=>'.png,.jpg,.gif,.mp4', 'required', 'multiple']) !!}
                 </div>
                 @if ($errors->has('image'))
                 <span class="help-block">

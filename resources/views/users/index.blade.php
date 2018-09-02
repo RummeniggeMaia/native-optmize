@@ -26,7 +26,7 @@
                         <th class="text-center">NIVEL</th>
                         <th class="text-center">SALDO</th>
                         <th class="text-center">STATUS</th>
-                        <th class="text-center">CRÉDITOS</th>
+                        <th class="text-center">ADD SALDO</th>
                         <th class="text-center">EDITAR</th>
                         <th class="text-center">EXIBIR</th>
                         <th class="text-center">EXCLUIR</th>

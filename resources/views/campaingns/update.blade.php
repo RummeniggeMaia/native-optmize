@@ -98,7 +98,7 @@
             <div id="cpc_fg" class="form-group {{ $errors->has('cpc') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'Custo Por CLICK', 'title'=>'Custo por CLICK']) !!}
+                    {!! Form::text('cpc',null,['id'=>'cpc','class'=>'form-control input-lg', 'placeholder' => 'CPC Mínimo: 0.001', 'title'=>'Custo por CLICK']) !!}
                 </div>
                 @if ($errors->has('cpc'))
                 <span class="help-block">
@@ -109,7 +109,7 @@
             <div id="cpm_fg" class="form-group {{ $errors->has('cpm') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
-                    {!! Form::text('cpm',null,['id'=>'cpm','class'=>'form-control input-lg', 'placeholder' => 'Custo por MIL', 'title'=>'Custo por MIL']) !!}
+                    {!! Form::text('cpm',null,['id'=>'cpm','class'=>'form-control input-lg', 'placeholder' => 'CPM Mínimo: 0.5', 'title'=>'Custo por MIL']) !!}
                 </div>
                 @if ($errors->has('cpm'))
                 <span class="help-block">
