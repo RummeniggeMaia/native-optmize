@@ -1,47 +1,77 @@
 @extends('layouts/template')
+@section('title', 'Usuários')
 
 @section('content')
-<h1>Users</h1>
-<a href="{{route('users.create')}}" class="btn btn-success">Novo User</a>
-<hr>
-<table class="table table-striped table-bordered table-hover">
-    <thead>
-        <tr class="bg-info">
-            <th>Id</th>
-            <th>Name</th>
-            <th>E-mail</th>
-            <th colspan="3">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($users as $user)
-        <tr>
-            <td>{{ $user->id }}</td>
-            <td>{{ $user->name }}</td>
-            <td>{{ $user->email }}</td>
-            <td><a href="{{route('users.show', $user->id)}}" class="btn btn-primary">Mostrar</a></td>
-            <td><a href="{{route('users.edit', $user->id)}}" class="btn btn-warning">Atualizar</a></td>
-            <td>
-                {!! Form::open(['method' => 'DELETE', 'route'=>['users.destroy', $user->id]]) !!}
-                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                {!! Form::close() !!}
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-    <tfoot class="bg-info">
-        <tr>
-            <td colspan="7" style="text-align: right;font-weight: bold">
-                Exibindo de {{ ($users->currentPage() - 1) * 5 + 1 }}
-                a @if(($users->currentPage() - 1) * 5 + 5 > $users->total())
-                    {{ $users->total() }}
-                  @else
-                    {{ ($users->currentPage() - 1) * 5 + 5 }}
-                  @endif
-                de {{ $users->total() }} users
-            </td>
-        </tr>
-    </tfoot>
-</table>
-{{ $users->links() }}
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="{{ route('home') }}">Home</a></li>
+    <li><a href="">Lista de Usuários</a></li>
+</ul>
+<div class="row">
+    <div class="col-lg-12 content-header">
+        <div class="header-section">
+            <h1>
+                <i class="lnr lnr-lock"></i>Lista de <b>Usuários</b>
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="row"> 
+    <div class="col-md-12">             
+        <div class="table-responsive">
+            <table id="datatable" class="table table-vcenter table-borderbottom table-condensed">
+                <thead>
+                    <tr class="bg-info">
+                        <th class="text-center">NOME</th>
+                        <th class="text-center">E-MAIL</th>
+                        <th class="text-center">NIVEL</th>
+                        <th class="text-center">SALDO</th>
+                        <th class="text-center">STATUS</th>
+                        <th class="text-center">ADD SALDO</th>
+                        <th class="text-center">EDITAR</th>
+                        <th class="text-center">EXIBIR</th>
+                        <th class="text-center">EXCLUIR</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        App.datatables();
+        $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{!! route("users.data") !!}',
+                type: 'GET',
+                'beforeSend': function (request) {
+                    request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+                },
+                data: function(data) {
+                    for (var i = 0, len = data.columns.length; i < len; i++) {
+                        if (! data.columns[i].search.value) delete data.columns[i].search;
+                        if (data.columns[i].searchable === true) delete data.columns[i].searchable;
+                        if (data.columns[i].orderable === true) delete data.columns[i].orderable;
+                        if (data.columns[i].data === data.columns[i].name) delete data.columns[i].name;
+                    }
+                    delete data.search.regex;
+                }
+            },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'roles', name: 'roles'},
+                {data: 'revenue', name: 'revenue'},
+                {data: 'status', name: 'status'},
+                {data: 'credits', name: 'credits', orderable: false, searchable: false},
+                {data: 'edit', name: 'edit', orderable: false, searchable: false},
+                {data: 'show', name: 'show', orderable: false, searchable: false},
+                {data: 'delete', name: 'delete', orderable: false, searchable: false},
+            ],
+            
+        });
+        $('.dataTables_filter input').attr('placeholder', 'Buscar');
+    });
+</script>
 @endsection

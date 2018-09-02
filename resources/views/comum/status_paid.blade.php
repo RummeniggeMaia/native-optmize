@@ -1,0 +1,1 @@
+<span class="label label-success" style="color:#fff;position:relative;top:0px;"><i class="fa fa-check"></i> Pago</span>

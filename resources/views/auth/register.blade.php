@@ -1,77 +1,159 @@
-@extends('layouts.template')
+<!DOCTYPE html>
+<html class="no-js" lang="{{ app()->getLocale() }}">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="author" content="pixelcave">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+        <link rel="shortcut icon" href="{{ asset('pago/img/favicon.png') }}">
+        <link rel="stylesheet" href="{{ asset('pago/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('pago/css/plugins.css') }}">
+        <link rel="stylesheet" href="{{ asset('pago/css/main.css') }}">
+        <script src="{{ asset('pago/js/vendor/modernizr.min.js') }}"></script>
+        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+        <!-- CSRF Token -->
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+        <title>Registro | Ads4XXX</title>
 
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
+        <!-- Scripts -->
+        <script src="{{ asset('pago/js/vendor/jquery.min.js') }}"></script>
+        <script src="{{ asset('pago/js/vendor/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('pago/js/plugins.js') }}"></script>
+        <script src="{{ asset('pago/js/main.js') }}"></script>
+        <style>
+            #datatable td {
+                text-align: center
+            }
+        </style>
+    </head>
+    <body style="background-color: #5A732D;">
+        <div id="page-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Name</label>
+                        <div id="login-container">
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+                            <div class="login-title text-center">
+                                <img src="{{ asset('pago/img/logo.png') }}" alt="logo" class="img-responsive">
+                            </div>
 
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+                            <div class="block">
+                                <form class="form-horizontal" method="POST" action="{{ route('register') }}">
+                                    {{ csrf_field() }}
+
+                                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                                                <input id="name" type="text" class="form-control input-lg" name="name" value="{{ old('name') }}" placeholder="Nome" required autofocus>
+                                            </div>
+                                            @if ($errors->has('name'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('name') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                                <input id="email" type="email" class="form-control input-lg" name="email" value="{{ old('email') }}" placeholder="E-mail" required>
+                                            </div>
+                                            @if ($errors->has('email'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('skype') ? ' has-error' : '' }}">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-skype"></i></span>
+                                                <input id="email" type="text" class="form-control" name="skype" placeholder="Skype">
+                                            </div>
+                                            @if ($errors->has('skype'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('skype') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-whatsapp"></i></span>
+                                                <input id="phone" type="phone" class="form-control" name="phone"placeholder="Telefone/Whatsapp">
+                                            </div>
+                                            @if ($errors->has('phone'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('phone') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                                                <input id="password" type="password" class="form-control" name="password" required>
+                                            </div>
+                                            @if ($errors->has('password'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('password') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group {{ $errors->has('role') ? ' has-error' : '' }}">
+                                        <div class="col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                                                {{ 
+                                                    Form::select('role', [
+                                                        '1'=>'Publisher', 
+                                                        '2'=>'Advertiser',
+                                                    ],
+                                                    Input::old('role'), 
+                                                    ['class'=>'selectpicker form-control input-lg', 'required', 'title' => 'Perfil do usuário.']) 
+                                                }}
+                                            </div>
+                                            @if ($errors->has('role'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('role') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-actions text-center">
+                                        <a class="btn btn-md btn-default" href="{{ route('login') }}">
+                                            VOLTAR
+                                        </a>
+                                        <button type="submit" class="btn btn-md btn-default">REGISTRAR</button>
+                                    </div> 
+                                </form>
                             </div>
                         </div>
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-@endsection
+        <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+    </body>
+</html>

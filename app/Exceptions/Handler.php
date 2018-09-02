@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Database\QueryException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +46,29 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof TokenMismatchException){
+            return back()->with('csrf_error'
+                            , 'Sessão anterior expirou.');
+        } else if ($exception instanceof QueryException) {
+            if ($exception->errorInfo[1] == 1062) {
+                return back()->with('duplicate_error'
+                            , 'Já existe um registro no sistema com esses dados.');
+            }
+        }
+        // if ($this->isHttpException($exception)) {
+        //     switch ($exception->getStatusCode()) {
+        //         case '403':
+        //             return 'not authorized';
+        //         case '404':
+        //             return 'not found';
+        //         case '500':
+        //             return 'server error';
+        //         default:
+        //             return $this->renderHttpException($exception);
+        //     }
+        // } else {
+        //     return parent::render($request, $exception);
+        // }
         return parent::render($request, $exception);
     }
 

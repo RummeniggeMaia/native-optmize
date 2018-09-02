@@ -1,0 +1,1 @@
+<span class="label label-default" style="color:#fff;position:relative;top:0px;"><i class="fa fa-clock-o"></i> Aguardando {{ $name }}</span>

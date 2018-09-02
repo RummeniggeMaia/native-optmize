@@ -1,0 +1,182 @@
+    <!DOCTYPE html>
+        <html class="no-js" lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Pogor</title>
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+        <link rel="shortcut icon" href="img/favicon.png">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/plugins.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+        <script src="js/vendor/modernizr.min.js"></script>
+    </head>
+    <body>
+
+    <div id="page-wrapper">
+
+            <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+              <div id="sidebar">
+                    <div id="sidebar-scroll">
+                        <div class="sidebar-content">
+                            <a href="#" class="sidebar-brand">
+                               <img src="img/logo-p.png" alt="logo">
+                            </a>
+
+                            <ul class="sidebar-nav">
+                                <li>
+                                    <a href="#">&nbsp;<i class="lnr lnr-screen sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-users sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Clientes</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Listar Clientes</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                 <li>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-cart sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pedidos</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Listar Pedidos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#"><i class="lnr lnr-chart-bars sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Relatórios</span></a>
+                                </li>
+
+                                <li class="active">
+                                    <a href="#" class="sidebar-nav-menu active"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Adicionar Usuário</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Listar Usuários</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="main-container">
+
+                   <header class="navbar navbar-default">
+                        <ul class="nav navbar-nav-custom">
+                            <li>
+                                <a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar');this.blur();">
+                                    <i class="fa fa-bars fa-fw side-togle"></i>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                        <ul class="nav navbar-nav-custom pull-right">
+                            <li class="dropdown">
+                                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                     <img src="img/avatar.png" style="border:1px solid #eaeaea;" alt="avatar"> <i class="fa fa-angle-down"></i> 
+                                </a>
+                                <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                    <li>
+                                        <a href="<?php echo $url_diretorio; ?>/minha-conta">
+                                            <i class="fa fa-user pull-right"></i>  &nbsp; Minha Conta
+                                        </a>
+                                        <a href="<?php echo $url_diretorio; ?>/sair">
+                                            <i class="gi gi-exit pull-right"></i>  &nbsp; Sair
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </header>
+
+                    <div id="page-content">
+
+                        <ul class="breadcrumb breadcrumb-top">
+                            <li>Home</li>
+                            <li><a href="">Adicionar Usuários</a></li>
+                        </ul>
+             
+                        <div class="row">
+                          <div class="col-lg-12 content-header">
+                            <div class="header-section">
+                                <h1>
+                                    <i class="lnr lnr-users"></i>Adicionar <b>Usuários</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                                </h1>
+                            </div>
+                          </div>
+                        </div>
+    
+                         <div class="row">
+                            <div class="col-md-6">
+                                <div class="block">
+                                    <form action="" method="post" target="#Resposta" id="form-usuario" name="form-usuario" class="form-bordered">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                                                <input type="text" name="nome" class="form-control input-lg" placeholder="Nome">
+                                            </div>
+                                        </div>
+                                         <div class="form-group">
+                                           <div class="input-group">
+                                                <span class="input-group-addon"><i class="hi hi-star"></i></span>
+                                                <select name="tipo" class="form-control input-lg">
+                                                    <option value="">Selecione o Nivel</option>
+                                                    <option value="admin">Administrador</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
+                                                <input type="email" name="email" class="form-control input-lg" placeholder="Email">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="gi gi-asterisk"></i></span>
+                                                <input type="password" name="senha" class="form-control input-lg" placeholder="Senha">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-actions text-center">
+                                            <button type="submit" class="btn btn-md btn-default">CRIAR USUÁRIO</button>
+                                            
+                                        </div>  
+                                    </form>
+
+                                </div>
+                             </div>
+
+                         </div>
+                     </div>
+
+                    <footer class="clearfix">
+                        <div class="pull-right">
+                            pago.com.br
+                        </div>
+                    </footer>
+
+                </div>
+            </div>
+        </div>
+
+        <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+
+        <script src="js/vendor/jquery.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/pages/tablesDatatables.js"></script>
+        <script>$(function(){ TablesDatatables.init(); });</script>
+    </body>
+</html>

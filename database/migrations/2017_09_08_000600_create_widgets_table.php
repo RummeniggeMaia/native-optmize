@@ -22,8 +22,10 @@ class CreateWidgetsTable extends Migration {
             $table->string('hashid')->nullable();
             $table->char('name', 255);
             $table->char('url', 255);
-            $table->char('type', 255);
+            $table->char('type', 255)->nullable();
+            $table->integer('type_layout')->default(0);
             $table->integer('quantity');
+            $table->integer('impressions')->nullable();
             $table->timestamps();
         });
 

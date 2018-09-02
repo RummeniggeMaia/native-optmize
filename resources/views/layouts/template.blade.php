@@ -1,166 +1,178 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html class="no-js" lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta name="author" content="pixelcave">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+        <link rel="shortcut icon" href="{{ asset('pago/img/favicon.png') }}">
+        <link rel="stylesheet" href="{{ asset('pago/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('pago/css/plugins.css') }}">
+        <link rel="stylesheet" href="{{ asset('pago/css/main.css') }}">
+        <script src="{{ asset('pago/js/vendor/modernizr.min.js') }}"></script>
+        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Native-Optimize</title>
+        <title> @yield('title') | Ads4XXX</title>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-              crossorigin="anonymous">
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-              integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
-              crossorigin="anonymous">
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-                crossorigin="anonymous">
-        </script>
-        <link rel="stylesheet" href="{{ asset('css/bootstrap-select.min.css') }}">
-        <script type="text/javascript" src="{{ asset('js/bootstrap-select.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/i18n/defaults-pt_BR.min.js') }}"></script>
-
-        <script type="text/javascript">
-$(document).ready(function () {
-    $('.dropdown-toggle').dropdown();
-    var url = window.location;
-    $('ul.navegacao a').filter(function () {
-        return url.href.indexOf(this.href) !== -1;
-    }).parent().addClass('active');
-    //$('.selectpicker').selectpicker();
-});
-        </script>
-        <!-- Styles -->
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <!-- Scripts -->
+        <script src="{{ asset('pago/js/vendor/jquery.min.js') }}"></script>
+        <script src="{{ asset('pago/js/vendor/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('pago/js/plugins.js') }}"></script>
+        <script src="{{ asset('pago/js/main.js') }}"></script>
         <style>
-            .body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                height: 100vh;
-                margin: 0;
-            }
-            .full-height {
-                height: 100vh;
-            }
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-            .position-ref {
-                position: relative;
-            }
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-            .content {
-                text-align: center;
-            }
-            .title {
-                font-size: 84px;
-            }
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-            .m-b-md {
-                margin-bottom: 30px;
+            #datatable td {
+                text-align: center
             }
         </style>
     </head>
-    <body style="background-color: white">
-        <div id="app">
-            <nav class="navbar-default navbar-static-top">
-                <div class="container">
-                    <div class="navbar-header">
-
-                        <!-- Collapsed Hamburger -->
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                            <span class="sr-only">Navegação</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-
-                        <!-- Branding Image -->
-                        <a class="navbar-brand" href="{{ route('home') }}">
-                            Native-Optimize
-                        </a>
-                    </div>
-
-                    <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                        <!-- Left Side Of Navbar -->
-                        <ul class="nav navbar-nav navegacao">
+    <body>
+        <div id="page-wrapper">
+            <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+                <div id="sidebar">
+                    <div id="sidebar-scroll">
+                        <div class="sidebar-content">
+                            <a href="{{ route('home') }}" class="sidebar-brand">
+                                <img src="{{ asset('pago/img/logo-p.png') }}" alt="logo">
+                            </a>
                             @auth
-                            <li><a href="{{ route('home') }}">Home</a></li>
-                            @If (Auth::user()->hasRole('admin'))
-                            <li><a href="{{ route('users') }}">Users</a></li>
-                            <li><a href="{{ route('creatives') }}">Creatives</a></li>
-                            <li><a href="{{ route('campaingns') }}">Campaigns</a></li>
-                            <li><a href="{{ route('categories') }}">Categories</a></li>
-                            @else
-                            <li><a href="{{ route('widgets') }}">Widgets</a></li>
-                            @endif
+                            <ul class="sidebar-nav">
+                                <li>
+                                    <a href="{{ route('home') }}">&nbsp;<i class="lnr lnr-screen sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
+                                </li>
+                                @If (Auth::user()->hasAnyRole(['admin', 'adver']))
+                                    @If (Auth::user()->hasRole('admin'))
+                                        <li class="{!! Request::is('users*') ? 'active' : '' !!}">
+                                            <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
+                                            <ul>
+                                                <li>
+                                                    <a href="{{ route('users.create') }}">Adicionar Usuário</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('users') }}">Listar Usuários</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    @endif
+                                    <li class="{!! Request::is('creatives*') ? 'active' : '' !!}">
+                                        <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Anúncios</span></a>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ route('creatives.create') }}">Adicionar Anúncios</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('creatives') }}">Listar Anúncios</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="{!! Request::is('campaingns*') || Request::is('campsinavites') ? 'active' : '' !!}">
+                                        <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-bullhorn sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Campanhas</span></a>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ route('campaingns.create') }}">Adicionar Campanha</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('campaingns') }}">Listar Campanhas</a>
+                                            </li>
+                                            @If (Auth::user()->hasRole('admin'))
+                                                <li>
+                                                    <a href="{{ route('campaingns.inatives') }}">Listar Campanhas Inativas</a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                    @If (Auth::user()->hasRole('admin'))
+                                        <li class="{!! Request::is('categories*') ? 'active' : '' !!}">
+                                            <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-list sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Categorias</span></a>
+                                            <ul>
+                                                <li>
+                                                    <a href="{{ route('categories.create') }}">Adicionar Categoria</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('categories') }}">Listar Categorias</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    @endif
+                                @else
+                                <li class="{!! Request::is('widgets*') ? 'active' : '' !!}">
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-power-switch sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Widgets</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('widgets.create') }}">Adicionar Widget</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('widgets') }}">Listar Widgets</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="{!! Request::is('payments*') ? 'active' : '' !!}">
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="fa fa-money sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pagamentos</span></a>
+                                    <ul>
+                                        <li>
+                                        <a href="{{ route('payments.create') }}">Solicitar pagamento</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('payments') }}">Listar Pagamentos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @endif
+                            </ul>
                             @endauth
+                        </div>
+                    </div>
+                </div>
+                <div id="main-container">
+                    <header class="navbar navbar-default">
+                        <ul class="nav navbar-nav-custom">
+                            <li>
+                                <a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar');this.blur();">
+                                    <i class="fa fa-bars fa-fw side-togle"></i>
+                                </a>
+                            </li>
                         </ul>
-
-                        <!-- Right Side Of Navbar -->
-                        <ul class="nav navbar-nav navbar-right">
-                            <!-- Authentication Links -->
+                        <ul class="nav navbar-nav-custom pull-right">
                             @auth
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{ asset('pago/img/avatar.png') }}" style="border:1px solid #eaeaea;" alt="avatar"> <i class="fa fa-angle-down"></i>
                                 </a>
-
-                                <ul class="dropdown-menu" role="menu">
+                                <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
                                     <li>
                                         <a href="{{ route('auth.account') }}">
-                                            Account
+                                            <i class="fa fa-user pull-right"></i>  &nbsp; Minha Conta
                                         </a>
-                                    </li>
-                                    <li>
+                                        <a href="{{ route('auth.paymentData') }}">
+                                            <i class="fa fa-credit-card pull-right"></i>  &nbsp; Dados Bancários
+                                        </a>
                                         <a href="{{ route('logout') }}"
-                                           onclick="event.preventDefault();
-                                                   document.getElementById('logout-form').submit();">
-                                            Sair
+                                           onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                            <i class="gi gi-exit pull-right"></i>  &nbsp; Sair
                                         </a>
-
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
+
                                     </li>
                                 </ul>
                             </li>
-                            @endauth
                         </ul>
+                        @endauth
+                    </header>
+                    <div id="page-content">
+                        @include('comum/flash-message')
+                        @yield('content')
                     </div>
+                    <footer class="clearfix">
+                        <div class="pull-right">
+                            ads4xxx.com
+                        </div>
+                    </footer>
                 </div>
-            </nav>
-            <br />
-            <div class="container">
-                @include('comum/flash-message')
-                @yield('content')
             </div>
         </div>
-
-        <!-- Scripts -->
-        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>

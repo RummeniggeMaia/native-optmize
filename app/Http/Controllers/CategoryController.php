@@ -7,6 +7,8 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class CategoryController extends Controller {
     /*
@@ -19,6 +21,28 @@ class CategoryController extends Controller {
         $categories = Category::where('fixed', true)
                         ->orderBy('name', 'asc')->paginate(5);
         return view('categories.index', compact('categories'));
+    }
+
+    public function indexDataTable() {
+        $categories = DB::table('categories')->get();
+        return Datatables::of($categories)->addColumn('edit', function($category) {
+                    return view('comum.button_edit', [
+                        'id' => $category->id,
+                        'route' => 'categories.edit'
+                    ]);
+                })->addColumn('show', function($category) {
+                    return view('comum.button_show', [
+                        'id' => $category->id,
+                        'route' => 'categories.show'
+                    ]);
+                })->addColumn('delete', function($category) {
+                    return view('comum.button_delete', [
+                        'id' => $category->id,
+                        'route' => 'categories.destroy'
+                    ]);
+                })->rawColumns(
+                        ['edit', 'show', 'delete']
+                )->make(true);
     }
 
     /**
@@ -57,7 +81,7 @@ class CategoryController extends Controller {
      */
     public function show($id) {
         $category = Category::find($id);
-        if ($category->fixed && Auth::user()->hasRole('user')) {
+        if ($category->fixed && Auth::user()->hasRole('publi')) {
             return $this->index();
         }
         return view('categories.show', compact('category'));
@@ -71,7 +95,7 @@ class CategoryController extends Controller {
      */
     public function edit($id) {
         $category = Category::find($id);
-        if ($category->fixed && Auth::user()->hasRole('user')) {
+        if ($category->fixed && Auth::user()->hasRole('publi')) {
             return $this->index();
         }
         return view('categories.update', compact('category'));
@@ -105,7 +129,7 @@ class CategoryController extends Controller {
      */
     public function destroy($id) {
         $category = Category::find($id);
-        if ($category->fixed && Auth::user()->hasRole('user')) {
+        if ($category->fixed && Auth::user()->hasRole('publi')) {
             return redirect('categories');
         }
         $category->delete();

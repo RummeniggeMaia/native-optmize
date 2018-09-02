@@ -1,4 +1,4 @@
-<div style="margin-top: 10px;margin-bottom: -15px">
+<div>
     @if ($message = Session::get('success'))
     <div class="alert alert-success alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button>	
@@ -26,10 +26,27 @@
         <strong>{{ $message }}</strong>
     </div>
     @endif
+    
+    @if ($message = Session::get('csrf_error'))
+    <div class="alert alert-info alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>	
+        <strong>{{ $message }}</strong>
+    </div>
+    @endif
+    
+    @if ($message = Session::get('duplicate_error'))
+    <div class="alert alert-danger alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>	
+        <strong>{{ $message }}</strong>
+    </div>
+    @endif
+    
     @if ($errors->any())
-    <div class="alert alert-danger">
+    <div class="alert alert-danger alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button>	
         Por favor verifique os erros abaixo no formulário.
     </div>
     @endif
+    
 </div>
+<br />

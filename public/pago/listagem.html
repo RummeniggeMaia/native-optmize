@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+        <html class="no-js" lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <title>Pago</title>
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+        <link rel="shortcut icon" href="img/favicon.png">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/plugins.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+        <script src="js/vendor/modernizr.min.js"></script>
+    </head>
+    <body>
+
+        <div id="page-wrapper">
+
+            <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+              <div id="sidebar">
+                    <div id="sidebar-scroll">
+                        <div class="sidebar-content">
+                            <a href="#" class="sidebar-brand">
+                               <img src="img/logo-p.png" alt="logo">
+                            </a>
+
+                            <ul class="sidebar-nav">
+                                <li>
+                                    <a href="#">&nbsp;<i class="lnr lnr-screen sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Dashboard</span></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-users sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Clientes</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Listar Clientes</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                 <li>
+                                    <a href="#" class="sidebar-nav-menu"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-cart sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Pedidos</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Listar Pedidos</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#"><i class="lnr lnr-chart-bars sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Relatórios</span></a>
+                                </li>
+
+                                <li class="active">
+                                    <a href="#" class="sidebar-nav-menu active"><i class="lnr lnr-chevron-right sidebar-nav-indicator sidebar-nav-mini-hide"></i><i class="lnr lnr-lock sidebar-nav-icon"></i><span class="sidebar-nav-mini-hide">Usuários</span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="#">Adicionar Usuário</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Listar Usuários</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="main-container">
+
+                   <header class="navbar navbar-default">
+                        <ul class="nav navbar-nav-custom">
+                            <li>
+                                <a href="javascript:void(0)" onclick="App.sidebar('toggle-sidebar');this.blur();">
+                                    <i class="fa fa-bars fa-fw side-togle"></i>
+                                </a>
+                            </li>
+
+                        </ul>
+
+                        <ul class="nav navbar-nav-custom pull-right">
+                            <li class="dropdown">
+                                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                     <img src="img/avatar.png" style="border:1px solid #eaeaea;" alt="avatar"> <i class="fa fa-angle-down"></i> 
+                                </a>
+                                <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                    <li>
+                                        <a href="<?php echo $url_diretorio; ?>/minha-conta">
+                                            <i class="fa fa-user pull-right"></i>  &nbsp; Minha Conta
+                                        </a>
+                                        <a href="<?php echo $url_diretorio; ?>/sair">
+                                            <i class="gi gi-exit pull-right"></i>  &nbsp; Sair
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </header>
+
+                    <div id="page-content">
+
+                        <ul class="breadcrumb breadcrumb-top">
+                            <li>Home</li>
+                            <li><a href="">Lista de Usuários</a></li>
+                        </ul>
+             
+                        <div class="row">
+                          <div class="col-lg-12 content-header">
+                            <div class="header-section">
+                                <h1>
+                                    <i class="lnr lnr-users"></i>Lista de <b>Usuários</b><br><small>Este é seu painel, cuide bem dele :)</small>
+                                </h1>
+                            </div>
+                          </div>
+                        </div>
+   
+             
+                       <div class="row"> 
+                          <div class="col-md-12">             
+                            <div class="table-responsive">
+                                <table id="example-datatable" class="table table-vcenter table-borderbottom table-condensed">
+                                    <thead>
+                                        <tr class="block-title">
+                                            <th class="text-center"></th>
+                                            <th class="text-center">NOME</th>
+                                            <th class="text-center">EMAIL</th>
+                                            <th class="text-center">NIVEL</th>
+                                            <th class="text-center">STATUS</th>
+                                            <th class="text-center">EDITAR</th>
+                                            <th class="text-center">EXCLUIR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center"><img src="img/avatar.png" alt="avatar" width="50" class="img-circle"></td>
+                                            <td>Haroldo</td>
+                                            <td class="text-center">anbanks@gmail.com</td>
+                                            <td class="text-center"><p class="label label-info">Cliente</p></td>
+                                            <td class="text-center"><p class="label label-success">ATIVO</p></td>
+                                            <td class="text-center">
+                                                    <a href="#" class="btn btn-xs btn-default"><i class="gi gi-edit"></i> &nbsp; EDITAR</a>
+                                            </td>
+                                            <td class="text-center">         
+                                                    <a href="#" class="btn btn-xs btn-danger"><i class="hi hi-remove"></i> &nbsp; EXCLUIR</a>
+                                            </td>
+                                        </tr>
+                                      </tbody>
+                                </table>
+                                </div> 
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <footer class="clearfix">
+                        <div class="pull-right">
+                            pago.com.br
+                        </div>
+                    </footer>
+
+                </div>
+
+            </div>
+
+        </div>
+		
+        <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+
+        <script src="js/vendor/jquery.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/pages/tablesDatatables.js"></script>
+        <script>$(function(){ TablesDatatables.init(); });</script>
+    </body>
+</html>

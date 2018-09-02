@@ -15,8 +15,16 @@ class CreateCampaingnsTable extends Migration {
         Schema::create('campaingns', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('hashid')->nullable();
-            $table->char('name', 255);
-            $table->char('brand', 255);
+            $table->string('name');
+            $table->string('brand');
+            $table->string('type')->default('CPC');
+            $table->integer('type_layout')->default(0);
+            $table->double('ceiling')->default(0.0);
+            $table->double('cpc')->default(0.0);
+            $table->double('cpm')->default(0.0);
+            $table->date('expires_in');
+            $table->boolean('paused')->default(false);
+            $table->boolean('status')->default(false);
             $table->timestamps();
         });
 

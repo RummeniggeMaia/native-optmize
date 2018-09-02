@@ -1,0 +1,1 @@
+<a href="{{route($route, $id )}}" class="btn btn-xs btn-default"><i class="gi gi-edit"></i>&nbsp;EDITAR</a>

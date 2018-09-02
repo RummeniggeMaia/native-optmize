@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -51,6 +52,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'role' => 'in:1,2',
         ]);
     }
 
@@ -62,10 +64,21 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $role_user = null;
+        if ($data['role'] == 2) {
+            $role_user = Role::where('name', 'adver')->first();
+        } else {
+            $role_user = Role::where('name', 'publi')->first();
+        }
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'skype' => $data['skype'],
+            'phone' => $data['phone'],
             'password' => bcrypt($data['password']),
         ]);
+        $user->roles()->attach($role_user);
+
+        return $user;
     }
 }

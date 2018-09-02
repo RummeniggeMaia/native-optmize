@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \App\Http\Middleware\Cors::class,
             'throttle:60,1',
             'bindings',
         ],
@@ -61,7 +62,12 @@ class Kernel extends HttpKernel
         'impressions' => \App\Http\Middleware\Impressions::class,
         'random_creatives' => \App\Http\Middleware\RandomCreatives::class,
         'postbacks' => \App\Http\Middleware\Postbacks::class,
+        'smartlinks' => \App\Http\Middleware\SmartLink::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'user' => \App\Http\Middleware\UserMiddleware::class,
+        'publi' => \App\Http\Middleware\PublisherMiddleware::class,
+        'adver' => \App\Http\Middleware\AdvertiserMiddleware::class,
+        'iframe' => \App\Http\Middleware\IFrame::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }

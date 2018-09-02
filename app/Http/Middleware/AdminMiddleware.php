@@ -14,9 +14,12 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, ...$hasAdver)
     {
-        if (Auth::check() && Auth::user()->hasRole('admin')) {
+        if (Auth::check() && 
+            Auth::user()->hasRole('admin') || 
+            !empty($hasAdver)) {
+
             return $next($request);
         }
         return redirect('home');
