@@ -52,6 +52,11 @@ class CampaingnController extends Controller {
                         'id' => $campaingn->id,
                         'route' => 'campaingns.destroy'
                     ]);
+                })->addColumn('duplicate', function($campaingn) {
+                    return view('comum.button_duplicate', [
+                        'id' => $campaingn->id,
+                        'route' => 'campaingns.duplicate'
+                    ]);
                 })->editColumn('type_layout', function($campaingn) {
                     $types = array(
                         '0' =>  '-',
@@ -82,7 +87,7 @@ class CampaingnController extends Controller {
                         return view('comum.status_waiting')->with(['name' => 'validação']);;
                     }
                 })->rawColumns(
-                        ['edit', 'show', 'delete', 'status', 'paused']
+                        ['edit', 'show', 'delete', 'status', 'paused', 'duplicate']
                 )->make(true);
     }
 
@@ -124,8 +129,14 @@ class CampaingnController extends Controller {
             })->editColumn('users.name', function($campaingn) {
                 $user = User::find($campaingn->user_id);
                 return $user ? $user->name : '-';
+            })->addColumn('delete', function($campaingn) {
+                return view('comum.button_delete', [
+                    'id' => $campaingn->id,
+                    'route' => 'campaingns.destroy',
+                    'text' => "REJEITAR"
+                ]);
             })->rawColumns(
-                ['show', 'status', 'activate']
+                ['show', 'status', 'activate', 'delete']
             )->make(true);
     }
 
@@ -204,7 +215,7 @@ class CampaingnController extends Controller {
                     $post['cpm'] = 0.0;
                 }
                 if (Auth::user()->hasRole('admin')) {
-                    $campaingn['status'] = true;
+                    $post['status'] = true;
                 }
                 $campaingn = Campaingn::create($post);
                 $campaingn->creatives()->sync($post['creatives']);
@@ -402,7 +413,8 @@ class CampaingnController extends Controller {
         if ($campaingn == null) {
             return back()->with('error'
                             , 'Campaingn não registrada no sistema.');
-        } else if ($campaingn->user->id != Auth::id()) {
+        } else if (!Auth::user()->hasRole('admin') 
+            && $campaingn->user->id != Auth::id()) {
             return back()->with('error'
                             , 'Não pode excluir esta Campaingn.');
         } else {
@@ -467,6 +479,22 @@ class CampaingnController extends Controller {
 
     public function pauseConfirm() {
         return view('campaingns.pauseconfirm');
+    }
+
+    public function duplicateCampaign($id) {
+        $campaingn = Campaingn::with(['user'])->where('id', $id)->first();
+        if ($campaingn == null) {
+            return back()->with('error'
+                            , 'Campanha não registrada no sistema.');
+        } else if ($campaingn->user->id != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode duplicar esta Campanha.');
+        } else {
+            $clone = $campaingn->replicate();
+            $clone->save();
+            return redirect('campaingns')
+                ->with('success', 'Campanha duplicada com sucesso.');
+        }
     }
 
     public function countries() {

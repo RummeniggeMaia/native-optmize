@@ -1,4 +1,169 @@
 @extends('layouts.template') @section('title', 'Dashboard') @section('content') @auth
+<script src="{{ asset('js/Chart.min.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        let months = {
+            1: 'Jan',
+            2: 'Fev',
+            3: 'Mar',
+            4: 'Abr',
+            5: 'Mai',
+            6: 'Jun',
+            7: 'Jul',
+            8: 'Ago',
+            9: 'Set',
+            10:'Out',
+            11:'Nov',
+            12:'Dez',
+        };
+        let lines = {
+            'labels' : [],
+            'datasets' : [{
+                label: 'Clicks',
+                fill: false,
+                backgroundColor: "rgb(54,128,45)",
+                borderColor: "rgb(54,128,45)", // The main line color
+                borderCapStyle: 'square',
+                borderDash: [], // try [5, 15] for instance
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "black",
+                pointBackgroundColor: "white",
+                pointBorderWidth: 1,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: "#17c4bb",
+                pointHoverBorderColor: "blue",
+                pointHoverBorderWidth: 2,
+                pointRadius: 4,
+                pointHitRadius: 10,
+                data: [],
+            }, {
+                label: 'Impressions',
+                fill: false,
+                backgroundColor: "#A8DCA8",
+                borderColor: "#A8DCA8", // The main line color
+                borderCapStyle: 'square',
+                borderDash: [], // try [5, 15] for instance
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "black",
+                pointBackgroundColor: "white",
+                pointBorderWidth: 1,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: "#17c4bb",
+                pointHoverBorderColor: "blue",
+                pointHoverBorderWidth: 2,
+                pointRadius: 4,
+                pointHitRadius: 10,
+                data: [],
+            }, {
+                label: 'Revenues R$',
+                fill: false,
+                backgroundColor: "#979797",
+                borderColor: "#979797", // The main line color
+                borderCapStyle: 'square',
+                borderDash: [], // try [5, 15] for instance
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "black",
+                pointBackgroundColor: "white",
+                pointBorderWidth: 1,
+                pointHoverRadius: 8,
+                pointHoverBackgroundColor: "#17c4bb",
+                pointHoverBorderColor: "blue",
+                pointHoverBorderWidth: 2,
+                pointRadius: 4,
+                pointHitRadius: 10,
+                data: [],
+            }]
+        };
+        $.ajax({
+            dataType: "json",
+            accepts: "application/json",
+            method: 'GET',
+            url: "{{ Auth::user()->hasAnyRole(['admin', 'adver']) ? route('home.campaignslc') : route('home.widgetslc') }}",
+            beforeSend: function (request) {
+                request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
+            }
+        }).done(function (data) {
+            let clicks = [];
+            let impressions = [];
+            let revenues = [];
+            let labels = [];
+            $.each(data, function (index, value) {
+                clicks.push(value['clicks']);
+                impressions.push(value['impressions']);
+                revenues.push(value['revenues']);
+                labels.push(months[value['month']]);
+            });
+            lines.labels = labels;
+            lines.datasets[0].data = clicks;
+            lines.datasets[1].data = impressions;
+            lines.datasets[2].data = revenues;
+            let myChart = new Chart($('#geralChartLine'), {
+                type: 'line',
+                data: lines,
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0, 
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        }).fail(function () {
+            console.log('Gráfico geral não pode ser carregado.');
+        });
+        $.ajax({
+            dataType: "json",
+            accepts: "application/json",
+            method: 'GET',
+            url: '{{ Auth::user()->hasAnyRole(["admin", "adver"]) ? route("home.dailycampaigns") : route("home.dailywidgets") }}'
+        }).done(function (data) {
+            let clicks = new Array();
+            let revenues = new Array(); 
+            let impressions = new Array();
+            let labels = new Array();
+            $.each(data, function (i, v) {
+                clicks.push(v['clicks']);
+                revenues.push(v['revenues']);
+                impressions.push(v['impressions']);
+                labels.push(v['day']);
+            });
+            lines.labels = labels;
+            lines.datasets[0].data = clicks;
+            lines.datasets[1].data = impressions;
+            lines.datasets[2].data = revenues;
+            let myChart = new Chart($('#dailyChartLine'), {
+                type: 'line',
+                data: lines,
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0, 
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+        }).fail(function () {
+            console.log('Gráfico diário não pode ser carregado.');
+        });
+    });
+</script>
 <ul class="breadcrumb breadcrumb-top">
     <li>
         <a href="{{ route('home') }}">Dashboard</a>
@@ -26,50 +191,9 @@
     <div class="col-sm-8">
         <div class="block">
             <div class="block-title">
-                <h2>Geral</h2>
+                <h2>Estatísticas gerais deste ano ({{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'Despesas' : 'Lucros' }})</h2>
             </div>
-            <div id="widgetsChartLine" class="chart" style="padding: 0px; position: relative;">
-                <canvas class="flot-base" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas>
-                <div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);">
-                    <div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;">
-                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 22px; text-align: center;">Fev</div>
-                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 172px; text-align: center;">Mar</div>
-                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 325px; text-align: center;">Abr</div>
-                        <div class="flot-tick-label tickLabel" style="position: absolute; max-width: 41px; top: 395px; left: 477px; text-align: center;">Mai</div>
-                    </div>
-                    <div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;">
-                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 383px; left: 19px; text-align: right;">0</div>
-                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 257px; left: 6px; text-align: right;">500</div>
-                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 132px; left: 0px; text-align: right;">1000</div>
-                        <div class="flot-tick-label tickLabel" style="position: absolute; top: 7px; left: 0px; text-align: right;">1500</div>
-                    </div>
-                </div>
-                <canvas class="flot-overlay" width="500" height="410" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 500px; height: 410px;"></canvas>
-                <div class="legend">
-                    <div style="position: absolute; width: 112px; height: 56px; top: 24px; left: 45px; background-color: rgb(255, 255, 255); opacity: 0.85;">
-                    </div>
-                    <table style="position:absolute;top:24px;left:45px;;font-size:smaller;color:#545454">
-                        <tbody>
-                            <tr>
-                                <td class="legendColorBox">
-                                    <div style="border:1px solid #ccc;padding:1px">
-                                        <div style="width:4px;height:0;border:5px solid rgb(52,152,219);overflow:hidden"></div>
-                                    </div>
-                                </td>
-                                <td class="legendLabel"></td>
-                            </tr>
-                            <tr>
-                                <td class="legendColorBox">
-                                    <div style="border:1px solid #ccc;padding:1px">
-                                        <div style="width:4px;height:0;border:5px solid rgb(51,51,51);overflow:hidden"></div>
-                                    </div>
-                                </td>
-                                <td class="legendLabel"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <canvas id="geralChartLine"></canvas>
         </div>
     </div>
     <div class="col-sm-4">
@@ -121,139 +245,13 @@
         @endif
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $.ajax({
-            dataType: "json",
-            accepts: "application/json",
-            method: 'GET',
-            url: "{{ Auth::user()->hasAnyRole(['admin', 'adver']) ? route('home.campaignslc') : route('home.widgetslc') }}",
-            beforeSend: function (request) {
-                request.setRequestHeader("token", $('meta[name="csrf-token"]').attr('content'));
-            }
-        }).done(function (data) {
-            var clicks = [];
-            var impressions = [];
-            var revenues = [];
-            $.each(data, function (index, value) {
-                clicks.push([value.month, value.clicks]);
-                impressions.push([value.month, value.impressions]);
-                revenues.push([value.month, value.revenues]);
-            });
-            CompCharts.widgetsChartLine(clicks, impressions, revenues);
-        });
-    });
-</script>
-<script src="{{ asset('js/Chart.min.js') }}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $.ajax({
-            dataType: "json",
-            accepts: "application/json",
-            method: 'GET',
-            url: '{{ Auth::user()->hasAnyRole(["admin", "adver"]) ? route("home.dailycampaigns") : route("home.dailywidgets") }}'
-        }).done(function (data) {
-            let clicks = new Array();
-            let revenues = new Array(); 
-            let impressions = new Array();
-            let labels = new Array();
-            $.each(data, function (i, v) {
-                clicks.push(v['clicks']);
-                revenues.push(v['revenues']);
-                impressions.push(v['impressions']);
-                labels.push(v['day']);
-            });
-            let lines = {
-                'labels' : labels,
-                'datasets' : [{
-                    label: 'Clicks',
-                    fill: false,
-                    backgroundColor: "rgb(54,128,45)",
-                    borderColor: "rgb(54,128,45)", // The main line color
-                    borderCapStyle: 'square',
-                    borderDash: [], // try [5, 15] for instance
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "black",
-                    pointBackgroundColor: "white",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: "#17c4bb",
-                    pointHoverBorderColor: "blue",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHitRadius: 10,
-                    data: clicks,
-                }, {
-                    label: 'Impressions',
-                    fill: false,
-                    backgroundColor: "#A8DCA8",
-                    borderColor: "#A8DCA8", // The main line color
-                    borderCapStyle: 'square',
-                    borderDash: [], // try [5, 15] for instance
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "black",
-                    pointBackgroundColor: "white",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: "#17c4bb",
-                    pointHoverBorderColor: "blue",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHitRadius: 10,
-                    data: impressions,
-                }, {
-                    label: 'Revenues R$',
-                    fill: false,
-                    backgroundColor: "#979797",
-                    borderColor: "#979797", // The main line color
-                    borderCapStyle: 'square',
-                    borderDash: [], // try [5, 15] for instance
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: "black",
-                    pointBackgroundColor: "white",
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 8,
-                    pointHoverBackgroundColor: "#17c4bb",
-                    pointHoverBorderColor: "blue",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHitRadius: 10,
-                    data: revenues,
-                }]
-            };
-            let myChart = new Chart($('#widgetsDaily'), {
-                type: 'line',
-                data: lines,
-                options: {
-                    elements: {
-                        line: {
-                            tension: 0, 
-                        }
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:true
-                            }
-                        }]
-                    }
-                }
-            });
-        }).fail(function () {
-            console.log('Gráfico diário dos widgets não pode ser carregado.');
-        });
-    });
-</script>
 <div class="row">
     <div class="col-md-12">
         <div class="block">
             <div class="block-title">
                 <h2>Estatísticas diárias deste mês ({{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'Despesas' : 'Lucros' }})</h2>
             </div>
-            <canvas id="widgetsDaily"></canvas>
+            <canvas id="dailyChartLine"></canvas>
         </div>
     </div>
 </div>

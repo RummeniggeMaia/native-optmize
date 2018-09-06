@@ -8,6 +8,7 @@ use App\Widget;
 use App\Click;
 use App\Category;
 use App\CreativeLog;
+use App\Image;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
@@ -62,13 +63,13 @@ class CreativeController extends Controller {
                     return view('comum.image', [
                         'image' => $creative->image
                     ]);
-                })->editColumn('status', function($user) {
-                    if ($user->status) {
+                })->editColumn('status', function($creative) {
+                    if ($creative->status) {
                         return view('comum.status_on');
                     } else {
                         return view('comum.status_off');
                     }
-                })->addColumn('type_layout', function($widget) {
+                })->addColumn('type_layout', function($creative) {
                     return array(
                             '0' => '-',
                             '1'=>'Native',
@@ -77,12 +78,32 @@ class CreativeController extends Controller {
                             '4'=>'Banner Mobile (300x100)',
                             '5'=>'Banner Footer (928x244)',
                             '6'=>'Vídeo',
-                        )[$widget->type_layout];
+                        )[$creative->type_layout];
+                })->addColumn('duplicate', function($creative) {
+                    return view('comum.button_duplicate', [
+                        'id' => $creative->id,
+                        'route' => 'creatives.duplicate'
+                    ]);
                 })->rawColumns(
-                        ['edit', 'show', 'delete', 'image', 'status']
+                        ['edit', 'show', 'delete', 'image', 'status', 'duplicate']
                 )->make(true);
     }
 
+    public function imagesDataTable($creativeId) {
+        $images= DB::table('images')->where('creative_id', $creativeId)->get();
+        return Datatables::of($images)->addColumn('delete', function($image) {
+                    return view('comum.button_delete', [
+                        'id' => $image->id,
+                        'route' => 'creatives.images.destroy'
+                    ]);
+                })->editColumn('path', function($image) {
+                    return view('comum.image', [
+                        'image' => $image->path
+                    ]);
+                })->rawColumns(
+                        ['delete', 'path']
+                )->make(true);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -107,10 +128,10 @@ class CreativeController extends Controller {
                         ->where('id', $id)->first();
         if ($creative == null) {
             return back()->with('error'
-                            , 'Creative não registrado no sistema.');
+                            , 'Anúncio não registrado no sistema.');
         } else if ($creative->user->id != Auth::id()) {
             return back()->with('error'
-                            , 'Não pode exibir os dados deste Creative.');
+                            , 'Não pode exibir os dados deste Anúncio.');
         } else {
             $clicks = CreativeLog::where('creative_id', $creative->id)
                     ->sum('clicks');
@@ -141,10 +162,10 @@ class CreativeController extends Controller {
                         ->where('id', $id)->first();
         if ($creative == null) {
             return back()->with('error'
-                            , 'Creative não registrado no sistema.');
+                            , 'Anúncio não registrado no sistema.');
         } else if ($creative->user->id != Auth::id()) {
             return back()->with('error'
-                            , 'Não pode editar os dados deste Creative.');
+                            , 'Não pode editar os dados deste Anúncio.');
         } else {
             $categories = Category::where('fixed', true)
                             ->orderBy('name', 'asc')->get();
@@ -170,20 +191,43 @@ class CreativeController extends Controller {
             $post['user_id'] = Auth::id();
             $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
 
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $pathToImage = $image->store('img/', self::DISK);
-                $image_path = $this->compress_image($pathToImage, $image->hashName());
-                
-                $post['image'] = "storage/" . $image_path;
+            /**
+             * TODO - Implementar remocao de imagens do armazenamento caso haja erro.
+             */
+            $imagesCreated = [];
+            DB::beginTransaction();
+            try {
+                if ($request->hasFile('image')) {
+                    $image = $request->file('image')[0];
+                    $pathToImage = $image->store('img/', self::DISK);
+                    $image_path = $this->compress_image($pathToImage, $image->hashName());
+                    
+                    $post['image'] = "storage/" . $image_path;
+                    $post['status'] = true;
+                    $creative = Creative::create($post);
+                    foreach ($request->file('image') as $img) {
+                        $pathToImage = $img->store('img/', self::DISK);
+                        $hashName = $img->hashName();
+                        $image_path = $this->compress_image($pathToImage, $hashName);
+                        Image::create([
+                            'name' => $hashName,
+                            'original_name' => $img->getClientOriginalName(),
+                            'path' => "storage/" . $image_path,
+                            'creative_id' => $creative->id
+                        ]);
+                    }
+                    DB::commit();
+                } else {
+                    throw new Exception("Não contém imagens. ");
+                }
+            } catch (Exception $ex) {
+                DB::rollBack();
+                return redirect('creatives')
+                                ->with('error', 'Erro ao salvar anúncio: ' . $ex->getMessage());
             }
-//            if (Auth::user()->hasRole('admin')) {
-            $post['status'] = true;
-//            }
-            Creative::create($post);
             return redirect('creatives')
                             ->with('success'
-                                    , 'Creative cadastrado com sucesso.');
+                                    , 'Anúncio cadastrado com sucesso.');
         }
     }
 
@@ -204,23 +248,61 @@ class CreativeController extends Controller {
             $creative = Creative::find($id);
             if ($creative == null) {
                 return back()->with('error'
-                                , 'Creative não registrado no sistema.');
+                                , 'Anúncio não registrado no sistema.');
             } else if ($creative->user_id != Auth::id()) {
                 return back()->with('error'
-                                , 'Não pode atualizar os dados deste Creative.');
+                                , 'Não pode atualizar os dados deste Anúncio.');
             } else {
-                if ($request->hasFile('image')) {
-                    $image = $request->file('image');
-                    $pathToImage = $image->store('img/', self::DISK);
-                    $image_path = $this->compress_image($pathToImage, $image->hashName());
-
-                    $post['image'] = "storage/" . $image_path;
-                }
-                $creative->update($post);
-                return redirect('creatives')
-                                ->with('success'
-                                        , 'Creative atualizado com sucesso.');
+                DB::beginTransaction();
+                try {
+                    if ($request->hasFile('image')) {
+                        foreach ($request->file('image') as $img) {
+                            $pathToImage = $img->store('img/', self::DISK);
+                            $hashName = $img->hashName();
+                            $image_path = $this->compress_image($pathToImage, $hashName);
+                            Image::create([
+                                'name' => $hashName,
+                                'original_name' => $img->getClientOriginalName(),
+                                'path' => "storage/" . $image_path,
+                                'creative_id' => $creative->id
+                            ]);
+                        }
+                    }
+                    unset($post['image']);
+                    $creative->update($post);
+                    DB::commit();
+                    return redirect('creatives')
+                                    ->with('success'
+                                            , 'Anúncio atualizado com sucesso.');
+                } catch (Exception $ex) {
+                    return redirect()->back()
+                        ->with('success'
+                                , 'Anúncio atualizado com sucesso.');
+                    }
             }
+        }
+    }
+
+    public function duplicar($id) {
+        $creative = Creative::with(['images'])->find($id)->first();
+        if ($creative == null) {
+            return back()->with('error'
+                            , 'Creative não registrado no sistema.');
+        } else if ($creative->user_id != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode atualizar os dados deste Creative.');
+        } else {
+            try {
+                $clone = $creative->replicate();
+                $clone->save();
+            } catch (Exception $ex) {
+                return redirect('creatives')
+                    ->with('error'
+                            , 'Anúncio duplicado com sucesso.');
+            }
+            return redirect()->back()
+                            ->with('success'
+                                    , 'Não pode duplicar anúncio.');
         }
     }
 
@@ -245,6 +327,22 @@ class CreativeController extends Controller {
         }
     }
 
+    public function destroyImage($id) {
+        /**
+         * TODO: Verificar se a imagem pertence a um creative do
+         * usuario q ta solicitando a requisicao.
+         */
+        $image = Image::find($id);
+        if ($image == null) {
+            return back()->with('error'
+                            , 'Imagem não registrada no sistema.');
+        } else {
+            $image->delete();
+            return back()->with('success', 
+                'Imagem excluída com sucesso.');
+        }
+    }
+
     private function validar($post, $edit) {
         $mensagens = array(
             'brand.required' => 'Insira uma brand.',
@@ -256,6 +354,7 @@ class CreativeController extends Controller {
             'category_id.required' => 'Selecione uma Category',
             'image.required' => 'Selecione uma imagem.',
             'image.dimensions' => 'Dimensões da imagem não coincidem com o layout escolhido.',
+            'image.mimes' => "Tipos permitidos: jpeg,png,jpg,gif",
             'status.in' => 'Status inválido.',
             'type_layout.in' => 'Layout inválido.',
         );
@@ -274,7 +373,7 @@ class CreativeController extends Controller {
             'name' => 'required|min:4',
             //'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             'category_id' => 'required',
-            'image' => "dimensions:$dimensions". ($edit ? '' : '|required'),
+            'image.*' => "dimensions:$dimensions". ($edit ? '' : '|required|mimes:jpeg,png,jpg,gif'),
             'status' => 'in:0,1',
             'type_layout' => 'in:1,2,3,4,5,6',
         );
@@ -337,6 +436,22 @@ class CreativeController extends Controller {
     
                 return $compressed_image_path;
             }
+        }
+    }
+
+    public function duplicateCreative($id) {
+        $creative = Creative::with(['user'])->where('id', $id)->first();
+        if ($creative == null) {
+            return back()->with('error'
+                            , 'Anúncio não registrado no sistema.');
+        } else if ($creative->user->id != Auth::id()) {
+            return back()->with('error'
+                            , 'Não pode duplicar este Anúncio.');
+        } else {
+            $clone = $creative->replicate();
+            $clone->save();
+            return redirect('creatives')
+                ->with('success', 'Anúncio duplicado com sucesso.');
         }
     }
 

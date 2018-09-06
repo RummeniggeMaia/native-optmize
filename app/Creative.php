@@ -25,6 +25,7 @@ class Creative extends Model {
         'brand',
         'name',
         'url',
+        'url_mobile',
         'image',
         'type_layout',
         'status',
@@ -76,5 +77,9 @@ class Creative extends Model {
     
     public function clicks() {
         return $this->hasMany('App\Click');
+    }
+
+    public function images() {
+        return $this->hasMany('App\Image');
     }
 }

@@ -62,6 +62,9 @@ Route::get('/creatives/{creative}/edit', 'CreativeController@edit')->name('creat
 Route::get('/creatives/{page?}', 'CreativeController@index')->name('creatives')->middleware('role:admin,adver');
 Route::get('/creativesdata', 'CreativeController@indexDataTable')->name('creatives.data')->middleware('role:admin,adver');
 Route::get('/creativeclicksdata/{creative}', 'CreativeController@clicksDataTable')->name('creatives.clicks')->middleware('role:admin,adver');
+Route::patch('/creatives/{creative}/duplicate', 'CreativeController@duplicateCreative')->name('creatives.duplicate')->middleware('role:admin,adver');
+Route::get('/creatives/{creative}/images', 'CreativeController@imagesDataTable')->name('creatives.images')->middleware('role:admin,adver');
+Route::delete('/creatives/images/{image}/delete', 'CreativeController@destroyImage')->name('creatives.images.destroy')->middleware('role:admin,adver');
 
 Route::post('/campaingns', 'CampaingnController@store')->name('campaingns.store')->middleware('role:admin,adver');
 Route::get('/campaingns', 'CampaingnController@index')->name('campaingns')->middleware('role:admin,adver');
@@ -80,6 +83,7 @@ Route::get('/pausecampaingns', 'CampaingnController@pauseAllCampaigns')->name('c
 Route::get('/pauseconfirm', 'CampaingnController@pauseConfirm')->name('campaingns.pauseconfirm')->middleware('role:admin,adver');
 Route::get('/campaingns/{campaingns}/daily/chartline', 'CampaingnController@dailyLineChartData')->name('campaingns.dailycl')->middleware('role:admin,adver');
 Route::get('/campaingns/dashboard/table', 'CampaingnController@campaignsDashboardTable')->name('campaingns.dashtable')->middleware('role:admin,adver');
+Route::patch('/campaingns/{campaingn}/duplicate', 'CampaingnController@duplicateCampaign')->name('campaingns.duplicate')->middleware('role:admin,adver');
 
 Route::post('/widgets', 'WidgetController@store')->name('widgets.store')->middleware('role:publi');
 Route::get('/widgets', 'WidgetController@index')->name('widgets')->middleware('role:publi');

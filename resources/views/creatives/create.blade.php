@@ -67,11 +67,22 @@
             <div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-globe"></i></span>
-                    {!! Form::text('url',null,['id'=>'url', 'class'=>'form-control input-lg', 'placeholder' => 'URL', 'required']) !!}
+                    {!! Form::text('url',null,['id'=>'url', 'class'=>'form-control input-lg', 'placeholder' => 'URL Desktop', 'required']) !!}
                 </div>
                 @if ($errors->has('url'))
                 <span class="help-block">
                     <strong>{{ $errors->first('url') }}</strong>
+                </span>
+                @endif
+            </div>
+            <div class="form-group {{ $errors->has('url_mobile') ? ' has-error' : '' }}">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+                    {!! Form::text('url_mobile',null,['id'=>'url_mobile', 'class'=>'form-control input-lg', 'placeholder' => 'URL Mobile']) !!}
+                </div>
+                @if ($errors->has('url_mobile'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('url_mobile') }}</strong>
                 </span>
                 @endif
             </div>
@@ -95,7 +106,7 @@
             <div class="form-group {{ $errors->has('image') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-image"></i></span>
-                    {!! Form::file('image',['class'=>'form-control input-lg', 'placeholder' => 'Imagem', 'accept'=>'.png,.jpg,.gif,.mp4', 'required', 'multiple']) !!}
+                    {!! Form::file('image[]',['class'=>'form-control input-lg', 'placeholder' => 'Imagem', 'accept'=>'.png,.jpg,.gif,.mp4', 'required', 'multiple']) !!}
                 </div>
                 @if ($errors->has('image'))
                 <span class="help-block">

@@ -73,9 +73,9 @@ class UserController extends Controller {
                     }
                 })->editColumn('revenue', function($user) {
                     if ($user->hasRole('adver')) {
-                        return 'R$ ' . $user->revenue_adv;
+                        return 'R$ ' . number_format($user->revenue_adv, 2);
                     } else {
-                        return 'R$ ' . $user->revenue;
+                        return 'R$ ' . number_format($user->revenue, 2);
                     }
                 })->rawColumns(
                         ['edit', 'show', 'delete', 'roles', 'status', 'credits']

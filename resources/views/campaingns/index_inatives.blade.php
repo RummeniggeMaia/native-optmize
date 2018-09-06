@@ -30,6 +30,7 @@
                         <th class="text-center">USUÁRIO</th>
                         <th class="text-center">EXIBIR</th>
                         <th class="text-center">ATIVAR</th>
+                        <th class="text-center">REJEITAR</th>
                     </tr>
                 </thead>
             </table>
@@ -58,6 +59,7 @@
                 {data: 'users.name', name: 'users.name'},
                 {data: 'show', name: 'show', orderable: false, searchable: false},
                 {data: 'activate', name: 'activate', orderable: false, searchable: false},
+                {data: 'delete', name: 'delete', orderable: false, searchable: false},
             ],
 
         });

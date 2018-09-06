@@ -7,6 +7,7 @@ use App\CreativeLog;
 use App\Widget;
 use App\WidgetLog;
 use App\User;
+use App\Image;
 use App\Providers\IP2Location;
 use Detection\MobileDetect;
 use Carbon\Carbon;
@@ -41,7 +42,7 @@ class RandomCreatives
             if (!$campaign) {
                 return response()->json("not found campaign", 404);
             }
-            $creatives = $campaign->creatives()->get();
+            $creatives = $campaign->creatives()->with(['images'])->get();
             foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
                     . "hashid"
@@ -55,14 +56,22 @@ class RandomCreatives
                     urlencode(url('/') . '/' . $creative->image),
                     urlencode($creative->name),
                 );
+                $url = "";
+                if ($campaign->segmentation->device = 2) {
+                    $url = $creative->url_mobile;
+                } else {
+                    $url = $creative->url;
+                }
                 $creative->url = str_replace([
                     '[click_id]',
                     '[widget_id]',
                     '[creative_id]',
                     '[image]',
                     '[headline]',
-                ], $fields, $creative->url);
-                $creative->image = url('/') . '/' . $creative->image;
+                ], $fields, $url);
+                $image = Image::where(['creative_id' => $creative->id])->get()->random();
+                $image->increment('impressions');
+                $creative->image = url('/') . '/' . $image->path;
                 $this->setCTR($creative);
             }
             $creatives = $creatives->sortBy('ctr')->reverse();
@@ -157,7 +166,7 @@ class RandomCreatives
         $records = $db->lookup($user_ip, IP2Location::ALL);
         $codigopais = $records['countryCode'];
 
-        $campaigns = Campaingn::with(['user', 'campaignLogs'/*, 'segmentation'*/])
+        $campaigns = Campaingn::with(['user', 'campaignLogs', 'segmentation'])
             ->whereHas('user', function($q) {
                 return $q->where('revenue_adv', '>', 0);
             })
