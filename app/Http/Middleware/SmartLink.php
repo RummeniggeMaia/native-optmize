@@ -39,7 +39,11 @@ class SmartLink
                 ));
                 $widget->createLog(Widget::LOG_CLI, 1);
                 $url = "";
-                $campaigns = Campaingn::where(['type_layout' => 2])->get();
+                $campaigns = Campaingn::where([
+                    'type_layout' => 2,
+                    'status' => 1,
+                    'paused' => 0
+                ])->get();
                 if (count($campaigns) > 0) {
                     $campaign = $campaigns->random();
                     $creative = $campaign->creatives->random();

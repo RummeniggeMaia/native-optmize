@@ -123,6 +123,21 @@ class HomeController extends Controller
                     DB::raw('DAY(campaign_logs.created_at) as day')]);
     }
 
+    // public function campaignsByPeriodChart() {
+
+    //     return DB::table('campaign_logs')
+    //             ->join('campaingns', 'campaign_logs.campaingn_id', '=', 'campaingns.id')
+    //             ->where('user_id', Auth::id())
+    //             ->where('campaign_logs.created_at', Carbon::now()->year)
+    //             ->whereMonth('campaign_logs.created_at', Carbon::now()->month)
+    //             ->groupBy('day')
+    //             ->get([
+    //                 DB::raw('SUM(campaign_logs.impressions) as impressions'),
+    //                 DB::raw('SUM(campaign_logs.clicks) as clicks'),
+    //                 DB::raw('FORMAT(SUM(campaign_logs.revenues), 4) as revenues'),
+    //                 DB::raw('DAY(campaign_logs.created_at) as day')]);
+    // }
+
     public function dailyEarnings() {
         $earnings = array();
         $earnings['today'] = $this->dateRevenues(

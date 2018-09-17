@@ -8,6 +8,7 @@ use App\Widget;
 use App\WidgetLog;
 use App\User;
 use App\Image;
+use App\WidgetCustomization;
 use App\Providers\IP2Location;
 use Detection\MobileDetect;
 use Carbon\Carbon;
@@ -35,7 +36,7 @@ class RandomCreatives
         if (!isset($query['wg'])) {
             return response()->json("invalid request", 400);
         }
-        $widget = Widget::where('hashid', $query['wg'])->first();
+        $widget = Widget::with(['widgetCustomization'])->where('hashid', $query['wg'])->first();
         if ($widget) {
             $cont = isset($query['cont']) ? $query['cont'] : 0;
             $campaign = $this->getCampaign($cont, $widget->type_layout);
@@ -69,9 +70,19 @@ class RandomCreatives
                     '[image]',
                     '[headline]',
                 ], $fields, $url);
-                $image = Image::where(['creative_id' => $creative->id])->get()->random();
-                $image->increment('impressions');
-                $creative->image = url('/') . '/' . $image->path;
+                $images = Image::where(['creative_id' => $creative->id])->get();
+                $image = null;
+                if (!$images->isEmpty()) {
+                    $image = $images->random();
+                }
+                $path = "";
+                if ($image) {
+                    $image->increment('impressions');
+                    $path = $image->path;
+                } else {
+                    $path = $creative->image;
+                }
+                $creative->image = url('/') . '/' . $path;
                 $this->setCTR($creative);
             }
             $creatives = $creatives->sortBy('ctr')->reverse();
@@ -97,6 +108,12 @@ class RandomCreatives
                  */
                 $widget->increment('impressions');
                 $widget->createLog(Widget::LOG_IMP, 1);
+            }
+            if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
+                $widgetNative = [];
+                $widgetNative['custom'] = $widget->widgetCustomization->toArray();
+                $widgetNative['creatives'] = $creatives->toArray();
+                return response()->json(array_values($widgetNative));
             }
             return response()->json(array_values($creatives->toArray()));
         } else {
@@ -166,7 +183,7 @@ class RandomCreatives
         $records = $db->lookup($user_ip, IP2Location::ALL);
         $codigopais = $records['countryCode'];
 
-        $campaigns = Campaingn::with(['user', 'campaignLogs', 'segmentation'])
+        $campaigns = Campaingn::with(['user', 'campaignLogs'/*, 'segmentation'*/])
             ->whereHas('user', function($q) {
                 return $q->where('revenue_adv', '>', 0);
             })

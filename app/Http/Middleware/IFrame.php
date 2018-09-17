@@ -18,7 +18,7 @@ class IFrame
     public function handle($request, Closure $next)
     {
         if (!$request->query('wg')) {
-            return response(view('comum/notfound'));
+            return response(view('comum/notfound')->with(['x' => 10]));
         }
         $query = $request->query();
         $widget = Widget::where('hashid', $query['wg'])->first();

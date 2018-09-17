@@ -29,3 +29,4 @@ Route::get('/postbacks')->middleware('postbacks');
 Route::get('/random_creatives')->middleware('random_creatives');
 Route::get('/smartlinks')->middleware('smartlinks');
 Route::get('/iframe')->middleware('iframe');
+Route::get('/widgets/customization')->middleware('widget_customization');

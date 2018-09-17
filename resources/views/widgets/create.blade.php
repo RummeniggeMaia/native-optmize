@@ -70,7 +70,7 @@
                     {{ 
                         Form::select(
                             'quantity', 
-                            ['3'=>3,'4'=>4,'5'=>5,'6'=>6], 
+                            ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5,'6'=>6], 
                             null, 
                             [
                                 'id' => 'input_quantity',
@@ -87,11 +87,73 @@
                 </span>
                 @endif
             </div>
-                @if ($errors->has('type'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('type') }}</strong>
-                </span>
-                @endif
+            <div id="customization">
+                <div class="form-group {{ $errors->has('image_width') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::text('image_width',null,['class'=>'form-control input-lg', 'title' => 'Largura das imagens dos anúncios']) !!}
+                    </div>
+                    @if ($errors->has('image_width'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image_width') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('image_height') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::text('image_height',null,['class'=>'form-control input-lg', 'title' => 'Altura das imagens dos anúncios']) !!}
+                    </div>
+                    @if ($errors->has('image_height'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image_height') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('title_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color('title_color','#FFFFFF',['class'=>'form-control input-lg', 'title' => 'Cor do título dos anúncios']) !!}
+                    </div>
+                    @if ($errors->has('title_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('title_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('title_hover_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color('title_hover_color','#0000FF',['class'=>'form-control input-lg', 'title' => 'Cor de sobreposição do mouse sobre o título dos anúncios']) !!}
+                    </div>
+                    @if ($errors->has('title_hover_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('title_hover_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('text_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color('text_color','#FFFFFF',['class'=>'form-control input-lg', 'title' => 'Cor da marca/texto dos anúncios']) !!}
+                    </div>
+                    @if ($errors->has('text_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('text_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('card_body_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color('card_body_color','#000000',['class'=>'form-control input-lg', 'title' => 'Cor de fundo do Card do anúncio']) !!}
+                    </div>
+                    @if ($errors->has('card_body_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('card_body_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
             </div>
             <div class="form-group form-actions text-center">
                 {!! Form::submit('Salvar', ['class' => 'btn btn-md btn-default']) !!}
@@ -105,8 +167,10 @@
         if (this.value != 1) {
             $("#quantity_fg").hide();
             $("#input_quantity").prop('selectedIndex', 0);
+            $('#customization').hide();
         } else {
             $("#quantity_fg").show();
+            $('#customization').show();
         }
     }
     $(document).ready(function () {

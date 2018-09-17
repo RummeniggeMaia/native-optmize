@@ -60,6 +60,10 @@ class Clicks
                         $revenueP = $campaign->cpc * $widget->user->taxa;
                         $revenueAdm = $campaign->cpc * (1 - $widget->user->taxa);
                         $campaignLog = $campaign->todayLog();
+                        if (!$campaignLog) {
+                            $campaign->createLog(Campaingn::LOG_CLI, 1);
+                            $campaignLog = $campaign->todayLog();
+                        }
                         if ($campaign->user->revenue_adv - $campaign->cpc < 0
                             || $campaignLog->revenues + $campaign->cpc > $campaign->ceiling) {
                             throw new Exception();

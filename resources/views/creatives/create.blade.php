@@ -75,17 +75,6 @@
                 </span>
                 @endif
             </div>
-            <div class="form-group {{ $errors->has('url_mobile') ? ' has-error' : '' }}">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
-                    {!! Form::text('url_mobile',null,['id'=>'url_mobile', 'class'=>'form-control input-lg', 'placeholder' => 'URL Mobile']) !!}
-                </div>
-                @if ($errors->has('url_mobile'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('url_mobile') }}</strong>
-                </span>
-                @endif
-            </div>
             <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-check"></i></span>

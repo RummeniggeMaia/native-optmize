@@ -62,6 +62,10 @@ class Widget extends Model
         return $this->hasMany('App\WidgetLog');
     }
 
+    public function widgetCustomization() {
+        return $this->hasOne('App\WidgetCustomization');
+    }
+
     public function createLog($property, $value)
     {
         $widgetLog = $this->widgetLogs()

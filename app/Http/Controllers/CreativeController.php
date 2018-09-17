@@ -256,6 +256,11 @@ class CreativeController extends Controller {
                 DB::beginTransaction();
                 try {
                     if ($request->hasFile('image')) {
+                        $image = $request->file('image')[0];
+                        $pathToImage = $image->store('img/', self::DISK);
+                        $image_path = $this->compress_image($pathToImage, $image->hashName());
+                        
+                        $post['image'] = "storage/" . $image_path;
                         foreach ($request->file('image') as $img) {
                             $pathToImage = $img->store('img/', self::DISK);
                             $hashName = $img->hashName();
@@ -268,7 +273,6 @@ class CreativeController extends Controller {
                             ]);
                         }
                     }
-                    unset($post['image']);
                     $creative->update($post);
                     DB::commit();
                     return redirect('creatives')
@@ -420,6 +424,9 @@ class CreativeController extends Controller {
             if ($im_type == 'image/gif') {
                 $compressed_path = Storage::disk(self::DISK)->path($path);
                 $compressed_image_path = $path . "/" . $image_name;
+                if (Storage::disk(self::DISK)->exists("img/compressed/{$image_name}")) {
+                    Storage::disk(self::DISK)->delete("img/compressed/{$image_name}");
+                }
                 Storage::disk(self::DISK)->copy("img/{$image_name}", "img/compressed/{$image_name}");
                 return $compressed_image_path;
             } else {

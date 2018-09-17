@@ -26,7 +26,6 @@
                         <th class="text-center">MARCA</th>
                         <th class="text-center">NOME</th>
                         <th class="text-center">URL DESKTOP</th>
-                        <th class="text-center">URL MOBILE</th>
                         <th class="text-center">LAYOUT</th>
                         <th class="text-center">STATUS</th>
                         <th class="text-center">EDITAR</th>
@@ -66,7 +65,6 @@
                 {data: 'brand', name: 'brand'},
                 {data: 'name', name: 'name'},
                 {data: 'url', name: 'url'},
-                {data: 'url_mobile', name: 'url_mobile'},
                 {data: 'type_layout', name: 'type_layout'},
                 {data: 'status', name: 'status'},
                 {data: 'edit', name: 'edit', orderable: false, searchable: false},

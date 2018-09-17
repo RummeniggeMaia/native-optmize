@@ -71,7 +71,7 @@
                     {{ 
                         Form::select(
                         'quantity', 
-                        ['3'=>3,'4'=>4,'5'=>5,'6'=>6], 
+                        ['1'=>1,'2'=>2,'3'=>3,'4'=>4,'5'=>5,'6'=>6], 
                         null, 
                         ['class'=>'selectpicker form-control input-lg']) 
                     }}

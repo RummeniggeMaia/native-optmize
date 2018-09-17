@@ -192,6 +192,13 @@
         <div class="block">
             <div class="block-title">
                 <h2>Estatísticas gerais deste ano ({{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'Despesas' : 'Lucros' }})</h2>
+                <div style="float:right;padding:10px;">
+                    <select>
+                        <option>Selecionar período</option>
+                        <option>Janeiro de 2018</option>
+                        <option>Fevereiro de 2018</option>
+                    </select>
+                </div>
             </div>
             <canvas id="geralChartLine"></canvas>
         </div>
@@ -245,6 +252,7 @@
         @endif
     </div>
 </div>
+<br />
 <div class="row">
     <div class="col-md-12">
         <div class="block">
@@ -268,7 +276,7 @@
                             <th class="text-center">DATA</th>
                             <th class="text-center">CLICKS</th>
                             <th class="text-center">IMPRESSIONS</th>
-                            <th class="text-center">REVENUES</th>
+                            <th class="text-center">>{{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'VALOR GASTO' : 'LUCROS' }}</th>
                             <th class="text-center">{{ Auth::user()->hasAnyRole(['admin', 'adver']) ? 'CAMPANHAS' : 'WIDGETS' }}</th>
                         </tr>
                     </thead>

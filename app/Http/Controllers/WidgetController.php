@@ -10,6 +10,7 @@ use App\CreativeLog;
 use App\Click;
 use App\Postback;
 use App\WidgetLog;
+use App\WidgetCustomization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -114,6 +115,8 @@ class WidgetController extends Controller {
                 $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 $widget = Widget::create($post);
+                $post['widget_id'] = $widget->id;
+                WidgetCustomization::create($post);
                 DB::commit();
                 return redirect('widgets')
                                 ->with('success', 'Widget cadastrado com sucesso.');
@@ -139,7 +142,7 @@ class WidgetController extends Controller {
                             , 'Não pode exibir os dados deste Widget.');
         } else {
             $json = null;
-            $version = '0001';//md5(time());
+            $version = '0005';//md5(time());
             $code = "";
             $iframe = "";
             if ($widget->type_layout == 1) {
@@ -322,7 +325,7 @@ class WidgetController extends Controller {
         $mensagens = array(
             'name.required' => 'Insira um nome.',
             'name.min' => 'Nome muito curto.',
-            'quantity.in' => 'Quantidade inválida.',
+            'quantity.in' => 'Quantidade deve ser entre 1 e 6.',
             'url.regex' => 'URL inválido.',
             'url.unique' => 'Já existe um Wdidget com esta URL.',
             'campaingns.required' => 'Selecione ao menos uma Campaingn.',
@@ -331,7 +334,7 @@ class WidgetController extends Controller {
         );
         $rules = array(
             'name' => 'required|min:4',
-            'quantity' => 'in:3,4,5,6',
+            'quantity' => 'in:1,2,3,4,5,6',
             'url' => "regex:/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$/",
             //'url' => 'unique:widgets,url,' .$post['id'],
             // 'type' => 'in:1,2,3,4',
