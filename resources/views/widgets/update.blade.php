@@ -82,6 +82,100 @@
                 </span>
                 @endif
             </div>
+            <div id="customization">
+                <div class="form-group {{ $errors->has('image_width') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::text(
+                            'image_width', 
+                            ($widget->widgetCustomization ? $widget->widgetCustomization->image_width : '240'),
+                            ['class'=>'form-control input-lg', 
+                            'title' => 'Largura das imagens dos anúncios']
+                        ) !!}
+                    </div>
+                    @if ($errors->has('image_width'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image_width') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('image_height') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::text(
+                            'image_height', 
+                            ($widget->widgetCustomization ? $widget->widgetCustomization->image_height : '180'),
+                            ['class'=>'form-control input-lg', 
+                            'title' => 'Altura das imagens dos anúncios']) !!}
+                    </div>
+                    @if ($errors->has('image_height'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('image_height') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('title_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color(
+                            'title_color', 
+                            ($widget->widgetCustomization ? $widget->widgetCustomization->title_color : '#FFFFFF'),
+                            ['class'=>'form-control input-lg', 
+                            'title' => 'Cor do título dos anúncios']
+                        ) !!}
+                    </div>
+                    @if ($errors->has('title_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('title_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('title_hover_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color(
+                            'title_hover_color', 
+                            ($widget->widgetCustomization ? $widget->widgetCustomization->title_hover_color : '#0000FF'),
+                            ['class'=>'form-control input-lg', 'title' => 'Cor do título quando quando o mouse está sobreposto']
+                        ) !!}
+                    </div>
+                    @if ($errors->has('title_hover_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('title_hover_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('text_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color(
+                            'text_color', 
+                            ($widget->widgetCustomization ? $widget->widgetCustomization->text_color : '#FFFFFF'),
+                            ['class'=>'form-control input-lg', 'title' => 'Cor da marca/texto dos anúncios']
+                        ) !!}
+                    </div>
+                    @if ($errors->has('text_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('text_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+                <div class="form-group {{ $errors->has('card_body_color') ? ' has-error' : '' }}">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                        {!! Form::color(
+                            'card_body_color',
+                            ($widget->widgetCustomization ? $widget->widgetCustomization->card_body_color : '#000000'),
+                             ['class'=>'form-control input-lg', 'title' => 'Cor de fundo do Card do anúncio']
+                        ) !!}
+                    </div>
+                    @if ($errors->has('card_body_color'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('card_body_color') }}</strong>
+                    </span>
+                    @endif
+                </div>
+            </div>
             <div class="form-group form-actions text-center">
                 {!! Form::submit('Atualizar', ['class' => 'btn btn-md btn-default']) !!}
             </div>
@@ -94,8 +188,10 @@
         if (this.value != 1) {
             $("#quantity_fg").hide();
             $("#input_quantity").prop('selectedIndex', 0);
+            $('#customization').hide();
         } else {
             $("#quantity_fg").show();
+            $('#customization').show();
         }
     }
     $(document).ready(function () {

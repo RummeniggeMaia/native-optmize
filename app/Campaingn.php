@@ -58,6 +58,14 @@ class Campaingn extends Model {
                 'created_at', 
                 Carbon::today()->toDateString())->first();
     }
+
+    public function limitReached() {
+        $log = $this->todayLog();
+        if ($log) {
+            return $this->todayLog()->revenues >= $this->ceiling;
+        }
+        return false;
+    }
     
     public function createLog($property, $value)
     {

@@ -124,7 +124,7 @@
                 <div class="form-group {{ $errors->has('title_hover_color') ? ' has-error' : '' }}">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
-                        {!! Form::color('title_hover_color','#0000FF',['class'=>'form-control input-lg', 'title' => 'Cor de sobreposição do mouse sobre o título dos anúncios']) !!}
+                        {!! Form::color('title_hover_color','#0000FF',['class'=>'form-control input-lg', 'title' => 'Cor do título quando quando o mouse está sobreposto']) !!}
                     </div>
                     @if ($errors->has('title_hover_color'))
                     <span class="help-block">

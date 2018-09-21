@@ -67,7 +67,7 @@
             <div class="form-group {{ $errors->has('url') ? ' has-error' : '' }}">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="gi gi-globe"></i></span>
-                    {!! Form::text('url',null,['id'=>'url', 'class'=>'form-control input-lg', 'placeholder' => 'URL Desktop', 'required']) !!}
+                    {!! Form::text('url',null,['id'=>'url', 'class'=>'form-control input-lg', 'placeholder' => 'URL', 'required']) !!}
                 </div>
                 @if ($errors->has('url'))
                 <span class="help-block">

@@ -15,8 +15,8 @@ class WidgetCustomization extends Migration
     {
         Schema::create('widget_customizations', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('image_width')->nullable();
-            $table->string('image_height')->nullable();
+            $table->string('image_width')->default('240')->nullable();
+            $table->string('image_height')->default('180')->nullable();
             $table->string('title_color')->default('white')->nullable();
             $table->string('title_hover_color')->default('blue')->nullable();
             $table->string('text_color')->default('white')->nullable();

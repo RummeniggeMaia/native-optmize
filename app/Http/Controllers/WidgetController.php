@@ -115,8 +115,10 @@ class WidgetController extends Controller {
                 $post['user_id'] = Auth::id();
                 $post['hashid'] = Hash::make(Auth::id() . "hash" . Carbon::now()->toDateTimeString());
                 $widget = Widget::create($post);
-                $post['widget_id'] = $widget->id;
-                WidgetCustomization::create($post);
+                if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
+                    $post['widget_id'] = $widget->id;
+                    WidgetCustomization::create($post);
+                }
                 DB::commit();
                 return redirect('widgets')
                                 ->with('success', 'Widget cadastrado com sucesso.');
@@ -246,7 +248,8 @@ class WidgetController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        $widget = Widget::find($id);
+        $widget = Widget::with(['widgetCustomization'])
+            ->where(['id' => $id])->first();
         if ($widget == null) {
             return back()->with('error'
                             , 'Widget não registrado no sistema.');
@@ -276,7 +279,7 @@ class WidgetController extends Controller {
                             ->withInput();
         } else {
             $this->typeLayoutsProperties($request->has('type_layout'), $post);
-            $widget = Widget::find($id);
+            $widget = Widget::with(['widgetCustomization'])->where(['id' => $id])->first();
             if ($widget == null) {
                 return back()->with('error'
                                 , 'Widget não registrado no sistema.');
@@ -287,9 +290,15 @@ class WidgetController extends Controller {
                 DB::beginTransaction();
                 try {
                     $widget->update($post);
-//                    $widget->campaingns()->sync($post['campaingns']);
+                    if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
+                        if ($widget->widgetCustomization) {
+                            $widget->widgetCustomization->update($post);
+                        } else {
+                            $post['widget_id'] = $widget->id;
+                            WidgetCustomization::create($post);
+                        }
+                    }
                     DB::commit();
-                    //$this->create_widget($widget->id);
                     return redirect('widgets')
                                     ->with('success', 'Widget editado com sucesso.');
                 } catch (Exception $e) {
