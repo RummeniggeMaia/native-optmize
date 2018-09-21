@@ -46,8 +46,8 @@ class RandomCreatives
             $creatives = $campaign->creatives()->with(['images'])->get();
             foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
-                    . "hashid"
-                    . Carbon::now()->toDateTimeString());
+                    . request()->ip()
+                    . Hash::make(Carbon::now()->toDateTimeString()));
                 $creative['click_id'] = $cId;
                 $creative['campaign_id'] = $campaign->hashid;
                 $fields = array(
@@ -109,7 +109,7 @@ class RandomCreatives
                 $widget->increment('impressions');
                 $widget->createLog(Widget::LOG_IMP, 1);
             }
-            if ($widget->type_layout == Widget::LAYOUT_NATIVE) {
+            if ($widget->type_layout == Widget::LAYOUT_NATIVE && $widget->widgetCustomization) {
                 $widgetNative = [];
                 $widgetNative['custom'] = $widget->widgetCustomization->toArray();
                 $widgetNative['creatives'] = $creatives->toArray();
@@ -183,23 +183,29 @@ class RandomCreatives
         $records = $db->lookup($user_ip, IP2Location::ALL);
         $codigopais = $records['countryCode'];
 
-        $campaigns = Campaingn::with(['user', 'campaignLogs'/*, 'segmentation'*/])
-            ->whereHas('user', function($q) {
-                return $q->where('revenue_adv', '>', 0);
-            })
-            // ->whereHas('segmentation', function($q) use ($device, $codigopais) {
-            //     return $q->where(
-            //         ['device' => $device],
-            //         ['country' => $codigopais]
-            //     );
-            // })
-            ->where([
+        $campaigns = Campaingn::with([
+            'user', 
+            'campaignLogs', 
+            'segmentation'])->where([
                 ['type_layout', $type],
                 ['status', true],
                 ['paused', false],
-            ])->get()->sortByDesc(function ($p, $k) {
-                return $p->creatives->sum('revenue');
-            });
+            ])->get();
+        foreach ($campaigns as $k => $c) {
+            if ($c->type == "CPM" && $c->user->revenue_adv < $c->cpm) {
+                $campaigns->forget($k);
+            } else if ($c->type == "CPC" && $c->user->revenue_adv < $c->cpc) {
+                $campaigns->forget($k);
+            } else if ($c->type == "CPA" && $c->user->revenue_adv <= 0) {
+                $campaigns->forget($k);
+            }
+            if ($c->limitReached()) {
+                $campaigns->forget($k);
+            }
+        }
+        $campaigns->sortByDesc(function ($p, $k) {
+            return $p->creatives->sum('revenue');
+        });
         if (!$campaigns->isEmpty()) {
             $campaign = null;
             if ($cont >= 1 && $cont <= 3) {

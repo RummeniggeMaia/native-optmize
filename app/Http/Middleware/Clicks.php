@@ -12,6 +12,7 @@ use App\WidgetLog;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Clicks
 {
