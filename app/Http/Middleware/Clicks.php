@@ -53,7 +53,6 @@ class Clicks
                             'widget_id' => $widget->id,
                         ));
                         $creativeLog->increment('clicks');
-                        return redirect()->to($creative->getURL($click));
                     } else {
                         return response()->json('click exists', 409);
                     }
