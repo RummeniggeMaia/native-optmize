@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class Clicks
 {
@@ -42,15 +43,19 @@ class Clicks
                 ])->first();
                 if ($creativeLog) {
                     $click = Click::where('click_id', $request->input('click_id'))->first();
-                    if (!$click) {
+                    $count_click = Click::where('click_id', $request->input('click_id') )
+                        ->where('creative_id', $creative->id)
+                        ->count('click_id');
+                    if (!$click || $count_click < 3) {
                         $click = Click::create(array(
                             'click_id' => $request->input('click_id'),
                             'creative_id' => $creative->id,
                             'widget_id' => $widget->id,
                         ));
                         $creativeLog->increment('clicks');
-                    } else {
                         return redirect()->to($creative->getURL($click));
+                    } else {
+                        return response()->json('click exists', 409);
                     }
                 } else {
                     return response()->json('not found', 404);
