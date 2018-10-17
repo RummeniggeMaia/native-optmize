@@ -446,7 +446,7 @@ class CampaingnController extends Controller {
             'type_layout' => 'in:1,2,3,4,5',
             'ceiling' => 'required|numeric',
             'type_layout' => 'in:1,2,3,4,5,6',
-            'device' => 'in:1,2',
+            'device' => 'in:1,2,3',
             'country' => "in:$contryCodes",
         );
         $rules['type'] = 'in:"CPC"';

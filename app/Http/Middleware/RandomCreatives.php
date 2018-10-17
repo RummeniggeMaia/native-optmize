@@ -44,6 +44,7 @@ class RandomCreatives
                 return response()->json("not found campaign", 404);
             }
             $creatives = $campaign->creatives()->with(['images'])->get();
+            $this->calculateECPM($campaign, $widget->id, $creatives);
             foreach ($creatives as $creative) {
                 $cId = hash("sha256", $creative->name
                     . request()->ip()
@@ -83,9 +84,9 @@ class RandomCreatives
                     $path = $creative->image;
                 }
                 $creative->image = url('/') . '/' . $path;
-                $this->setCTR($creative);
+                //$this->setCTR($creative);
             }
-            $creatives = $creatives->sortBy('ctr')->reverse();
+            $creatives = $creatives->sortBy('ecpm')->reverse();
             /** 
              * TODO
              * Os valores no array sao os tipos de banners
@@ -202,6 +203,14 @@ class RandomCreatives
             if ($c->limitReached()) {
                 $campaigns->forget($k);
             }
+            // if ($c->segmentation->country != $codigopais) {
+            //     $campaigns->forget($k);
+            // }
+            // if ($c->segmentation->device != $device) {
+            //     if ($c->segmentation->device != 3) {
+            //         $campaigns->forget($k);
+            //     }
+            // }
         }
         $campaigns->sortByDesc(function ($p, $k) {
             return $p->creatives->sum('revenue');
@@ -233,6 +242,31 @@ class RandomCreatives
             $creative['ctr'] = $clicks / $impressions * 100;
         } else {
             $creative['ctr'] = 0;
+        }
+    }
+
+    private function calculateECPM($campaign, $widget_id, $creatives) {
+        foreach ($creatives as $creative) {
+            if ($creative->ecpmCounter < 20000) {
+                $creative->increment('ecpmCounter');
+                continue;
+            }
+            $log = CreativeLog::where([
+                'campaingn_id' => $campaign->id,
+                'widget_id' => $widget_id,
+                'creative_id' => $creative->id,
+            ])->first();
+            if ($log) {
+                if ($campaign->type == "CPC") {
+                    $creative->yield = $campaign->cpc * $log->clicks;
+                } else if ($campaign->type == "CPM") {
+                    $creative->yield = $campaign->cpm * $log->impressions;
+                }
+                $creative->ecpm = ($creative->yield / ($log->impressions == 0 ? 1 : $log->impressions)) * 1000;
+                //Zera o contador
+                $creative->ecpmCounter = 0;
+                $creative->save();
+            }
         }
     }
 }

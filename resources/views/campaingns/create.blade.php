@@ -163,7 +163,7 @@
                     <span class="input-group-addon"><i class="hi hi-star"></i></span>
                     {{ 
                         Form::select('device', 
-                            ['1' => 'Mobile', '2' => 'Desktop'],
+                            ['1' => 'Mobile', '2' => 'Desktop', '3' => 'Ambos'],
                             Input::old('country'), 
                             [
                                 'class'=>'selectpicker form-control input-lg', 

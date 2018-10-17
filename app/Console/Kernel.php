@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Campaingn;
+use App\CampaingnLog;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +28,17 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        // $schedule->call(function () {
+        //     $camps = Campaingn::with('campaignLogs')->where('type', 'CPA')->get();
+        //     // foreach ($camps as $c) {
+        //     //     $clicks
+        //     // }
+        // })
+        // ->weekly()
+        // ->tuesdays()
+        // ->wednesdays()
+        // ->thursdays()
+        // ->fridays()->at('10:00');
     }
 
     /**

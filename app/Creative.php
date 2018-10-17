@@ -27,6 +27,9 @@ class Creative extends Model {
         'url',
         'image',
         'type_layout',
+        'yield',
+        'ecpm',
+        'ecpmCounter',
         'status',
         'user_id',
         'category_id'

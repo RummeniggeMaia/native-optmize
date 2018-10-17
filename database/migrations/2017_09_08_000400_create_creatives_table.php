@@ -21,6 +21,9 @@ class CreateCreativesTable extends Migration {
             // $table->string('url_mobile');
             $table->string('image');
             $table->integer('type_layout')->default(0);
+            $table->double('yield')->default(0.0);
+            $table->double('ecpm')->default(0.0);
+            $table->integer('ecpmCounter')->default(0);
             $table->double('revenue')->default(0.0);
             $table->boolean('status')->default(true);
             $table->timestamps();
