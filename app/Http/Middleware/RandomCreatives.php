@@ -259,10 +259,12 @@ class RandomCreatives
             if ($log) {
                 if ($campaign->type == "CPC") {
                     $creative->yield = $campaign->cpc * $log->clicks;
+                    $creative->ecpm = ($creative->yield / ($log->impressions == 0 ? 1 : $log->impressions));
                 } else if ($campaign->type == "CPM") {
                     $creative->yield = $campaign->cpm * $log->impressions;
+                    $creative->ecpm = $campaign->cpm;
                 }
-                $creative->ecpm = ($creative->yield / ($log->impressions == 0 ? 1 : $log->impressions)) * 1000;
+                // $creative->ecpm = ($creative->yield / ($log->impressions == 0 ? 1 : $log->impressions)) * 1000;
                 //Zera o contador
                 $creative->ecpmCounter = 0;
                 $creative->save();
