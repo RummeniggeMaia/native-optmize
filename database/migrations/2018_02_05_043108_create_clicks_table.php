@@ -25,9 +25,9 @@ class CreateClicksTable extends Migration {
             $table->bigInteger('widget_id')->unsigned()->nullable();
             $table->foreign('widget_id')->references('id')->on('widgets')
                     ->onDelete('set null');
-            // $table->bigInteger('campaingn_id')->unsigned()->nullable();
-            // $table->foreign('campaingn_id')->references('id')->on('campaingns')
-            //         ->onDelete('set null');
+            $table->bigInteger('campaingn_id')->unsigned()->nullable();
+            $table->foreign('campaingn_id')->references('id')->on('campaingns')
+                    ->onDelete('set null');
         });
     }
 

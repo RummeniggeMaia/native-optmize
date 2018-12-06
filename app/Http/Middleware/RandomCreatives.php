@@ -203,6 +203,9 @@ class RandomCreatives
             if ($c->limitReached()) {
                 $campaigns->forget($k);
             }
+            if ($c->paused) {
+                $campaigns->forget($k);
+            }
             // if ($c->segmentation->country != $codigopais) {
             //     $campaigns->forget($k);
             // }

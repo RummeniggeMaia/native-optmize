@@ -206,7 +206,7 @@ class UserController extends Controller {
             return redirect()->back()->with('error', 'Usuário inexistente.');
         } else {
             $rules = [
-                'revenue_adv' => 'required|numeric|min:1'
+                'revenue_adv' => 'required|numeric'
             ];
             $msgs = [
                 'revenue_adv.required' => 'Insira o valor.',

@@ -4,6 +4,8 @@ namespace App\Console;
 
 use App\Campaingn;
 use App\CampaingnLog;
+use App\Postback;
+use App\Click;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,19 +28,31 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-        // $schedule->call(function () {
-        //     $camps = Campaingn::with('campaignLogs')->where('type', 'CPA')->get();
-        //     // foreach ($camps as $c) {
-        //     //     $clicks
-        //     // }
-        // })
-        // ->weekly()
-        // ->tuesdays()
-        // ->wednesdays()
-        // ->thursdays()
-        // ->fridays()->at('10:00');
+        $schedule->call(function () {
+            $posts = Postback::with('clicks.creative')->get();
+            foreach ($posts as $postback) {
+                $postback->creative->yield = 0;
+            }
+            foreach ($posts as $postback) {
+                $postback->creative->yield += $postback->amt;
+            }
+            foreach ($posts as $postback) {
+                $logs = CreativeLog::with('campaingns')->where([
+                    'creative_id' => $postback->creative->id,
+                    'type' => 'CPA'
+                ]);
+                if (count($logs) > 0 && $logs[0]->impressions > 0) {
+                    $postback->creative->ecpm = 
+                        $postback->creative->yield 
+                        / $logs[0]->impressions;
+                }
+            }
+        })
+        ->weekly()
+        ->tuesdays()
+        ->wednesdays()
+        ->thursdays()
+        ->fridays()->at('10:00');
     }
 
     /**

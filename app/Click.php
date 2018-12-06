@@ -9,7 +9,8 @@ class Click extends Model {
     protected $fillable = [
         'click_id',
         'creative_id',
-        'widget_id'
+        'widget_id',
+        'campaingn_id',
     ];
     
     public function creative() {

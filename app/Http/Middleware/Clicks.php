@@ -51,6 +51,7 @@ class Clicks
                             'click_id' => $request->input('click_id'),
                             'creative_id' => $creative->id,
                             'widget_id' => $widget->id,
+                            'campaingn_id' => $campaign->id,
                         ));
                         $creativeLog->increment('clicks');
                     } else {
