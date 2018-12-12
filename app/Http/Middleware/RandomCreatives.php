@@ -171,18 +171,18 @@ class RandomCreatives
 
     private function getCampaign($cont, $type)
     {
-        $detect = new MobileDetect;
-        $device = $detect->isMobile() ? 1 : 2;
+        // $detect = new MobileDetect;
+        // $device = $detect->isMobile() ? 1 : 2;
 
-        $db = new IP2Location(Storage::disk('public')->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
-        $user_ip = request()->ip();
-        /**
-         * TODO caso seja acessado do localhost, mudar o ip para o da google.
-         * Essa parte funciona apenas para teste.
-         */
-        $user_ip = $user_ip == '::1' ? '8.8.8.8' : $user_ip;
-        $records = $db->lookup($user_ip, IP2Location::ALL);
-        $codigopais = $records['countryCode'];
+        // $db = new IP2Location(Storage::disk('public')->path("IP-COUNTRY-ISP.BIN"),IP2Location::FILE_IO);
+        // $user_ip = request()->ip();
+        // /**
+        //  * TODO caso seja acessado do localhost, mudar o ip para o da google.
+        //  * Essa parte funciona apenas para teste.
+        //  */
+        // $user_ip = $user_ip == '::1' ? '8.8.8.8' : $user_ip;
+        // $records = $db->lookup($user_ip, IP2Location::ALL);
+        // $codigopais = $records['countryCode'];
 
         $campaigns = Campaingn::with([
             'user', 
@@ -203,7 +203,7 @@ class RandomCreatives
             if ($c->limitReached()) {
                 $campaigns->forget($k);
             }
-            if ($c->paused) {
+            if ($c->paused || $c->status == false) {
                 $campaigns->forget($k);
             }
             // if ($c->segmentation->country != $codigopais) {

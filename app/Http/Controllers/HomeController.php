@@ -51,6 +51,13 @@ class HomeController extends Controller
                 ->with('error'
                     , 'Usuário com perfil inválido.');
         }
+        $camps = DB::table('campaingns')
+            ->join('users', function($join){
+                $join->('users.id', '=', 'campaingns.user_id')
+                    ->where()
+            })
+            ->leftJoin('campaign_logs', 'campaign_logs.campaingn_id', '=', 'campaingns_id')
+            ->join('segmentations', 'segmentations.campaingn_id', '=', 'campaingns.id');
         return view('home')->with('money', $money);
     }
 
